@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "117727673048",
+    "project_id": "brainscreen",
+    "storage_bucket": "brainscreen.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:117727673048:android:0c8dc4cf567678a148f5ad",
+        "android_client_info": {
+          "package_name": "com.example.brainscreen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuNv9i4qw_yed_uRJsYrJRcC4XvwRtWic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
