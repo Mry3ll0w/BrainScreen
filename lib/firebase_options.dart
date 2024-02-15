@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDuNv9i4qw_yed_uRJsYrJRcC4XvwRtWic',
-    appId: '1:117727673048:android:0c8dc4cf567678a148f5ad',
-    messagingSenderId: '117727673048',
-    projectId: 'brainscreen',
-    storageBucket: 'brainscreen.appspot.com',
+    apiKey: 'AIzaSyAl8aiVyn6s9xBn7Ltllhcl_9zp5Jq97cQ',
+    appId: '1:1015440539097:android:145e784d084589e6faadc8',
+    messagingSenderId: '1015440539097',
+    projectId: 'brainscreen-d8e47',
+    storageBucket: 'brainscreen-d8e47.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBi89o2HKUzYTFPkyKp35G48X6hImsnE8U',
-    appId: '1:117727673048:ios:15aa4a3cc35c4fef48f5ad',
-    messagingSenderId: '117727673048',
-    projectId: 'brainscreen',
-    storageBucket: 'brainscreen.appspot.com',
+    apiKey: 'AIzaSyCfagSE0oUayowAyzUHSwKiqy2jI_wYfZI',
+    appId: '1:1015440539097:ios:6452587ea4f33b77faadc8',
+    messagingSenderId: '1015440539097',
+    projectId: 'brainscreen-d8e47',
+    storageBucket: 'brainscreen-d8e47.appspot.com',
     iosBundleId: 'com.example.brainscreen',
   );
 }

@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyBi89o2HKUzYTFPkyKp35G48X6hImsnE8U</string>
+	<string>AIzaSyCfagSE0oUayowAyzUHSwKiqy2jI_wYfZI</string>
 	<key>GCM_SENDER_ID</key>
-	<string>117727673048</string>
+	<string>1015440539097</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.brainscreen.RunnerTests</string>
 	<key>PROJECT_ID</key>
-	<string>brainscreen</string>
+	<string>brainscreen-d8e47</string>
 	<key>STORAGE_BUCKET</key>
-	<string>brainscreen.appspot.com</string>
+	<string>brainscreen-d8e47.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:117727673048:ios:dace0d35aecfdbe648f5ad</string>
+	<string>1:1015440539097:ios:de4c44c17bf233b6faadc8</string>
 </dict>
 </plist>
