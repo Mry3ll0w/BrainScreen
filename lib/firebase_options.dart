@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:1015440539097:android:145e784d084589e6faadc8',
     messagingSenderId: '1015440539097',
     projectId: 'brainscreen-d8e47',
+    databaseURL: 'https://brainscreen-d8e47-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'brainscreen-d8e47.appspot.com',
   );
 
@@ -62,7 +63,9 @@ class DefaultFirebaseOptions {
     appId: '1:1015440539097:ios:6452587ea4f33b77faadc8',
     messagingSenderId: '1015440539097',
     projectId: 'brainscreen-d8e47',
+    databaseURL: 'https://brainscreen-d8e47-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'brainscreen-d8e47.appspot.com',
+    iosClientId: '1015440539097-kee9mmusds0lhs6139p0jl5s7mqafvk9.apps.googleusercontent.com',
     iosBundleId: 'com.example.brainscreen',
   );
 }

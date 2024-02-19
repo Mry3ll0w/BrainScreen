@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1015440539097",
+    "firebase_url": "https://brainscreen-d8e47-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "brainscreen-d8e47",
     "storage_bucket": "brainscreen-d8e47.appspot.com"
   },
@@ -12,7 +13,12 @@
           "package_name": "com.example.brainscreen"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1015440539097-2ckj9nhhbujpvjh7muigrnke6u2tmed5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAl8aiVyn6s9xBn7Ltllhcl_9zp5Jq97cQ"
@@ -20,7 +26,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1015440539097-2ckj9nhhbujpvjh7muigrnke6u2tmed5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1015440539097-kee9mmusds0lhs6139p0jl5s7mqafvk9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.brainscreen"
+              }
+            }
+          ]
         }
       }
     }
