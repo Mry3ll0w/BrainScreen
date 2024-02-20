@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -13,9 +12,13 @@ void main() {
 Future<void> main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); // Ensure binding is initialized if not dependant async operantions wont be call correctly
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  ); // Initialize Firebase with options
+
+  // Initialize Firebase with options
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
   runApp(const MyApp());
 }
 
@@ -69,13 +72,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-/**
- * import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
-// ...
-
-await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-);
- */
