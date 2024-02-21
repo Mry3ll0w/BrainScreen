@@ -1,7 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'pages/home.dart';
+import 'pages/welcome.dart';
 
 /*
 void main() {
@@ -14,10 +16,16 @@ void main() async {
       .ensureInitialized(); // Ensure binding is initialized if not dependant async operantions wont be call correctly
 
   // Initialize Firebase with options
-  await Firebase.initializeApp(
-    name: 'BrainScreen',
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  if (Platform.isAndroid) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } else {
+    await Firebase.initializeApp(
+      name: 'BrainScreen',
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
   runApp(const MyApp());
 }
 
@@ -30,9 +38,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+          fontFamily: 'SF'),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
