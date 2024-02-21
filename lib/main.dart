@@ -9,16 +9,15 @@ void main() {
 }
 */
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); // Ensure binding is initialized if not dependant async operantions wont be call correctly
 
   // Initialize Firebase with options
-  if (Firebase.apps.isEmpty) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  }
+  await Firebase.initializeApp(
+    name: 'BrainScreen',
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

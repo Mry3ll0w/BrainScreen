@@ -65,6 +65,7 @@ class DefaultFirebaseOptions {
     projectId: 'brainscreen-d8e47',
     databaseURL: 'https://brainscreen-d8e47-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'brainscreen-d8e47.appspot.com',
+    androidClientId: '1015440539097-u9f79phob8h8lnei8nau18n20pbhle21.apps.googleusercontent.com',
     iosClientId: '1015440539097-kee9mmusds0lhs6139p0jl5s7mqafvk9.apps.googleusercontent.com',
     iosBundleId: 'com.example.brainscreen',
   );

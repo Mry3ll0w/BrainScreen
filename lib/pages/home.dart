@@ -97,7 +97,9 @@ class _WelcomeHomeState extends State<WelcomeHome>
   void handleGoogleSignIn() {
     try {
       GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-      _auth.signInWithProvider(googleAuthProvider);
+      //_auth.signInWithProvider(googleAuthProvider);
+      //R_auth.signInWithRedirect(googleAuthProvider);
+      _auth.signInWithPopup(googleAuthProvider);
     } catch (e) {
       print(e);
     }
