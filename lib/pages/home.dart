@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeHome extends StatefulWidget {
@@ -11,6 +12,7 @@ class WelcomeHome extends StatefulWidget {
 class _WelcomeHomeState extends State<WelcomeHome>
     with SingleTickerProviderStateMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   User? _user;
   late AnimationController _controller;
 
@@ -97,9 +99,8 @@ class _WelcomeHomeState extends State<WelcomeHome>
   void handleGoogleSignIn() {
     try {
       GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-      //_auth.signInWithProvider(googleAuthProvider);
-      //R_auth.signInWithRedirect(googleAuthProvider);
-      _auth.signInWithPopup(googleAuthProvider);
+      PhoneAuthProvider phoneAuthProvider = PhoneAuthProvider();
+      _auth.signInWithProvider(googleAuthProvider);
     } catch (e) {
       print(e);
     }
