@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeController {
   HomeController._();
@@ -16,4 +17,6 @@ class HomeController {
       ));
     }
   }
+
+  static void createProyect(String userUID, String proyectName) {}
 }

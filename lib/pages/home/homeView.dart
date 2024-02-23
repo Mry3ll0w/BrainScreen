@@ -1,4 +1,5 @@
 import 'package:brainscreen/pages/home/home_controller.dart';
+import 'package:brainscreen/pages/profile/profile_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+
     initializeProjectList();
     return Scaffold(
       backgroundColor: const Color(0xFFDCF2F1),
@@ -29,11 +31,29 @@ class _HomeState extends State<Home> {
               _scaffoldKey.currentState?.openDrawer(), // Open the drawer
           tooltip: 'Despliegame!',
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 11),
+            child: IconButton(
+              icon: const Icon(Icons.person_3),
+              onPressed: () {
+                if (user != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Profile()),
+                  );
+                }
+              }, // Open the drawer
+              tooltip: 'Perfil',
+            ),
+          )
+        ],
       ),
       drawer: Drawer(
         backgroundColor: const Color(0xFFDCF2F1),
         child: ListView(padding: EdgeInsets.zero, children: projectList),
       ),
+
       // ... rest of your code
     );
   }

@@ -34,5 +34,20 @@
 	<string>1:1015440539097:ios:6452587ea4f33b77faadc8</string>
 	<key>DATABASE_URL</key>
 	<string>https://brainscreen-d8e47-default-rtdb.europe-west1.firebasedatabase.app</string>
+
+	
+	<key>UISupportedInterfaceOrientations</key>
+<array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationPortraitUpsideDown</string>
+</array>
+<key>UISupportedInterfaceOrientations~ipad</key>
+<array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationPortraitUpsideDown</string>
+</array>
+
+
+
 </dict>
 </plist>
