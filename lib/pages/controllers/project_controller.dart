@@ -13,4 +13,19 @@ class ProjectController {
       'members': [p.ownerUID],
     });
   }
+
+  static Future<List<Project>> getProjectsFromLoggedUser() async {
+    List<Project> projects = [];
+    QuerySnapshot querySnapshot = await db
+        .collection('projects')
+        .where('members', arrayContains: _auth.currentUser!.uid)
+        .get();
+    for (var doc in querySnapshot.docs) {
+      projects.add(Project(
+        doc['name'],
+        doc['owner'],
+      ));
+    }
+    return projects;
+  }
 }

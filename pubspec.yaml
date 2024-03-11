@@ -111,3 +111,4 @@ flutter_launcher_icons:
   image_path_ios: "img/logo.jpeg"
   android: true # can specify file name here e.g. "ic_launcher"
   ios: true # can specify file name here e.g. "My-Launcher-Icon"
+  modal_bottom_sheet: ^2.1.2

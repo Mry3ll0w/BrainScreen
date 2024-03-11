@@ -1,4 +1,5 @@
 import 'package:brainscreen/pages/home/home_controller.dart';
+import 'package:brainscreen/pages/home/widgets/project_creation_dialog.dart';
 import 'package:brainscreen/pages/profile/profile_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,8 @@ class _HomeState extends State<Home> {
         backgroundColor: const Color(0xFFDCF2F1),
         child: ListView(padding: EdgeInsets.zero, children: projectList),
       ),
-
+      body: chargeToHome(
+          projectList.isEmpty ? noProjects() : const Text("Tiene Proyectos")),
       // ... rest of your code
     );
   }
@@ -85,7 +87,7 @@ class _HomeState extends State<Home> {
     HomeController.projectFetcher('ara', context, projectList);
     //now we Append one more to allow the user the creation of another project
     projectList.add(ListTile(
-      onTap: () {},
+      onTap: _openCreateProjectButton,
       title: const Row(
         children: [
           Text('Crear nuevo proyecto'),
@@ -96,5 +98,20 @@ class _HomeState extends State<Home> {
         ],
       ),
     ));
+  }
+
+  Widget noProjects() {
+    return const Center(
+      child: Text('No tienes proyectos, crea uno!'),
+    );
+  }
+
+  Widget chargeToHome(Widget widgeToLoad) {
+    return widgeToLoad;
+  }
+
+  void _openCreateProjectButton() {
+    showModalBottomSheet(
+        context: context, builder: (ctx) => ProjectCreationModal());
   }
 }
