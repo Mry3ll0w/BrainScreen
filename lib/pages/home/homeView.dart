@@ -61,6 +61,7 @@ class _HomeState extends State<Home> {
   }
 
   void initializeProjectList() {
+    final user = FirebaseAuth.instance.currentUser;
     projectList = <Widget>[
       const SizedBox(
         height: 150,
@@ -84,7 +85,7 @@ class _HomeState extends State<Home> {
     ];
 
     //Now we fetch de projects
-    HomeController.projectFetcher('ara', context, projectList);
+    HomeController.projectFetcher(user!.uid, context, projectList);
     //now we Append one more to allow the user the creation of another project
     projectList.add(ListTile(
       onTap: _openCreateProjectButton,

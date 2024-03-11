@@ -1,5 +1,4 @@
 import 'package:brainscreen/pages/controllers/project_controller.dart';
-import 'package:brainscreen/pages/models/project_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

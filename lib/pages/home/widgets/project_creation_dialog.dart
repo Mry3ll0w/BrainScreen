@@ -1,4 +1,5 @@
 import 'package:brainscreen/pages/controllers/project_controller.dart';
+import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/pages/models/project_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,9 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
                   child: TextField(
                       onChanged: (value) => {
                             checkProjectName(value),
-                            strProjectName = value,
+                            setState(() {
+                              strProjectName = value;
+                            })
                           },
                       style: const TextStyle(fontStyle: FontStyle.italic),
                       decoration: InputDecoration(
@@ -83,6 +86,11 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
             setState(() {
               errorText = 'El nombre del proyecto ya está en uso';
             });
+            break;
+          } else {
+            setState(() {
+              errorText = null;
+            });
           }
         }
       });
@@ -119,7 +127,7 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
         },
       );
     } else {
-      //ProjectController.createProyect(Project(user!.uid, name));
+      ProjectController.createProyect(Project(strProjectName, user!.uid));
       return showDialog<void>(
         context: context,
         builder: (BuildContext context) {
@@ -137,6 +145,8 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
                 child: const Text('Cerrar'),
                 onPressed: () {
                   Navigator.of(context).pop();
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Home()));
                 },
               )
             ],

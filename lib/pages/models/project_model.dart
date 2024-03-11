@@ -7,7 +7,7 @@ class Project {
   List<String> _members = []; //UID de los usuarios que pertenecen al Project
   //La clave primaria vendra dada por el nombre del Project y el UID del usuario
 
-  Project(String owner, String name)
+  Project(String name, String owner)
       : _name = '',
         _ownerUID = '',
         _creationDate = '',

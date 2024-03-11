@@ -16,11 +16,29 @@ class ProjectController {
 
   static Future<List<Project>> getProjectsFromLoggedUser() async {
     List<Project> projects = [];
-    QuerySnapshot querySnapshot = await db
+    List<QueryDocumentSnapshot> proyectos = [];
+    //Get the projects where the user is a member or the owner
+    // Consulta para proyectos donde el usuario es miembro
+    QuerySnapshot queryMiembros = await db
         .collection('projects')
         .where('members', arrayContains: _auth.currentUser!.uid)
         .get();
-    for (var doc in querySnapshot.docs) {
+    proyectos.addAll(queryMiembros.docs);
+    // Consulta para proyectos donde el usuario es propietario
+    QuerySnapshot queryPropietarios = await db
+        .collection('projects')
+        .where('owner', isEqualTo: _auth.currentUser!.uid)
+        .get();
+
+    //Agregamos los proyectos que no esten ya en la lista de proyectos usando su nombre de proyecto
+    for (var doc in queryPropietarios.docs) {
+      if (!proyectos.any((element) => element['name'] == doc['name'])) {
+        proyectos.add(doc);
+      }
+    }
+
+    for (var doc in proyectos) {
+      print(doc['name']);
       projects.add(Project(
         doc['name'],
         doc['owner'],
