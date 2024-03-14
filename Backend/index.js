@@ -21,14 +21,23 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
-
+const {getFirestore, collection, getDocs} = require('firebase/firestore');
+const DB = getFirestore(firebaseApp);
 
 // Express Server initialization
 const express = require('express');
+
 const nodeServer = express();
 const port = 3000;
-nodeServer.get('/', (req, res) => {
-  res.send('Hello World!');
+nodeServer.get('/', async (req, res) => {
+  try {
+    const projectsCol = collection(DB, 'projects');
+    const projectSnapShot = await getDocs(projectsCol);
+    const projectList = projectSnapShot.docs.map((doc) => doc.data());
+    res.send(projectList);
+  } catch (e) {
+    print(e);
+  }
 });
 nodeServer.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
