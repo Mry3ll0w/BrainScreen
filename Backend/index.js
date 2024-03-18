@@ -23,7 +23,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const {getFirestore, collection, getDocs} = require('firebase/firestore');
 const DB = getFirestore(firebaseApp);
-const ProjectController = require('./ProjectController');
+const ProjectController = require('./Controllers/ProjectController');
 
 // Express Server initialization
 const express = require('express');
