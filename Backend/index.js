@@ -23,6 +23,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const {getFirestore, collection, getDocs} = require('firebase/firestore');
 const DB = getFirestore(firebaseApp);
+const ProjectController = require('./ProjectController');
 
 // Express Server initialization
 const express = require('express');
@@ -36,9 +37,20 @@ nodeServer.get('/', async (req, res) => {
     const projectList = projectSnapShot.docs.map((doc) => doc.data());
     res.send(projectList);
   } catch (e) {
-    print(e);
+    console.log(e);
   }
 });
+
+nodeServer.get('/linkUser', async (req, res) => {
+  try {
+    const projectController = new ProjectController(DB);
+    await projectController.linkAmazonUserToProject('prueba ', '6EGHD6ZJaOerB3Lj2kDw', 'amzn1.ask.account.AMA4DUVCMGVZQ7NUYRKXEFIFU6IISFRK6WLMGROUFI3AVYQF2SPMN4SP3GEHYMUF72T5AD37G7TDL6TR6FH37IYNO5UNH5UM2GF4QGZECCX3DAYJRIOTS7RNM4FUNGSLLH3RBOMQ27ISPA3GDYC6WTOH62SCFRNIS2N4J5QW433ZVUUVFQ4EMWIQGJMARR3EPYKA5DHWZ5E7WLETRUOPULB4YTPPNK7W7BYGLH4GFRSA');
+    res.send('User linked to project');
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 nodeServer.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

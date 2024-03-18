@@ -11,6 +11,7 @@ class ProjectController {
       'name': p.name,
       'owner': _auth.currentUser!.uid,
       'members': [p.ownerUID],
+      'alexaUserID': ''
     });
   }
 
