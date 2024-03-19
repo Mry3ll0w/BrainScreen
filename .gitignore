@@ -46,3 +46,4 @@ app.*.map.json
 #Node Modules Backend
 /BackendBrainScreen/node_modules
 Backend/node_modules/
+Backend/requests.http

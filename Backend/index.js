@@ -27,9 +27,15 @@ const ProjectController = require('./Controllers/ProjectController');
 
 // Express Server initialization
 const express = require('express');
+const axios = require('axios');
 
 const nodeServer = express();
 const port = 3000;
+
+
+// Configuration
+nodeServer.use(express.json());
+
 nodeServer.get('/', async (req, res) => {
   try {
     const projectsCol = collection(DB, 'projects');
@@ -41,11 +47,25 @@ nodeServer.get('/', async (req, res) => {
   }
 });
 
-nodeServer.get('/linkUser', async (req, res) => {
+nodeServer.patch('/bindAmazonToProject', async (req, res) => {
   try {
+    const {projectName, firebaseUID, amazonUID} = req.body;
     const projectController = new ProjectController(DB);
-    await projectController.linkAmazonUserToProject('prueba ', '6EGHD6ZJaOerB3Lj2kDw', 'amzn1.ask.account.AMA4DUVCMGVZQ7NUYRKXEFIFU6IISFRK6WLMGROUFI3AVYQF2SPMN4SP3GEHYMUF72T5AD37G7TDL6TR6FH37IYNO5UNH5UM2GF4QGZECCX3DAYJRIOTS7RNM4FUNGSLLH3RBOMQ27ISPA3GDYC6WTOH62SCFRNIS2N4J5QW433ZVUUVFQ4EMWIQGJMARR3EPYKA5DHWZ5E7WLETRUOPULB4YTPPNK7W7BYGLH4GFRSA');
+    await projectController.linkAmazonUserToProject(projectName, firebaseUID, amazonUID);
+    // '6EGHD6ZJaOerB3Lj2kDw', 'amzn1.ask.account.AMA4DUVCMGVZQ7NUYRKXEFIFU6IISFRK6WLMGROUFI3AVYQF2SPMN4SP3GEHYMUF72T5AD37G7TDL6TR6FH37IYNO5UNH5UM2GF4QGZECCX3DAYJRIOTS7RNM4FUNGSLLH3RBOMQ27ISPA3GDYC6WTOH62SCFRNIS2N4J5QW433ZVUUVFQ4EMWIQGJMARR3EPYKA5DHWZ5E7WLETRUOPULB4YTPPNK7W7BYGLH4GFRSA');
     res.send('User linked to project');
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+nodeServer.patch('/prueba', async (req, res) => {
+  try {
+    console.log(req.body);
+    // Obtengo los parametros recibidos
+    // const {amazonUID, projectName, firebaseUID} = req.body;
+
+    res.send('hola desde /prueba, se recibe: ');
   } catch (e) {
     console.log(e);
   }

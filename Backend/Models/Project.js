@@ -89,3 +89,5 @@ class Project {
     this._owner = value;
   }
 }
+
+module.exports = Project;
