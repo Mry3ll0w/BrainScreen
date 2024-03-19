@@ -16,14 +16,13 @@ class ProjectController {
   /**
 * Method to link an amazonUSER to a project.
 * @param {string} strProjectName Project's name to link the user to.
-* @param {string} strFirebaseUID FirebaseUID of the user to link to the project.
 * @param {string} strAmazonUID Amazon UID of the user to link to the project.
 */
-  async linkAmazonUserToProject(strProjectName, strFirebaseUID, strAmazonUID) {
+  async linkAmazonUserToProject(strProjectName, strAmazonUID) {
     // Definimos una variable de control de errores
     let error = false;
     // Comprobamos que no esten vacios los parametros recibidos
-    if (strProjectName && strFirebaseUID && strAmazonUID) {
+    if (strProjectName && strAmazonUID) {
       try {
         // Usamos el objeto DB para agregar a projects el usuario de amazon
         const projectsCol = collection(this.firebaseDB, 'projects');
