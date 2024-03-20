@@ -12,11 +12,9 @@ const LaunchRequestHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     async handle(handlerInput) {
-        const userID = handlerInput.requestEnvelope.context.System.user.userId;
-        
         const speakOutput = `Bienvenido al panel de control de BrainScreen, en que puedo ayudarte?`;
-        const data = await BrainScreenSetUp(userID, 'ara');
         
+        //AGREGAR OPCION DE LA PRIMERA VEZ Y CREAR CAMPOS DE VINCULACION DE USUARIO A CUENTA DE BrainScreen
         
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -25,21 +23,76 @@ const LaunchRequestHandler = {
     }
 };
 
-const HelloWorldIntentHandler = {
+const ProjectGeneralStateIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'ProjectGeneralState';
     },
-    handle(handlerInput) {
-        const speakOutput = 'Hello World!';
-
+    async handle(handlerInput) {
+        const sProjectName = Alexa.getSlotValue(handlerInput.requestEnvelope, 'projectName');
+        const userID = handlerInput.requestEnvelope.context.System.user.userId;
+        var speakOutput = `Valor projectName ${sProjectName} `;
+        
+     
+        try{
+            const userID = handlerInput.requestEnvelope.context.System.user.userId;
+            const sProjectName = Alexa.getSlotValue(handlerInput.requestEnvelope, 'projectName');
+            
+            
+            //Realizamos la peticion para vincular el nombre 
+            const res = await BrainScreenBindUserToProject(userID,sProjectName);
+            /*console.log(res);
+            
+            if(res.state && res.linkedUser){
+                speakOutput+= ` Recibido el nombre ${sProjectName}, con el status de respuesta ${res.responseStatus}`;
+            }else{
+                speakOutput +=' Se ha producido un error desconocido, intentelo de nuevo mas tarde.'
+            }
+            */
+        }catch(e){
+           speakOutput = 'Se ha producido un error en la vinculación del usuario al proyecto, por favor intentelo de nuevo mas tarde.' 
+        }
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
+            .reprompt('El panel de control sigue encendido')
             .getResponse();
     }
 };
 
+const BindAmazonUserToProjectHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'BindAmazonUserToProject';
+    },
+    async handle(handlerInput) {
+        const sProjectName = Alexa.getSlotValue(handlerInput.requestEnvelope, 'projectName');
+        const userID = handlerInput.requestEnvelope.context.System.user.userId;
+        var speakOutput = `Valor projectName ${sProjectName} `;
+        
+     
+        try{
+            const userID = handlerInput.requestEnvelope.context.System.user.userId;
+            const sProjectName = Alexa.getSlotValue(handlerInput.requestEnvelope, 'projectName');
+            
+            
+            //Realizamos la peticion para vincular el nombre 
+            const res = await BrainScreenBindUserToProject(userID,sProjectName);
+            
+            if(res.state && res.linkedUser){
+                speakOutput+= `Se ha vinculado esta cuenta de Amazon al proyecto: ${sProjectName}. Disfruta de nuestra app!!`;
+            }else{
+                speakOutput +=' Se ha producido un error desconocido, intentelo de nuevo mas tarde.'
+            }
+            
+        }catch(e){
+           speakOutput = 'Se ha producido un error en la vinculación del usuario al proyecto, por favor intentelo de nuevo mas tarde.' 
+        }
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt('El panel de control sigue encendido')
+            .getResponse();
+    }
+};
 const HelpIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -123,24 +176,29 @@ const mainBrainScreenHandler = {
 //Project Session ConnectionHandler, prepara los datos necesarios para guardarlos en las variables de sesion y usarlas en las interacciones con el 
 //Backend de la aplicacion.
 //Devuelve un Diccionario con el estado de la peticion (atributo state que marca si todo ha ido bien, y linkedUser que marca si existe un usuario vinculado)
-async function BrainScreenSetUp(strAmazonUserId,strProjectName){
+async function BrainScreenBindUserToProject(strAmazonUserId,strProjectName){
     //Diccionario para el control del acceso al servidor
     var dictSetUpCompleted = {
         state: true,
-        linkedUser:true
+        linkedUser:true,
+        response: null,
+        responseStatus : null
     }
     
-    if(strAmazonUserId === null || strProjectName === null || strProjectName === '' || strProjectName === 'null'){
+    if(strAmazonUserId === undefined || strProjectName === undefined || strProjectName === '' || strProjectName === 'null'){
         dictSetUpCompleted.state = false;//Error en los parametros
     }
     else{
         //Realizamos la logica de la conexion con la aplicacion
         try{
-            const data = await Axios.get('https://dummy.restapiexample.com/api/v1/employees')
-            console.log(data);
-            if(data !== null){
-                dictSetUpCompleted.state = true;
-            }
+            await Axios.patch('http://3.210.108.248:3000/bindAmazonUserToProject',
+            {
+                "amazonUID": strAmazonUserId,
+                "projectName": strProjectName
+            }).then((response) =>{
+                dictSetUpCompleted.response = response.data;
+                dictSetUpCompleted.responseStatus = response.status;
+            });
         }catch(e){
             console.log(e);
             dictSetUpCompleted.state = false;
@@ -162,7 +220,7 @@ const ErrorHandler = {
         return true;
     },
     handle(handlerInput, error) {
-        const speakOutput = 'Sorry, I had trouble doing what you asked. Please try again.';
+        const speakOutput = 'Error encontrando el endpoint seleccionado';
         console.log(`~~~~ Error handled: ${JSON.stringify(error)}`);
 
         return handlerInput.responseBuilder
@@ -183,13 +241,15 @@ const ErrorHandler = {
  * */
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
-        mainBrainScreenHandler,//CUSTOM handler
+        
         LaunchRequestHandler,
-        HelloWorldIntentHandler,
+        ProjectGeneralStateIntentHandler,
+        BindAmazonUserToProjectHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,
         SessionEndedRequestHandler,
+        mainBrainScreenHandler,//CUSTOM handler
         //IntentReflectorHandler
         )
     .addErrorHandlers(

@@ -29,7 +29,6 @@ class ProjectController {
         const projectSnapShot = await getDocs(projectsCol);
         const projectList = projectSnapShot.docs.map((doc) =>({id: doc.id,
           ...doc.data()}));
-        console.table(projectList);
         // Buscamos el proyecto con el nombre recibido
         const project = projectList.find((p) => p.name === strProjectName);
 
