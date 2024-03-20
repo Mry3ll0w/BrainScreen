@@ -40,6 +40,7 @@ class ProjectController {
             alexaUserID: strAmazonUID,
           });
         } else {
+          error = true;
           console.log('Project not found');
         }
       } catch (e) {

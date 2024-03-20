@@ -46,17 +46,22 @@ nodeServer.get('/', async (req, res) => {
   }
 });
 
-/** Metodo para vincular un usuario de amazon a un proyecto, se recibe por parametros el nombre del proyecto y el UID de amazon.
+/** Metodo para vincular un usuario de amazon a un proyecto,
+    se recibe por parametros el nombre del proyecto y el UID de amazon.
  */
 nodeServer.patch('/bindAmazonUserToProject', async (req, res) => {
   try {
+    console.log(req.body);
     const {projectName, amazonUID} = req.body;
 
     const projectController = new ProjectController(DB);
-    await projectController.linkAmazonUserToProject(projectName, amazonUID);
-    // '6EGHD6ZJaOerB3Lj2kDw',
-    // 'amzn1.ask.account.AMA4DUVCMGVZQ7NUYRKXEFIFU6IISFRK6WLMGROUFI3AVYQF2SPMN4SP3GEHYMUF72T5AD37G7TDL6TR6FH37IYNO5UNH5UM2GF4QGZECCX3DAYJRIOTS7RNM4FUNGSLLH3RBOMQ27ISPA3GDYC6WTOH62SCFRNIS2N4J5QW433ZVUUVFQ4EMWIQGJMARR3EPYKA5DHWZ5E7WLETRUOPULB4YTPPNK7W7BYGLH4GFRSA');
-    res.send('User linked to project');
+    const response = await projectController.linkAmazonUserToProject(projectName
+        , amazonUID);
+    if (!response) {
+      res.send('Error linking user to project');
+    } else {
+      res.send('User linked to project');
+    }
   } catch (e) {
     console.log(e);
   }
