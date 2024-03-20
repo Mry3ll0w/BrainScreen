@@ -27,7 +27,6 @@ const ProjectController = require('./Controllers/ProjectController');
 
 // Express Server initialization
 const express = require('express');
-const axios = require('axios');
 
 const nodeServer = express();
 const port = 3000;
@@ -47,10 +46,12 @@ nodeServer.get('/', async (req, res) => {
   }
 });
 
+/** Metodo para vincular un usuario de amazon a un proyecto, se recibe por parametros el nombre del proyecto y el UID de amazon.
+ */
 nodeServer.patch('/bindAmazonUserToProject', async (req, res) => {
   try {
     const {projectName, amazonUID} = req.body;
-    
+
     const projectController = new ProjectController(DB);
     await projectController.linkAmazonUserToProject(projectName, amazonUID);
     // '6EGHD6ZJaOerB3Lj2kDw',

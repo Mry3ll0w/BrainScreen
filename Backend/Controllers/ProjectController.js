@@ -32,7 +32,7 @@ class ProjectController {
         console.table(projectList);
         // Buscamos el proyecto con el nombre recibido
         const project = projectList.find((p) => p.name === strProjectName);
-        console.log(project);
+
         if (project) {
         // Si el proyecto existe, actualizamos el campo alexaUserID con el valor recibido
           const projectDoc = doc(this.firebaseDB, 'projects', project.id);
@@ -48,6 +48,26 @@ class ProjectController {
       }
     }
     return error;// Devolvemos el estado de la operacion
+  }
+
+  /** Method to count the number of projects that an amazon user is linked to.
+    * @param {string} strAmazonUID Amazon UID of the user to count the projects.
+   */
+  async countProjectsLinkedToAmazonUser(strAmazonUID) {
+    let error = false;
+    let count = 0;
+    if (strAmazonUID) {
+      try {
+        const projectsCol = collection(this.firebaseDB, 'projects');
+        const projectSnapShot = await getDocs(projectsCol);
+        const projectList = projectSnapShot.docs.map((doc) => doc.data());
+        count = projectList.filter((p) => p.alexaUserID === strAmazonUID).length;
+      } catch (e) {
+        error = true;
+        console.log(e);
+      }
+    }
+    return {error, count};
   }
 }
 module.exports = ProjectController;
