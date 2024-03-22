@@ -82,6 +82,8 @@ nodeServer.get('/isLinked/:amazonUID', async (req, res) => {
       // Grueso de la funcion, comprobamos si el usuario esta en la DB
       const projectController = new ProjectController(DB);
       const response = await projectController.isLinked(amazonUID);
+      console.log(`Recibidos los parametros ${amazonUID}`);
+      console.table(response);
       if (response.error) {
         res.send({error: false, linked: false}, 500);
       } else {
