@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 const {collection, getDocs, updateDoc, doc} = require('firebase/firestore');
+
 /**
  * Class Used to interact with Projects that are located on firebase.
  */
@@ -17,6 +18,7 @@ class ProjectController {
 * Method to link an amazonUSER to a project.
 * @param {string} strProjectName Project's name to link the user to.
 * @param {string} strAmazonUID Amazon UID of the user to link to the project.
+* @return {boolean} True if the operation was successful, false otherwise.
 */
   async linkAmazonUserToProject(strProjectName, strAmazonUID) {
     // Definimos una variable de control de errores
@@ -50,8 +52,11 @@ class ProjectController {
     return error;// Devolvemos el estado de la operacion
   }
 
-  /** Method to count the number of projects that an amazon user is linked to.
-    * @param {string} strAmazonUID Amazon UID of the user to count the projects.
+
+  /**
+   * Method to count the number of projects that are linked to an Amazon user.
+   * @param {string} strAmazonUID Amazon UID of the user to count the projects.
+   * @return {{error: boolean, count: number}} Object containing the error status and the count of linked projects.
    */
   async countProjectsLinkedToAmazonUser(strAmazonUID) {
     let error = false;
@@ -68,6 +73,37 @@ class ProjectController {
       }
     }
     return {error, count};
+  }
+
+  /** Method that checks if there is a firebaseUser linked to a given AmazonUID.
+    * @param {string} strAmazonUID Amazon UID of the user to check if is linked to a firebase user.
+    * @return {{error: boolean, linked: boolean, linkedToUser: string}} Object containing the error status, linked status, and linked user.
+  */
+  async isLinked(strAmazonUID) {
+    let error = false;
+    let linked = false;
+    let linkedToUser='';
+    if (strAmazonUID) {
+      try {
+        const projectsCol = collection(this.firebaseDB, 'AlexaUsers');
+        const projectSnapShot = await getDocs(projectsCol);
+        const projectList = projectSnapShot.docs.map((doc) => doc.data());
+        projectList.some((p) => {
+          if (p.amazonUID === strAmazonUID) {
+            linkedToUser = p.firebaseUID;
+            linked = true;
+          } else {
+            linked = false;
+          }
+        });
+      } catch (e) {
+        error = true;
+        console.log(e);
+      }
+      // console.table({error, linked, linkedToUser});
+      return {error, linked, linkedToUser};
+    }
+    return {error, linked, linkedToUser};
   }
 }
 module.exports = ProjectController;

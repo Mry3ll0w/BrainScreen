@@ -67,7 +67,38 @@ nodeServer.patch('/bindAmazonUserToProject', async (req, res) => {
   }
 });
 
+/** Metodo para comprobar si el existe esa cuenta de amazon en nuestra
+    base de datos.
+*/
+nodeServer.get('/isLinked/:amazonUID', async (req, res) => {
+  // Obtenemos los parametros
+  const {amazonUID} = req.params;
+  // Si no recibimos el UID de amazon, devolvemos un error para que el cliente
+  // sepa que no se ha recibido el parametro
+  if (amazonUID === undefined) {
+    res.send('Error', 400);
+  } else {
+    try {
+      // Grueso de la funcion, comprobamos si el usuario esta en la DB
+      const projectController = new ProjectController(DB);
+      const response = await projectController.isLinked(amazonUID);
+      if (response.error) {
+        res.send('Error en el procesamiento de la solicitud', 500);
+      } else {
+        if (response.linked) {
+          res.send('Usuario encontrado');
+        } else {
+          res.send('Usuario no encontrado');
+        }
+      }
+    } catch (e) {
+      res.send('Error', 500);
+      console.log(e);
+    }
+  }
+});
+
 
 nodeServer.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Servidor Backend en el puerto ${port}`);
 });
