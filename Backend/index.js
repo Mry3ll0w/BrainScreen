@@ -83,16 +83,12 @@ nodeServer.get('/isLinked/:amazonUID', async (req, res) => {
       const projectController = new ProjectController(DB);
       const response = await projectController.isLinked(amazonUID);
       if (response.error) {
-        res.send('Error en el procesamiento de la solicitud', 500);
+        res.send({error: false, linked: false}, 500);
       } else {
-        if (response.linked) {
-          res.send('Usuario encontrado');
-        } else {
-          res.send('Usuario no encontrado');
-        }
+        res.send({error: false, linked: response.linked});
       }
     } catch (e) {
-      res.send('Error', 500);
+      res.send({error: true}, 500);
       console.log(e);
     }
   }
