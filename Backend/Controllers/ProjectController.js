@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 const {collection, getDocs, updateDoc, doc} = require('firebase/firestore');
-const {admin} = require('firebase-admin');
-const {access} = require('fs');
+
 
 /**
  * Class Used to interact with Projects that are located on firebase.
