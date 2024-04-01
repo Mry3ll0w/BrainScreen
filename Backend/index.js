@@ -65,11 +65,11 @@ nodeServer.patch('/bindAmazonUserToProject', async (req, res) => {
     const allowed = await projectController.
         userAllowedForServerRequests(amazonUID, firebaseUID);
     if (!allowed) {
-      res.send('No accesible', 403);
+      res.status(403).send('No accesible');
     } else {
       const response = await projectController.
           linkAmazonUserToProject(projectName, amazonUID);
-      if (!response) {
+      if (response) {
         res.send('Error linking user to project');
       } else {
         res.send('User linked to project');

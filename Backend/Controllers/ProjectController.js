@@ -42,6 +42,7 @@ class ProjectController {
           await updateDoc(projectDoc, {
             alexaUserID: strAmazonUID,
           });
+          console.log('Se ha vinculado: '+error);
         } else {
           error = true;
           console.log('Project not found');
