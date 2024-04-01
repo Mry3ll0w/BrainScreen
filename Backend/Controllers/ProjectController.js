@@ -1,5 +1,7 @@
 /* eslint-disable max-len */
 const {collection, getDocs, updateDoc, doc} = require('firebase/firestore');
+const {admin} = require('firebase-admin');
+const {access} = require('fs');
 
 /**
  * Class Used to interact with Projects that are located on firebase.
@@ -104,6 +106,61 @@ class ProjectController {
       return {error, linked, linkedToUser};
     }
     return {error, linked, linkedToUser};
+  }
+
+  /**
+   * Metodo para comprobar si la peticion recibida es de un usuario que tiene acceso al servidor,
+   * puede ser mediante un token de Amazon o un token de Firebase.
+   * @param {string} strAmazonUID
+   * @param {string} firebaseUID
+   */
+  async userAllowedForServerRequests(strAmazonUID, firebaseUID) {
+    let bAccess = false;
+
+    // En caso de que no se reciba ningun parametro, devolvemos false
+    if (strAmazonUID === undefined && firebaseUID === undefined) {
+      bAccess = false;
+    }
+    // Si se recibe un UID de Amazon, comprobamos si esta enlazado a un usuario de firebase
+    if (strAmazonUID) {
+      const response = await this.isLinked(strAmazonUID);
+      bAccess = response.linked;
+      if (response.linked) {
+        return bAccess;
+      }
+    }
+
+
+    // Si solo recibimos un UID de firebase, comprobamos que existe un usuario con ese UID
+    // Ya que el usuario solo funciona si :
+    // 1. Existe en la base de datos de AlexaUsers, implica que se ha vinculado con Amazon
+    // 2. Existe en la base de datos de Alguno de los proyectos, implica que se ha vinculado con un proyecto
+    // Solo necesitamos uno de los dos para que la peticion sea valida, ya que siempre que se hagan peticiones
+    // se comprobara que el usuario tiene acceso a ese proyecto.
+    if (firebaseUID) {
+      const projectsCol = collection(this.firebaseDB, 'AlexaUsers');
+      const projectSnapShot = await getDocs(projectsCol);
+      const projectList = projectSnapShot.docs.map((doc) => doc.data());
+      // Comprobamos si el usuario esta en la base de datos de AlexaUsers
+      const alexaUser = projectList.find((p) => p.firebaseUID === firebaseUID);
+
+      if (alexaUser) {
+        bAccess = true;
+      } else {
+        // Si no esta en la base de datos de AlexaUsers, comprobamos si esta en algun proyecto
+        const projectsCol = collection(this.firebaseDB, 'projects');
+        const projectSnapShot = await getDocs(projectsCol);
+        const projectList = projectSnapShot.docs.map((doc) => doc.data());
+        // Comprobamos si es owner o esta en la lista de miembros de algun proyecto
+        const project = projectList.find((p) => p.owner === firebaseUID || p.members.includes(firebaseUID));
+        if (project) {
+          bAccess = true;
+        } else {
+          bAccess = false;
+        }
+      }
+    }
+    return bAccess;
   }
 }
 module.exports = ProjectController;

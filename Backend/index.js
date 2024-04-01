@@ -48,19 +48,32 @@ nodeServer.get('/', async (req, res) => {
 
 /** Metodo para vincular un usuario de amazon a un proyecto,
     se recibe por parametros el nombre del proyecto y el UID de amazon.
+    TODOS TIENEN QUE TENER AL MENOS UN FIREBASEUID O UN AMAZONUID
  */
 nodeServer.patch('/bindAmazonUserToProject', async (req, res) => {
   try {
     console.log(req.body);
-    const {projectName, amazonUID} = req.body;
+    const {projectName, amazonUID, firebaseUID} = req.body;
+    // Comprobamos requisitos de Seguridad
+    if (firebaseUID === undefined || amazonUID === undefined) {
+      res.send('No accesible', 403);
+    }
 
+    // Con el controlador de proyectos comprobamos si el usuario tiene acceso
     const projectController = new ProjectController(DB);
-    const response = await projectController.linkAmazonUserToProject(projectName
-        , amazonUID);
-    if (!response) {
-      res.send('Error linking user to project');
+
+    const allowed = await projectController.
+        userAllowedForServerRequests(amazonUID, firebaseUID);
+    if (!allowed) {
+      res.send('No accesible', 403);
     } else {
-      res.send('User linked to project');
+      const response = await projectController.
+          linkAmazonUserToProject(projectName, amazonUID);
+      if (!response) {
+        res.send('Error linking user to project');
+      } else {
+        res.send('User linked to project');
+      }
     }
   } catch (e) {
     console.log(e);
