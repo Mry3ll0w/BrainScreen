@@ -1,3 +1,4 @@
+import 'package:brainscreen/pages/profile/widgets/server_status.dart';
 import 'package:brainscreen/pages/welcome.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,7 +23,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mi Perfil'),
+        title: const Text('Conexiones'),
         backgroundColor: BrainColors.mainBannerColor,
         actions: [
           Padding(
@@ -60,7 +61,7 @@ class _ProfileState extends State<Profile> {
             Center(
               child: Column(children: [
                 Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
+                    padding: const EdgeInsets.only(top: 10.0),
                     child: Column(
                       children: <Widget>[
                         TextButton(
@@ -139,7 +140,7 @@ class _ProfileState extends State<Profile> {
                       ],
                     )),
                 Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
+                    padding: const EdgeInsets.only(top: 10.0),
                     child: Column(
                       children: <Widget>[
                         TextButton(
@@ -232,6 +233,30 @@ class _ProfileState extends State<Profile> {
                         )
                       ],
                     )),
+                Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: BrainColors.backgroundButtonColor,
+                          borderRadius: BorderRadius.circular(20)),
+                      height: 200,
+                      width: 300,
+                      child: const Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'Estado del Servicio de BrainScreen',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 15),
+                            ),
+                          ),
+                          Padding(
+                              padding: EdgeInsets.only(top: 40),
+                              child: ServerStatus()),
+                        ],
+                      ),
+                    ))
               ]),
             ),
           ],
