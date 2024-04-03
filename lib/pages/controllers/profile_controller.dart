@@ -16,22 +16,23 @@ class ProfileController {
         var firebaseUid = GeneralFunctions.getLoggedUserUID();
 
         //1) Buscamos si el usuario ya tiene un registro en la coleccion, primero usando el alexaUID
-        final alexaUsersRef =
-            _db.collection('alexaUsers').where('alexaUID', isEqualTo: alexaUID);
+        final alexaUsersRef = _db
+            .collection('AlexaUsers')
+            .where('amazonUID', isEqualTo: alexaUID);
         QuerySnapshot queryAlexaUIDSearch = await alexaUsersRef.get();
         if (queryAlexaUIDSearch.docs.isNotEmpty) {
-          //Si ya existe un registro con ese alexaUID, entonces lo eliminamos
+          // Si ya existe un registro con ese alexaUID, entonces lo eliminamos
           for (var doc in queryAlexaUIDSearch.docs) {
             // Aunque se usa un for, solo se espera un doc
             await _db
-                .collection('alexaUsers')
+                .collection('AlexaUsers')
                 .doc(doc.id)
                 .update({'firebaseUID': firebaseUid});
           }
         } else {
           // Dado ese id de amazon no hemos encontrado nada, por lo que buscaremos usan
           final firebaseSearchRef = _db
-              .collection('alexaUsers')
+              .collection('AlexaUsers')
               .where('firebaseUID', isEqualTo: firebaseUid);
           QuerySnapshot queryFirebaseUIDSearch = await firebaseSearchRef.get();
           if (queryFirebaseUIDSearch.docs.isNotEmpty) {
@@ -39,15 +40,15 @@ class ProfileController {
             for (var doc in queryFirebaseUIDSearch.docs) {
               // Aunque se usa un for, solo se espera un doc
               await _db
-                  .collection('alexaUsers')
+                  .collection('AlexaUsers')
                   .doc(doc.id)
-                  .update({'alexaUID': alexaUID});
+                  .update({'amazonUID': alexaUID});
             }
           } else {
             //Si no existe un registro con ese alexaUID, entonces lo creamos, ya no es necesario verificar si existe un registro con el firebaseUID
             await _db
-                .collection('alexaUsers')
-                .add({'alexaUID': alexaUID, 'firebaseUID': firebaseUid});
+                .collection('AlexaUsers')
+                .add({'amazonUID': alexaUID, 'firebaseUID': firebaseUid});
           }
         }
       } catch (e) {

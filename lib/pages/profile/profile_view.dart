@@ -1,7 +1,7 @@
 import 'package:brainscreen/pages/welcome.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_json_view/flutter_json_view.dart';
 
@@ -16,7 +16,7 @@ class _ProfileState extends State<Profile> {
   final _user = FirebaseAuth.instance.currentUser;
   final _auth = FirebaseAuth.instance;
 
-  var sName = '';
+  final alexaCodeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -114,19 +114,117 @@ class _ProfileState extends State<Profile> {
                             decoration: BoxDecoration(
                                 color: BrainColors.backgroundButtonColor,
                                 borderRadius: BorderRadius.circular(20)),
-                            child: const Row(
+                            child: const Column(
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10.0),
-                                  child: Text(
-                                    'Configura tu proyecto',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 20),
-                                  ),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        'Configura tu proyecto',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 30),
+                                      child: Icon(Icons.arrow_forward_ios),
+                                    ),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 30),
-                                  child: Icon(Icons.arrow_forward_ios),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    )),
+                Padding(
+                    padding: const EdgeInsets.only(top: 30.0),
+                    child: Column(
+                      children: <Widget>[
+                        TextButton(
+                          onPressed: () => showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => Dialog(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    const Padding(
+                                      padding: EdgeInsets.only(
+                                          top: 20.0, bottom: 15),
+                                      child: Text('Guia de uso'),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      width: 300,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: const Text(
+                                          'Para configurar tu cuenta de Alexa, copia en el campo inferior el codigo dado por la skill de Alexa'),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: TextField(
+                                        controller: alexaCodeController,
+                                        decoration: InputDecoration(
+                                            labelText: 'Codigo de Alexa',
+                                            suffixIcon: IconButton(
+                                                onPressed: () async {
+                                                  final ClipboardData? data =
+                                                      await Clipboard.getData(
+                                                          Clipboard.kTextPlain);
+                                                  if (data != null) {
+                                                    // Actualizamos el valor del TextField de Alexa
+                                                    alexaCodeController.text =
+                                                        data.text!;
+                                                  }
+                                                },
+                                                icon: const Icon(Icons.paste))),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Cerrar'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: BrainColors.backgroundButtonColor,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        'Configurar Alexa',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20),
+                                      ),
+                                    ),
+                                    Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 60),
+                                        child: Image.asset(
+                                          'img/alexaLogo.png',
+                                          width: 50,
+                                          height: 30,
+                                        )),
+                                  ],
                                 ),
                               ],
                             ),
@@ -136,7 +234,6 @@ class _ProfileState extends State<Profile> {
                     )),
               ]),
             ),
-            Container()
           ],
         ),
       )),
