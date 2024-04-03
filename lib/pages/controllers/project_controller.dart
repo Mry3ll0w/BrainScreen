@@ -39,7 +39,6 @@ class ProjectController {
     }
 
     for (var doc in proyectos) {
-      print(doc['name']);
       projects.add(Project(
         doc['name'],
         doc['owner'],

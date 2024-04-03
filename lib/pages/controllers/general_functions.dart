@@ -10,4 +10,9 @@ class GeneralFunctions {
   static bool isUserLogged() {
     return _user != null;
   }
+
+  // Pillamos el UID del usuario logueado
+  static getLoggedUserUID() {
+    return _user!.uid;
+  }
 }
