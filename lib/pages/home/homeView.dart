@@ -36,7 +36,7 @@ class _HomeState extends State<Home> {
           Padding(
             padding: const EdgeInsets.only(right: 11),
             child: IconButton(
-              icon: const Icon(Icons.person_3),
+              icon: const Icon(Icons.account_tree_outlined),
               onPressed: () {
                 if (user != null) {
                   Navigator.push(
