@@ -39,7 +39,8 @@ dependencies:
   cloud_firestore: ^4.15.4
   flutter_launcher_icons: ^0.13.1
   firebase_auth: ^4.17.4
-  flutter_signin_button: ^2.0.0
+  flutter_signin_button: ^2.0.0 # Boton Sign In
+  flutter_json_view: ^1.1.4 #Mostrar de forma mas amigable el formato JSON
 
 dev_dependencies:
   flutter_test:

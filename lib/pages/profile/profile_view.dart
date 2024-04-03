@@ -1,8 +1,9 @@
 import 'package:brainscreen/pages/welcome.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_json_view/flutter_json_view.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key, Key? ky});
@@ -58,71 +59,81 @@ class _ProfileState extends State<Profile> {
             ),
             Center(
               child: Column(children: [
-                TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      sName = value;
-                    });
-                  },
-                  style: const TextStyle(fontStyle: FontStyle.italic),
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.save),
-                      onPressed: () {
-                        _user.updateDisplayName(sName);
-                      },
-                    ),
-                    // Remove the fillColor property
-                    // fillColor: BrainColors.backgroundColor,
-                    filled: true,
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 2.0), // Color del borde cuando está habilitado
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: BrainColors.mainBannerColor,
-                          width: 2.0), // Color del borde cuando está enfocado
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    ),
-                    labelText: _user.displayName ?? 'Sin nombre en google',
-                    hintText: 'Usuario',
-                  ),
-                ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: TextField(
-                    enabled: false,
-                    onChanged: (value) {
-                      setState(() {
-                        sName = value;
-                      });
-                    },
-                    style: const TextStyle(fontStyle: FontStyle.italic),
-                    decoration: InputDecoration(
-                      // Remove the fillColor property
-                      // fillColor: BrainColors.backgroundColor,
-                      filled: true,
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(
-                            width:
-                                2.0), // Color del borde cuando está habilitado
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: BrainColors.mainBannerColor,
-                            width: 2.0), // Color del borde cuando está enfocado
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                      ),
-                      labelText: _user.email ?? 'Sin mail vinculado',
-                      hintText: 'Mail Vinculado, no editable',
-                    ),
-                  ),
-                )
+                    padding: const EdgeInsets.only(top: 30.0),
+                    child: Column(
+                      children: <Widget>[
+                        TextButton(
+                          onPressed: () => showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => Dialog(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    const Padding(
+                                      padding: EdgeInsets.only(
+                                          top: 20.0, bottom: 15),
+                                      child: Text('Guia de uso'),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      width: 300,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: const Text(
+                                          'Para la configuración de tu proyecto, tienes que agregar al cuerpo de tu petición el siguiente código:'),
+                                    ),
+                                    Container(
+                                      height: 300,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: JsonView.string(
+                                        '{"UID": "${_user.uid}"}',
+                                        theme: const JsonViewTheme(
+                                            viewType: JsonViewType.base),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Cerrar'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: BrainColors.backgroundButtonColor,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: const Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10.0),
+                                  child: Text(
+                                    'Configura tu proyecto',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 20),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 30),
+                                  child: Icon(Icons.arrow_forward_ios),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    )),
               ]),
             ),
             Container()
