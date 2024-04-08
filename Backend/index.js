@@ -40,7 +40,12 @@ nodeServer.get('/', async (req, res) => {
     const projectsCol = collection(DB, 'projects');
     const projectSnapShot = await getDocs(projectsCol);
     const projectList = projectSnapShot.docs.map((doc) => doc.data());
-    res.send(projectList);
+    console.log('peticion desde: ' + req.ip);
+    if (projectList.length === 0) {
+      res.status(200).send({database: 'error'});
+    } else {
+      res.status(200).send({database: 'ok'});
+    }
   } catch (e) {
     console.log(e);
   }

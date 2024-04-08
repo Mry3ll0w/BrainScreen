@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 
 class ServerStatus extends StatefulWidget {
   const ServerStatus({super.key});
@@ -19,8 +23,14 @@ class _ServerStatusState extends State<ServerStatus> {
   Future<int> fetchStatusFromServer() async {
     // Realiza la petición al servidor
     // Este es solo un ejemplo, reemplaza esta línea con tu propia lógica de petición
-    await Future.delayed(Duration(seconds: 2)); // Simula un retraso
-    return 200; // Simula una respuesta
+
+    // Obtenemos del .env la URL base del server
+    // var serverUrl = dotenv.env['SERVER_URL'];
+    var response = await http.get(Uri.parse(
+        'http://jsonplaceholder.typicode.com/albums/1')); // ! Cambia la URL por la de tu servidor
+
+    // Comprobamos el body de la respuesta
+    return response.statusCode;
   }
 
   @override

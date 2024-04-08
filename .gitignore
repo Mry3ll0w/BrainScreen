@@ -48,3 +48,4 @@ app.*.map.json
 Backend/node_modules/
 Backend/requests.http
 Backend/brainscreen_backend_key.pem
+.env

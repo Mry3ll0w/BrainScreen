@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -25,7 +25,9 @@ void main() async {
       name: 'BrainScreen',
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    // Inicializa el .env
   }
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
