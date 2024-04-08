@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -26,11 +27,16 @@ class _ServerStatusState extends State<ServerStatus> {
 
     // Obtenemos del .env la URL base del server
     // var serverUrl = dotenv.env['SERVER_URL'];
-    var response = await http.get(Uri.parse(
-        'http://jsonplaceholder.typicode.com/albums/1')); // ! Cambia la URL por la de tu servidor
-
-    // Comprobamos el body de la respuesta
-    return response.statusCode;
+    try {
+      var response = await http
+          .get(Uri.parse('http://jsonplaceholder.typicode.com/albums/1'))
+          .timeout(const Duration(
+              seconds: 30)); // ! Cambia la URL por la de tu servidor
+      // Comprobamos el body de la respuesta
+      return response.statusCode;
+    } on TimeoutException {
+      return 408;
+    }
   }
 
   @override

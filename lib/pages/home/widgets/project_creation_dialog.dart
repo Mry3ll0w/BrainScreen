@@ -61,6 +61,8 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
                               const BorderRadius.all(Radius.circular(10)),
                         ),
                         labelText: 'Nombre del Proyecto',
+                        helperText:
+                            'No puede tener caracteres especiales\nni números',
                       )),
                 ),
                 ElevatedButton(
@@ -77,6 +79,12 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
     if (name.isEmpty) {
       setState(() {
         errorText = 'El nombre del proyecto no puede estar vacío';
+      });
+    } else if (!name.contains(RegExp(r'^[a-zA-Z ]+$'))) {
+      // No puede tener caracteres especiales ni numericos
+      setState(() {
+        errorText =
+            'El nombre del proyecto no puede tener caracteres\nespeciales ni números ';
       });
     } else {
       //If not empty now we check if the name is already taken
