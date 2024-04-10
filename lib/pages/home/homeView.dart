@@ -1,6 +1,7 @@
 import 'package:brainscreen/pages/home/home_controller.dart';
 import 'package:brainscreen/pages/home/widgets/project_creation_dialog.dart';
 import 'package:brainscreen/pages/profile/profile_view.dart';
+import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -115,17 +116,56 @@ class _HomeState extends State<Home> {
     ));
   }
 
-  Widget noProjects() {
-    return const Center(
-      child: Text('No tienes proyectos, crea uno!'),
-    );
-  }
-
   Widget chargeToHome(Widget? widgeToLoad) {
     if (widgeToLoad != null) {
       return widgeToLoad;
     } else {
-      return noProjects();
+      if (projectList.length == 0) {
+        // ! RECUERDA CAMBIAR A > 1 para q funcione
+        return const Center(
+          child: Text('Selecciona un proyecto para comenzar'),
+        );
+      } else {
+        return Center(
+            child: Column(children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              radius: 100,
+              child: ClipOval(
+                child: Image.asset('img/no_projects_icon.jpeg'),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+                decoration: BoxDecoration(
+                  color: BrainColors.backgroundButtonColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Para crear tu lienzo, primero necesitarás un proyecto.\nPulsa en :',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(top: 30, bottom: 30),
+                        child: Center(
+                            child: Icon(
+                          Icons.menu,
+                          size: 50,
+                        ))),
+                  ],
+                )),
+          )
+        ]));
+      }
     }
   }
 

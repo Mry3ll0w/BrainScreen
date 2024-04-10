@@ -82,6 +82,7 @@ flutter:
     - img/logo.jpeg
     - img/google_logo.png
     - img/alexaLogo.png
+    - img/no_projects_icon.jpeg
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
