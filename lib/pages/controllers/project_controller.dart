@@ -60,4 +60,41 @@ class ProjectController {
     }
     return members;
   }
+
+  static Future<String> changeCurrentUserProjectName(
+      String strProjectName, String newName) async {
+    String sResult = 'ok';
+    // Comprobamos si el usuario es propietario del proyecto o esta en la lista de miembros
+    QuerySnapshot queryOwner = await db
+        .collection('projects')
+        .where('owner', isEqualTo: _auth.currentUser!.uid)
+        .where('name', isEqualTo: strProjectName)
+        .get();
+
+    if (queryOwner.docs.isEmpty) {
+      QuerySnapshot queryMember = await db
+          .collection('projects')
+          .where('members', arrayContains: _auth.currentUser!.uid)
+          .where('name', isEqualTo: strProjectName)
+          .get();
+      if (queryMember.docs.isEmpty) {
+        sResult = 'No tienes permisos para cambiar el nombre de este proyecto';
+      } else {
+        // Pertenece a la lista de miembros, por lo que actualizamos el nombre
+        db
+            .collection('projects')
+            .doc(queryMember.docs[0].id)
+            .update({'name': newName});
+      }
+    } else {
+      // Pertenece al usuario, por lo que actualizamos el nombre
+      db
+          .collection('projects')
+          .doc(queryOwner.docs[0].id)
+          .update({'name': newName});
+    }
+
+    // Devolvemos el resultado de la operacion
+    return sResult;
+  }
 }

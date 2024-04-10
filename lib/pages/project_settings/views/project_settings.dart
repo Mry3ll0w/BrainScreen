@@ -107,7 +107,7 @@ class _ProjectSettingsState extends State<ProjectSettings> {
     }
   }
 
-  Future<void> changeProjectName() {
+  Future<void> changeProjectName() async {
     if (strErrorTextNameField != null || strProjectName == '' || user == null) {
       //Depending on the error or success we show a dialog, if there is an error we show the error.
       return showDialog<void>(
@@ -136,30 +136,55 @@ class _ProjectSettingsState extends State<ProjectSettings> {
         },
       );
     } else {
-      //ProjectController.createProyect(Project(strProjectName, user!.uid));
-      return showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('¡Proyecto creado con éxito!'),
-            content: const Text(
-              'Se ha cambiado el nombre \n'
-              'puedes continuar cuando quieras.\n',
-            ),
-            actions: <Widget>[
-              TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: Theme.of(context).textTheme.labelLarge,
-                ),
-                child: const Text('Cerrar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        },
-      );
+      final String resolution =
+          await ProjectController.changeCurrentUserProjectName(
+              widget.proyectName, strProjectName);
+      if (resolution == 'ok') {
+        return showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('¡Proyecto creado con éxito!'),
+              content: const Text(
+                'Se ha cambiado el nombre \n'
+                'puedes continuar cuando quieras.\n',
+              ),
+              actions: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  child: const Text('Cerrar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          },
+        );
+      } else {
+        return showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('¡Se ha producido un error!'),
+              content: Text(resolution),
+              actions: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  child: const Text('Cerrar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          },
+        );
+      }
     }
   }
 }
