@@ -153,8 +153,8 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
                 child: const Text('Cerrar'),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Home()));
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Home()));
                 },
               )
             ],

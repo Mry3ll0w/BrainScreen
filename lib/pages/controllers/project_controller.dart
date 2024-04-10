@@ -46,4 +46,18 @@ class ProjectController {
     }
     return projects;
   }
+
+  // Dado el nombre de un proyecto, devuelve la lista de miembros (propietario y participantes)
+  static Future<List<String>> getMembersFromProject(String projectName) async {
+    List<String> members = [];
+    QuerySnapshot query = await db
+        .collection('projects')
+        .where('name', isEqualTo: projectName)
+        .get();
+    for (var doc in query.docs) {
+      members = List<String>.from(doc['members']);
+      members.add(doc['owner']);
+    }
+    return members;
+  }
 }

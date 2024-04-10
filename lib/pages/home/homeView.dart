@@ -5,7 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  Widget? childrenView;
+  Home({
+    this.childrenView,
+    super.key,
+  });
 
   @override
   State<Home> createState() => _HomeState();
@@ -23,7 +27,7 @@ class _HomeState extends State<Home> {
       backgroundColor: const Color(0xFFDCF2F1),
       key: _scaffoldKey, // Assign the key to the Scaffold
       appBar: AppBar(
-        title: const Text("Panel de Control"),
+        title: const Text("BrainScreen"),
         backgroundColor: const Color(0xFF5edce6),
         centerTitle: true,
         leading: IconButton(
@@ -41,7 +45,7 @@ class _HomeState extends State<Home> {
                 if (user != null) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Profile()),
+                    MaterialPageRoute(builder: (context) => const Profile()),
                   );
                 }
               }, // Open the drawer
@@ -54,8 +58,8 @@ class _HomeState extends State<Home> {
         backgroundColor: const Color(0xFFDCF2F1),
         child: ListView(padding: EdgeInsets.zero, children: projectList),
       ),
-      body: chargeToHome(
-          projectList.isEmpty ? noProjects() : const Text("Tiene Proyectos")),
+      body: chargeToHome(widget
+          .childrenView), // ! El elemeto a cargar es el 1er proyecto q tengas
       // ... rest of your code
     );
   }
@@ -107,12 +111,16 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget chargeToHome(Widget widgeToLoad) {
-    return widgeToLoad;
+  Widget chargeToHome(Widget? widgeToLoad) {
+    if (widgeToLoad != null) {
+      return widgeToLoad;
+    } else {
+      return noProjects();
+    }
   }
 
   void _openCreateProjectButton() {
     showModalBottomSheet(
-        context: context, builder: (ctx) => ProjectCreationModal());
+        context: context, builder: (ctx) => const ProjectCreationModal());
   }
 }

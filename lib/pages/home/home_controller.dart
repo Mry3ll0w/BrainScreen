@@ -1,4 +1,7 @@
 import 'package:brainscreen/pages/controllers/project_controller.dart';
+import 'package:brainscreen/pages/home/homeView.dart';
+import 'package:brainscreen/pages/profile/profile_view.dart';
+import 'package:brainscreen/pages/project_settings/views/project_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -14,7 +17,24 @@ class HomeController {
       //We add the proyects to the list
       for (var proyect in value) {
         res.add(ListTile(
-          title: Text(proyect.name),
+          title: Row(
+            children: <Widget>[
+              Text(proyect.name),
+              IconButton(
+                icon: const Icon(
+                    Icons.settings), // Cambia esto por el icono que quieras
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Home(
+                              childrenView: Text('HOLA'),
+                            )), // Replace NewView with the class of your new view
+                  );
+                },
+              ),
+            ],
+          ),
           onTap: () {
             // Update the state of the app.
             // Then close the drawer.
@@ -36,9 +56,7 @@ class HomeController {
         .get();
 
     //We check if the user has any proyects
-    for (var doc in querySnapshot.docs) {
-      print(doc.data());
-    }
+
     hasProyects = querySnapshot.docs.isNotEmpty;
     return hasProyects;
   }
