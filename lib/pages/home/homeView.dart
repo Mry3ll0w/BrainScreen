@@ -5,11 +5,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  Widget? childrenView;
-  Home({
+  final Widget? childrenView;
+  final String? title;
+
+  // Constructor para Home con nombre variable
+  const Home.named({
     this.childrenView,
+    required this.title,
     super.key,
   });
+
+  //Predefinido
+  const Home({
+    this.childrenView,
+    super.key,
+  }) : title = 'BrainScreen';
 
   @override
   State<Home> createState() => _HomeState();
@@ -27,7 +37,7 @@ class _HomeState extends State<Home> {
       backgroundColor: const Color(0xFFDCF2F1),
       key: _scaffoldKey, // Assign the key to the Scaffold
       appBar: AppBar(
-        title: const Text("BrainScreen"),
+        title: Text(widget.title ?? 'BrainScreen'),
         backgroundColor: const Color(0xFF5edce6),
         centerTitle: true,
         leading: IconButton(

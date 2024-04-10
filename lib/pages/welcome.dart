@@ -99,7 +99,9 @@ class _WelcomeHomeState extends State<WelcomeHome>
       ),
     );
      */
-    return Home();
+    return const Home.named(
+      title: 'BrainScreen',
+    );
   }
 
   void handleGoogleSignIn() {

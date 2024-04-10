@@ -27,8 +27,11 @@ class HomeController {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Home(
-                              childrenView: Text('HOLA'),
+                        builder: (context) => Home.named(
+                              childrenView: ProjectSettings(
+                                proyectName: proyect.name,
+                              ),
+                              title: 'Ajustes',
                             )), // Replace NewView with the class of your new view
                   );
                 },
