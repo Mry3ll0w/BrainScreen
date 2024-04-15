@@ -83,36 +83,53 @@ class _ProjectSettingsState extends State<ProjectSettings> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: FutureBuilder(
-                future: ProjecSettingsController.getMembersFromProject(
-                    widget.projectName), // Reemplaza esto con tu Future
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    // Devolvemos un ListView con los usuarios
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          title: Text(snapshot.data[index]),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              // Eliminar usuario
-                            },
-                          ),
-                        );
-                      },
-                    );
-                  }
-                },
-              ),
-            ),
+                padding: const EdgeInsets.only(top: 20.0),
+                child: FutureBuilder(
+                  future: ProjecSettingsController.getMembersFromProject(
+                      widget.projectName),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            // Si el índice es 0, devuelve una ListTile que dice "Agregar usuario"
+                            return ListTile(
+                              title: TextButton(
+                                onPressed: () {},
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            BrainColors.backgroundButtonColor)),
+                                child: const Text('Agregar usuario'),
+                              ),
+                            );
+                          } else {
+                            // Si el índice no es 0, devuelve la ListTile para el usuario
+                            var user = snapshot.data[index -
+                                1]; // Usa index - 1 para obtener el usuario correcto
+                            return Card(
+                              child: ListTile(
+                                leading: const Icon(Icons.person),
+                                title: Text(user.toString()),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.more_vert),
+                                  onPressed: () {},
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    }
+                  },
+                )),
           ],
         ),
       ),
