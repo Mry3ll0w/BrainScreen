@@ -56,12 +56,10 @@ class _HomeState extends State<Home> {
             child: IconButton(
               icon: const Icon(Icons.account_tree_outlined),
               onPressed: () {
-                if (user != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Profile()),
-                  );
-                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Profile()),
+                );
               }, // Open the drawer
               tooltip: 'Perfil',
             ),

@@ -1,11 +1,12 @@
+import 'package:brainscreen/pages/project_settings/controllers/project_settings_controller.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:brainscreen/pages/controllers/project_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ProjectSettings extends StatefulWidget {
-  final String proyectName;
-  const ProjectSettings({super.key, required this.proyectName});
+  final String projectName;
+  const ProjectSettings({super.key, required this.projectName});
 
   @override
   State<ProjectSettings> createState() => _ProjectSettingsState();
@@ -58,7 +59,7 @@ class _ProjectSettingsState extends State<ProjectSettings> {
                           width: 2.0), // Color del borde cuando está enfocado
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                     ),
-                    labelText: widget.proyectName,
+                    labelText: widget.projectName,
                     hintText:
                         'Recuerda, el nombre del proyecto no puede tener numeros',
                     errorText: strErrorTextNameField),
@@ -83,37 +84,32 @@ class _ProjectSettingsState extends State<ProjectSettings> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
-              child: TextField(
-                style: const TextStyle(fontStyle: FontStyle.italic),
-                decoration: InputDecoration(
-                    fillColor: BrainColors.backgroundColor,
-                    filled: true,
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 2.0), // Color del borde cuando está habilitado
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.save),
-                      onPressed: () {
-                        changeProjectName();
+              child: FutureBuilder(
+                future: ProjecSettingsController.getMembersFromProject(
+                    widget.projectName), // Reemplaza esto con tu Future
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    // Devolvemos un ListView con los usuarios
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          title: Text(snapshot.data[index]),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              // Eliminar usuario
+                            },
+                          ),
+                        );
                       },
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: BrainColors.mainBannerColor,
-                          width: 2.0), // Color del borde cuando está enfocado
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    ),
-                    labelText: widget.proyectName,
-                    hintText:
-                        'Recuerda, el nombre del proyecto no puede tener numeros',
-                    errorText: strErrorTextNameField),
-                onChanged: (value) => {
-                  checkProjectName(value),
-                  setState(() {
-                    strProjectName = value;
-                  })
+                    );
+                  }
                 },
               ),
             ),
@@ -185,7 +181,7 @@ class _ProjectSettingsState extends State<ProjectSettings> {
     } else {
       final String resolution =
           await ProjectController.changeCurrentUserProjectName(
-              widget.proyectName, strProjectName);
+              widget.projectName, strProjectName);
       if (resolution == 'ok') {
         return showDialog<void>(
           context: context,

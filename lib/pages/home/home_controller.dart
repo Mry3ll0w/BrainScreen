@@ -1,6 +1,5 @@
 import 'package:brainscreen/pages/controllers/project_controller.dart';
 import 'package:brainscreen/pages/home/homeView.dart';
-import 'package:brainscreen/pages/profile/profile_view.dart';
 import 'package:brainscreen/pages/project_settings/views/project_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,7 +28,7 @@ class HomeController {
                     MaterialPageRoute(
                         builder: (context) => Home.named(
                               childrenView: ProjectSettings(
-                                proyectName: proyect.name,
+                                projectName: proyect.name,
                               ),
                               title: 'Ajustes',
                             )), // Replace NewView with the class of your new view
