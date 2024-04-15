@@ -1,3 +1,4 @@
+import 'package:brainscreen/pages/project_settings/components/add_user_dialog.dart';
 import 'package:brainscreen/pages/project_settings/controllers/project_settings_controller.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:flutter/material.dart';
@@ -99,10 +100,24 @@ class _ProjectSettingsState extends State<ProjectSettings> {
                         itemCount: snapshot.data.length + 1,
                         itemBuilder: (context, index) {
                           if (index == 0) {
-                            // Si el índice es 0, devuelve una ListTile que dice "Agregar usuario"
+                            // Si el índice es 0, devuelve una ListTile para agregar un usuario
                             return ListTile(
                               title: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  // Abre el diálogo para agregar un usuario
+                                  AlertDialog dialog = AlertDialog(
+                                    title: const Text('Agregar usuario'),
+                                    content: AddUserDialog(
+                                      projectName: widget.projectName,
+                                    ),
+                                  );
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return dialog;
+                                    },
+                                  );
+                                },
                                 style: ButtonStyle(
                                     backgroundColor:
                                         MaterialStateProperty.all<Color>(
@@ -120,7 +135,9 @@ class _ProjectSettingsState extends State<ProjectSettings> {
                                 title: Text(user.toString()),
                                 trailing: IconButton(
                                   icon: const Icon(Icons.more_vert),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    // Lista de opciones para crear, eliminar o modificar un usuario
+                                  },
                                 ),
                               ),
                             );
