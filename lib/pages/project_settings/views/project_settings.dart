@@ -70,6 +70,53 @@ class _ProjectSettingsState extends State<ProjectSettings> {
                 },
               ),
             ),
+            const Padding(
+              padding: EdgeInsets.only(top: 20.0),
+              child: Center(
+                child: Text(
+                  'Participantes',
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: TextField(
+                style: const TextStyle(fontStyle: FontStyle.italic),
+                decoration: InputDecoration(
+                    fillColor: BrainColors.backgroundColor,
+                    filled: true,
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                          width: 2.0), // Color del borde cuando está habilitado
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.save),
+                      onPressed: () {
+                        changeProjectName();
+                      },
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: BrainColors.mainBannerColor,
+                          width: 2.0), // Color del borde cuando está enfocado
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    ),
+                    labelText: widget.proyectName,
+                    hintText:
+                        'Recuerda, el nombre del proyecto no puede tener numeros',
+                    errorText: strErrorTextNameField),
+                onChanged: (value) => {
+                  checkProjectName(value),
+                  setState(() {
+                    strProjectName = value;
+                  })
+                },
+              ),
+            ),
           ],
         ),
       ),

@@ -91,4 +91,24 @@ class HomeController {
       );
     }
   }
+
+  // Funcion para bypasear el tener q pagar firebase admin features
+
+  static void registerCurrentUserIfNotCreated(
+      String userID, String userMail) async {
+    // Check if the user is already registered
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('LoggedUsers')
+        .where('uid', isEqualTo: userID)
+        .where('email', isEqualTo: userMail)
+        .get();
+
+    // Si no existe el usuario lo creamos, en otro caso no hacemos nada
+    if (querySnapshot.docs.isEmpty) {
+      await FirebaseFirestore.instance.collection('LoggedUsers').add({
+        'uid': userID,
+        'email': userMail,
+      });
+    }
+  }
 }

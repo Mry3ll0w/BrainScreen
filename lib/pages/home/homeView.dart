@@ -33,6 +33,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
+    // Bypass firebaseFunctions
+    HomeController.registerCurrentUserIfNotCreated(user!.uid, user.email!);
+
     initializeProjectList();
     return Scaffold(
       backgroundColor: const Color(0xFFDCF2F1),
