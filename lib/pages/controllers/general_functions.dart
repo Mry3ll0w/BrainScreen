@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GeneralFunctions {
   GeneralFunctions._();
@@ -14,5 +15,14 @@ class GeneralFunctions {
   // Pillamos el UID del usuario logueado
   static getLoggedUserUID() {
     return _user!.uid;
+  }
+
+  static Future<String> getUserMailByUID(String uid) async {
+    // Obtenemos los datos del usuario Logged usando el UID dado
+    var QuerySnapshot = await FirebaseFirestore.instance
+        .collection('LoggedUsers')
+        .where('uid', isEqualTo: uid)
+        .get();
+    return QuerySnapshot.docs[0]['email'];
   }
 }

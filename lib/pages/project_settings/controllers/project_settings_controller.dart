@@ -1,3 +1,4 @@
+import 'package:brainscreen/pages/controllers/general_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -29,20 +30,25 @@ class ProjecSettingsController {
 
     for (var doc in query.docs) {
       members = List<String>.from(doc['members']);
-      members.add(doc['owner']);
+      // Si la lista no tiene el propietario, lo añadimos
+      if (!members.contains(doc['owner'])) {
+        members.add(doc['owner']);
+      }
     }
 
     // Una vez tenemos los uid de los miembros, los convertimos a emails comparandolos con la lista de projects
+    List<String> membersCopy = List<String>.from(members);
+
     List<String> membersMails = [];
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('LoggedUsers').get();
 
     for (var doc in querySnapshot.docs) {
-      if (members.contains(doc['uid'])) {
-        membersMails.add(doc['email']);
-      }
+      // Usamos la funcion general getUserMailByUID
+      var sMail = await GeneralFunctions.getUserMailByUID(doc['uid']);
+      membersMails.add(sMail);
     }
-
+    print(membersMails.toString());
     return membersMails;
   }
 }

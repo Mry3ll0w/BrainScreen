@@ -1,3 +1,4 @@
+import 'package:brainscreen/pages/controllers/project_controller.dart';
 import 'package:brainscreen/pages/project_settings/controllers/project_settings_controller.dart';
 import 'package:brainscreen/pages/project_settings/views/project_settings.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
@@ -25,6 +26,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
 
   final user = FirebaseAuth.instance.currentUser;
   String strProjectName = '';
+  String strMemberEmail = '';
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -68,7 +70,9 @@ class _AddUserDialogState extends State<AddUserDialog> {
                                     });
                                   },
                                   onSelected: (String selection) {
-                                    print('Has seleccionado: $selection');
+                                    setState(() {
+                                      strMemberEmail = selection;
+                                    });
                                   },
                                   fieldViewBuilder: (BuildContext context,
                                       TextEditingController
@@ -104,8 +108,8 @@ class _AddUserDialogState extends State<AddUserDialog> {
                               }
                             })),
                     ElevatedButton(
-                        onPressed: () => addMember('elpepe'),
-                        child: const Text('Agregar miembro'))
+                        onPressed: () => addMember(strMemberEmail),
+                        child: const Text('Agregar miembro')) //! FIX
                   ],
                 )),
           ],
@@ -135,7 +139,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
 
   //Create the project
   void addMember(String member) async {
-    if (errorText != null || strProjectName == '' || user == null) {
+    if (errorText != null || widget.projectName == '' || user == null) {
       //Depending on the error or success we show a dialog, if there is an error we show the error.
       return showDialog<void>(
         context: context,
@@ -163,35 +167,8 @@ class _AddUserDialogState extends State<AddUserDialog> {
         },
       );
     } else {
-      //ProjectController.createProyect(Project(strProjectName, user!.uid));
-      return showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('¡Miembro creado con éxito!'),
-            content: const Text(
-              'Se ha agreagado ese miembro  con éxito\n'
-              'puedes cerrar el dialogo cuando quieras 💻 \n',
-            ),
-            actions: <Widget>[
-              TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: Theme.of(context).textTheme.labelLarge,
-                ),
-                child: const Text('Cerrar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProjectSettings(
-                              projectName: widget.projectName)));
-                },
-              )
-            ],
-          );
-        },
-      );
+      ProjectController.addMemberToProject(widget.projectName, member);
+      Navigator.of(context).pop();
     }
   }
 }

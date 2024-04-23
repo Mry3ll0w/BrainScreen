@@ -97,4 +97,49 @@ class ProjectController {
     // Devolvemos el resultado de la operacion
     return sResult;
   }
+
+  static void addMemberToProject(String strProjectName, String sMail) async {
+    if (strProjectName == '' || sMail == '') {
+      return;
+    } else {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('LoggedUsers')
+          .where('email', isEqualTo: sMail)
+          .get();
+      if (querySnapshot.docs.isEmpty) {
+        print('No existe el usuario');
+        return;
+      } else {
+        // Usamos las QuerySnapshot para obtener el uid del usuario
+        String sUID = querySnapshot.docs[0].id;
+        // Metemos ese uid en la lista de miembros del proyecto, en caso de que no este ya en miembros u owner
+        QuerySnapshot queryOwner = await db
+            .collection('projects')
+            .where('owner', isEqualTo: _auth.currentUser!.uid)
+            .where('name', isEqualTo: strProjectName)
+            .get();
+        // Si no es propietario, comprobamos si es miembro
+        if (queryOwner.docs.isEmpty) {
+          QuerySnapshot queryMember = await db
+              .collection('projects')
+              .where('members', arrayContains: _auth.currentUser!.uid)
+              .where('name', isEqualTo: strProjectName)
+              .get();
+          if (queryMember.docs.isEmpty) {
+            print('No tienes permisos para añadir miembros a este proyecto');
+          } else {
+            // Pertenece a la lista de miembros, por lo que actualizamos el nombre
+            db.collection('projects').doc(queryMember.docs[0].id).update({
+              'members': FieldValue.arrayUnion([sUID])
+            });
+          }
+        } else {
+          // Pertenece al usuario, por lo que actualizamos el nombre
+          db.collection('projects').doc(queryOwner.docs[0].id).update({
+            'members': FieldValue.arrayUnion([sUID])
+          });
+        }
+      }
+    }
+  }
 }
