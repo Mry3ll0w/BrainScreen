@@ -15,9 +15,14 @@ class ProjectSettings extends StatefulWidget {
 
 class _ProjectSettingsState extends State<ProjectSettings> {
   String? strErrorTextNameField;
-
+  // ! PASAR A FUTURE BUILDER PARA FETCH DATA
   String strProjectName = '';
   final user = FirebaseAuth.instance.currentUser;
+
+  Future<void> _dataFetching() async {
+    await ProjecSettingsController.getMembersFromProject(widget.projectName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(

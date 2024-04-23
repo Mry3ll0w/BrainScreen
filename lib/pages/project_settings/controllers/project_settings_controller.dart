@@ -35,20 +35,18 @@ class ProjecSettingsController {
         members.add(doc['owner']);
       }
     }
+    print(members.toString());
 
     // Una vez tenemos los uid de los miembros, los convertimos a emails comparandolos con la lista de projects
-    List<String> membersCopy = List<String>.from(members);
 
     List<String> membersMails = [];
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('LoggedUsers').get();
 
-    for (var doc in querySnapshot.docs) {
+    for (var member in members) {
       // Usamos la funcion general getUserMailByUID
-      var sMail = await GeneralFunctions.getUserMailByUID(doc['uid']);
-      membersMails.add(sMail);
+      var sMail = await GeneralFunctions.getUserMailByUID(member);
+      if (sMail != '') membersMails.add(sMail);
     }
-    print(membersMails.toString());
+
     return membersMails;
   }
 }

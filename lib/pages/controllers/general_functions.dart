@@ -23,6 +23,10 @@ class GeneralFunctions {
         .collection('LoggedUsers')
         .where('uid', isEqualTo: uid)
         .get();
-    return QuerySnapshot.docs[0]['email'];
+    if (QuerySnapshot.docs.isNotEmpty) {
+      return QuerySnapshot.docs[0]['email'];
+    } else {
+      return '';
+    }
   }
 }

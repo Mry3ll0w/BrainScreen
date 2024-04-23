@@ -109,7 +109,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                             })),
                     ElevatedButton(
                         onPressed: () => addMember(strMemberEmail),
-                        child: const Text('Agregar miembro')) //! FIX
+                        child: const Text('Agregar miembro'))
                   ],
                 )),
           ],
