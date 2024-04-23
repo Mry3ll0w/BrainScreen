@@ -111,7 +111,7 @@ class ProjectController {
         return;
       } else {
         // Usamos las QuerySnapshot para obtener el uid del usuario
-        String sUID = querySnapshot.docs[0].id;
+        String sUID = querySnapshot.docs[0]['uid'];
         // Metemos ese uid en la lista de miembros del proyecto, en caso de que no este ya en miembros u owner
         QuerySnapshot queryOwner = await db
             .collection('projects')

@@ -35,7 +35,6 @@ class ProjecSettingsController {
         members.add(doc['owner']);
       }
     }
-    print(members.toString());
 
     // Una vez tenemos los uid de los miembros, los convertimos a emails comparandolos con la lista de projects
 
@@ -44,6 +43,7 @@ class ProjecSettingsController {
     for (var member in members) {
       // Usamos la funcion general getUserMailByUID
       var sMail = await GeneralFunctions.getUserMailByUID(member);
+      print(member);
       if (sMail != '') membersMails.add(sMail);
     }
 

@@ -15,94 +15,93 @@ class ProjectSettings extends StatefulWidget {
 
 class _ProjectSettingsState extends State<ProjectSettings> {
   String? strErrorTextNameField;
-  // ! PASAR A FUTURE BUILDER PARA FETCH DATA
+
   String strProjectName = '';
   final user = FirebaseAuth.instance.currentUser;
 
-  Future<void> _dataFetching() async {
-    await ProjecSettingsController.getMembersFromProject(widget.projectName);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 20.0),
-              child: Center(
-                child: Text(
-                  'Nombre del Proyecto',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: TextField(
-                style: const TextStyle(fontStyle: FontStyle.italic),
-                decoration: InputDecoration(
-                    fillColor: BrainColors.backgroundColor,
-                    filled: true,
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 2.0), // Color del borde cuando está habilitado
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+    return FutureBuilder(
+      future:
+          ProjecSettingsController.getMembersFromProject(widget.projectName),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (snapshot.connectionState == ConnectionState.done) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: Center(
+                      child: Text(
+                        'Nombre del Proyecto',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
                     ),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.save),
-                      onPressed: () {
-                        changeProjectName();
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: TextField(
+                      style: const TextStyle(fontStyle: FontStyle.italic),
+                      decoration: InputDecoration(
+                          fillColor: BrainColors.backgroundColor,
+                          filled: true,
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width:
+                                    2.0), // Color del borde cuando está habilitado
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.save),
+                            onPressed: () {
+                              changeProjectName();
+                            },
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: BrainColors.mainBannerColor,
+                                width:
+                                    2.0), // Color del borde cuando está enfocado
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                          ),
+                          labelText: widget.projectName,
+                          hintText:
+                              'Recuerda, el nombre del proyecto no puede tener numeros',
+                          errorText: strErrorTextNameField),
+                      onChanged: (value) => {
+                        checkProjectName(value),
+                        setState(() {
+                          strProjectName = value;
+                        })
                       },
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: BrainColors.mainBannerColor,
-                          width: 2.0), // Color del borde cuando está enfocado
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    ),
-                    labelText: widget.projectName,
-                    hintText:
-                        'Recuerda, el nombre del proyecto no puede tener numeros',
-                    errorText: strErrorTextNameField),
-                onChanged: (value) => {
-                  checkProjectName(value),
-                  setState(() {
-                    strProjectName = value;
-                  })
-                },
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(top: 20.0),
-              child: Center(
-                child: Text(
-                  'Participantes',
-                  style: TextStyle(
-                    fontSize: 20,
                   ),
-                ),
-              ),
-            ),
-            Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: FutureBuilder(
-                  future: ProjecSettingsController.getMembersFromProject(
-                      widget.projectName),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      return ListView.builder(
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: Center(
+                      child: Text(
+                        'Participantes',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data.length + 1,
+                        itemCount: (snapshot.data?.length ?? 0) + 1,
                         itemBuilder: (context, index) {
                           if (index == 0) {
                             // Si el índice es 0, devuelve una ListTile para agregar un usuario
@@ -132,8 +131,10 @@ class _ProjectSettingsState extends State<ProjectSettings> {
                             );
                           } else {
                             // Si el índice no es 0, devuelve la ListTile para el usuario
-                            var user = snapshot.data[index -
-                                1]; // Usa index - 1 para obtener el usuario correcto
+                            var user = snapshot.data != null &&
+                                    index - 1 < snapshot.data.length
+                                ? snapshot.data[index - 1]
+                                : null; // Usa index - 1 para obtener el usuario correcto
                             return Card(
                               child: ListTile(
                                 leading: const Icon(Icons.person),
@@ -148,13 +149,15 @@ class _ProjectSettingsState extends State<ProjectSettings> {
                             );
                           }
                         },
-                      );
-                    }
-                  },
-                )),
-          ],
-        ),
-      ),
+                      )),
+                ],
+              ),
+            ),
+          );
+        } else {
+          return const Text('Error');
+        }
+      },
     );
   }
 
