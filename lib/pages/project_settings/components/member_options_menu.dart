@@ -1,4 +1,6 @@
 import 'package:brainscreen/pages/controllers/project_controller.dart';
+import 'package:brainscreen/pages/project_settings/controllers/project_settings_controller.dart';
+import 'package:brainscreen/pages/project_settings/views/project_settings.dart';
 import 'package:flutter/material.dart';
 
 class MemberOptionsMenu extends StatefulWidget {
@@ -73,7 +75,9 @@ class _MemberOptionsMenuState extends State<MemberOptionsMenu> {
               child: GestureDetector(
                 onTap: () {
                   // Realiza la acción de borrar miembro
-                  Navigator.pop(context); // Cierra el menú
+                  ProjectSettingsController.deleteMemberFromProject(
+                      widget.projectName!, widget.userMail!);
+                  Navigator.popUntil(context, (route) => route.isFirst);
                 },
                 child: const Row(children: [
                   Text('Borrar miembro'),

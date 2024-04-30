@@ -24,7 +24,7 @@ class _ProjectSettingsState extends State<ProjectSettings> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future:
-          ProjecSettingsController.getMembersFromProject(widget.projectName),
+          ProjectSettingsController.getMembersFromProject(widget.projectName),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();

@@ -19,7 +19,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
   @override
   void initState() {
     super.initState();
-    _usersEmails = ProjecSettingsController.getAllUsersEmail();
+    _usersEmails = ProjectSettingsController.getAllUsersEmail();
   }
 
   //Users mails to autocomplete

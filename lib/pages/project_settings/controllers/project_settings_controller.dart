@@ -2,7 +2,7 @@ import 'package:brainscreen/pages/controllers/general_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class ProjecSettingsController {
+class ProjectSettingsController {
   static Future<List<String>> getAllUsersEmail() async {
     List<String> users = [];
     final currentUser = FirebaseAuth.instance.currentUser;
