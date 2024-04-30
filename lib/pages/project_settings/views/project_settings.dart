@@ -1,4 +1,5 @@
 import 'package:brainscreen/pages/project_settings/components/add_user_dialog.dart';
+import 'package:brainscreen/pages/project_settings/components/member_options_menu.dart';
 import 'package:brainscreen/pages/project_settings/controllers/project_settings_controller.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:flutter/material.dart';
@@ -99,6 +100,7 @@ class _ProjectSettingsState extends State<ProjectSettings> {
                   Padding(
                       padding: const EdgeInsets.only(top: 20.0),
                       child: ListView.builder(
+                        //! Estilar OWNER y agregar icono de eliminar
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: (snapshot.data?.length ?? 0) + 1,
@@ -135,16 +137,12 @@ class _ProjectSettingsState extends State<ProjectSettings> {
                                     index - 1 < snapshot.data.length
                                 ? snapshot.data[index - 1]
                                 : null; // Usa index - 1 para obtener el usuario correcto
+
                             return Card(
                               child: ListTile(
                                 leading: const Icon(Icons.person),
                                 title: Text(user.toString()),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.more_vert),
-                                  onPressed: () {
-                                    // Lista de opciones para crear, eliminar o modificar un usuario
-                                  },
-                                ),
+                                trailing: MemberOptionsMenu(),
                               ),
                             );
                           }

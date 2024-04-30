@@ -1,3 +1,4 @@
+import 'package:brainscreen/pages/controllers/general_functions.dart';
 import 'package:brainscreen/pages/models/project_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -141,5 +142,17 @@ class ProjectController {
         }
       }
     }
+  }
+
+  static Future<String> getOwnerEmailFromProject(String projectName) async {
+    String sOwnerMail = '';
+    QuerySnapshot query = await db
+        .collection('projects')
+        .where('name', isEqualTo: projectName)
+        .get();
+    for (var doc in query.docs) {
+      sOwnerMail = await GeneralFunctions.getUserMailByUID(doc['owner']);
+    }
+    return sOwnerMail;
   }
 }

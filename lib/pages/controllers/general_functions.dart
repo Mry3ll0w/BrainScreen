@@ -19,12 +19,25 @@ class GeneralFunctions {
 
   static Future<String> getUserMailByUID(String uid) async {
     // Obtenemos los datos del usuario Logged usando el UID dado
-    var QuerySnapshot = await FirebaseFirestore.instance
+    var querySnapshot = await FirebaseFirestore.instance
         .collection('LoggedUsers')
         .where('uid', isEqualTo: uid)
         .get();
-    if (QuerySnapshot.docs.isNotEmpty) {
-      return QuerySnapshot.docs[0]['email'];
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs[0]['email'];
+    } else {
+      return '';
+    }
+  }
+
+  static Future<String> getUserUIDByEmail(String email) async {
+    // Obtenemos los datos del usuario Logged usando el email dado
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection('LoggedUsers')
+        .where('email', isEqualTo: email)
+        .get();
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs[0]['uid'];
     } else {
       return '';
     }

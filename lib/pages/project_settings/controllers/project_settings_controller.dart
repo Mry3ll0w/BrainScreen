@@ -43,10 +43,36 @@ class ProjecSettingsController {
     for (var member in members) {
       // Usamos la funcion general getUserMailByUID
       var sMail = await GeneralFunctions.getUserMailByUID(member);
-      print(member);
       if (sMail != '') membersMails.add(sMail);
     }
 
     return membersMails;
+  }
+
+  static Future<void> deleteMemberFromProject(
+      String projectName, String memberEmail) async {
+    // Obtenemos el uid del usuario a partir del email
+    String memberUID = await GeneralFunctions.getUserUIDByEmail(memberEmail);
+    // En caso de que falle debido a que el email no existe, no hacemos nada
+    if (memberUID == '') {
+      return;
+    } else {
+      // Obtenemos el documento del proyecto
+      QuerySnapshot query = await FirebaseFirestore.instance
+          .collection('projects')
+          .where('name', isEqualTo: projectName)
+          .get();
+
+      // Obtenemos el id del documento
+      String docID = query.docs[0].id;
+
+      // Eliminamos el uid del miembro de la lista de miembros
+      await FirebaseFirestore.instance
+          .collection('projects')
+          .doc(docID)
+          .update({
+        'members': FieldValue.arrayRemove([memberUID])
+      });
+    }
   }
 }
