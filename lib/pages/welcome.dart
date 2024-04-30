@@ -99,6 +99,7 @@ class _WelcomeHomeState extends State<WelcomeHome>
     );
      */
     return const Home.named(
+      projectToLoad: 'BrainScreen',
       title: 'BrainScreen',
     );
   }

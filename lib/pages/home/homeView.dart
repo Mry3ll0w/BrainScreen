@@ -1,4 +1,5 @@
 import 'package:brainscreen/pages/home/home_controller.dart';
+import 'package:brainscreen/pages/home/widgets/lienzo.dart';
 import 'package:brainscreen/pages/home/widgets/project_creation_dialog.dart';
 import 'package:brainscreen/pages/profile/profile_view.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
@@ -8,19 +9,19 @@ import 'package:flutter/material.dart';
 class Home extends StatefulWidget {
   final Widget? childrenView;
   final String? title;
+  final String? projectToLoad;
 
   // Constructor para Home con nombre variable
   const Home.named({
     this.childrenView,
     required this.title,
     super.key,
+    required this.projectToLoad,
   });
 
   //Predefinido
-  const Home({
-    this.childrenView,
-    super.key,
-  }) : title = 'BrainScreen';
+  const Home({this.childrenView, super.key, this.projectToLoad = ''})
+      : title = 'BrainScreen';
 
   @override
   State<Home> createState() => _HomeState();
@@ -36,7 +37,10 @@ class _HomeState extends State<Home> {
     // Bypass firebaseFunctions
     HomeController.registerCurrentUserIfNotCreated(user!.uid, user.email!);
 
+    //Inicializamos la lista de proyectos
     initializeProjectList();
+
+    //Vista de Home
     return Scaffold(
       backgroundColor: const Color(0xFFDCF2F1),
       key: _scaffoldKey, // Assign the key to the Scaffold
@@ -121,11 +125,10 @@ class _HomeState extends State<Home> {
     if (widgeToLoad != null) {
       return widgeToLoad;
     } else {
-      if (projectList.length == 0) {
-        // ! RECUERDA CAMBIAR A > 1 para q funcione
-        return const Center(
-          child: Text('Selecciona un proyecto para comenzar'),
-        );
+      if (projectList.length > 1) {
+        // Tenemos al menos 1 proyecto, por lo que seleccionamos el primero de la lista
+
+        return Lienzo(); // Usamos el predeterminado que carga el primer proyecto
       } else {
         return Center(
             child: Column(children: [

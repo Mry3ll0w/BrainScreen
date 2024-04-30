@@ -1,5 +1,7 @@
+import 'package:brainscreen/pages/controllers/general_functions.dart';
 import 'package:brainscreen/pages/controllers/project_controller.dart';
 import 'package:brainscreen/pages/home/homeView.dart';
+import 'package:brainscreen/pages/home/widgets/lienzo.dart';
 import 'package:brainscreen/pages/project_settings/views/project_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,6 +33,7 @@ class HomeController {
                                 projectName: proyect.name,
                               ),
                               title: 'Ajustes',
+                              projectToLoad: proyect.name,
                             )), // Replace NewView with the class of your new view
                   );
                 },
@@ -38,9 +41,16 @@ class HomeController {
             ],
           ),
           onTap: () {
-            // Update the state of the app.
-            // Then close the drawer.
-            Navigator.pop(context);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Home.named(
+                          childrenView: Lienzo.named(
+                            sProjectName: proyect.name,
+                          ),
+                          title: proyect.name,
+                          projectToLoad: proyect.name,
+                        )));
           },
         ));
       }
@@ -109,5 +119,35 @@ class HomeController {
         'email': userMail,
       });
     }
+  }
+
+  // Get the first project of the Logged User
+  static Future<String> getFirstProjectName(String userID) async {
+    //We fetch the proyects
+    String sProjectName = '';
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Obtenemos los proyectos donde el usuario es el propietario
+    final QuerySnapshot ownerSnapshot = await firestore
+        .collection('projects')
+        .where('owner', isEqualTo: userID)
+        .get();
+
+// Obtenemos los proyectos donde el usuario es un miembro
+    final QuerySnapshot memberSnapshot = await firestore
+        .collection('projects')
+        .where('members', arrayContains: userID)
+        .get();
+
+// Combinamos los resultados
+    final List<DocumentSnapshot> projects = [
+      ...ownerSnapshot.docs,
+      ...memberSnapshot.docs
+    ];
+    // Pillamos el primer resultado
+    if (projects.isNotEmpty) {
+      sProjectName = projects.first.get('name');
+    }
+    return sProjectName;
   }
 }
