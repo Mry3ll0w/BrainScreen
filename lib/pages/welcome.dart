@@ -1,4 +1,5 @@
 import 'package:brainscreen/pages/home/homeView.dart';
+import 'package:brainscreen/pages/home/widgets/lienzo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -98,9 +99,8 @@ class _WelcomeHomeState extends State<WelcomeHome>
       ),
     );
      */
-    return const Home.named(
-      projectToLoad: 'BrainScreen',
-      title: 'BrainScreen',
+    return Home(
+      childrenView: Lienzo(),
     );
   }
 
