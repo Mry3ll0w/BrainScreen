@@ -13,7 +13,8 @@ class MemberOptionsMenu extends StatefulWidget {
 
 class _MemberOptionsMenuState extends State<MemberOptionsMenu> {
   // Gestor Icons de Switch
-  final MaterialStateProperty<Icon?> thumbIcon =
+  /**
+   * final MaterialStateProperty<Icon?> thumbIcon =
       MaterialStateProperty.resolveWith<Icon?>(
     (Set<MaterialState> states) {
       if (states.contains(MaterialState.selected)) {
@@ -22,13 +23,14 @@ class _MemberOptionsMenuState extends State<MemberOptionsMenu> {
       return const Icon(Icons.close);
     },
   );
+   */
 
   // Estado del Switch
   bool light1 = false;
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Widget>(
-      future: buildOptions(),
+      future: buildMenuOptions(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return snapshot.data!;
@@ -43,36 +45,27 @@ class _MemberOptionsMenuState extends State<MemberOptionsMenu> {
     );
   }
 
-  Future<Widget> buildOptions() async {
+  Future<Widget> buildMenuOptions() async {
     // Obtenemos si el mail es el propietario
     bool isOwner = await ProjectController.isUserTheOwnerOfProject(
         widget.userMail!, widget.projectName!);
+    bool isEditor = false;
+
     if (isOwner) {
       return PopupMenuButton(
         itemBuilder: (BuildContext context) {
           return <PopupMenuEntry>[
-            PopupMenuItem(
+            const PopupMenuItem(
               enabled: false,
               child: Row(children: [
-                const Text('Cambiar rol'),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Switch(
-                    value: light1,
-                    thumbIcon: thumbIcon,
-                    onChanged: (bool value) {
-                      setState(() {
-                        light1 = value;
-                      });
-                    },
-                  ),
-                ),
+                const Text('Dueño del proyecto'),
               ]),
             ),
           ];
         },
       );
     } else {
+      // Si no es propietario, mostramos el menú normal
       return PopupMenuButton(
         itemBuilder: (BuildContext context) {
           return <PopupMenuEntry>[
@@ -90,24 +83,6 @@ class _MemberOptionsMenuState extends State<MemberOptionsMenu> {
                   ),
                 ]),
               ),
-            ),
-            PopupMenuItem(
-              enabled: false,
-              child: Row(children: [
-                const Text('Cambiar rol'),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Switch(
-                    value: light1,
-                    thumbIcon: thumbIcon,
-                    onChanged: (bool value) {
-                      setState(() {
-                        light1 = value;
-                      });
-                    },
-                  ),
-                ),
-              ]),
             ),
           ];
         },
