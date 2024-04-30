@@ -137,12 +137,16 @@ class _ProjectSettingsState extends State<ProjectSettings> {
                                     index - 1 < snapshot.data.length
                                 ? snapshot.data[index - 1]
                                 : null; // Usa index - 1 para obtener el usuario correcto
+                            // Comprobamos que el usuario sea el admin del proyecto
 
                             return Card(
                               child: ListTile(
                                 leading: const Icon(Icons.person),
                                 title: Text(user.toString()),
-                                trailing: MemberOptionsMenu(),
+                                trailing: MemberOptionsMenu(
+                                  userMail: user.toString(),
+                                  projectName: widget.projectName,
+                                ),
                               ),
                             );
                           }

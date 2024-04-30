@@ -155,4 +155,10 @@ class ProjectController {
     }
     return sOwnerMail;
   }
+
+  static Future<bool> isUserTheOwnerOfProject(
+      String email, String projectName) async {
+    String sOwnerMail = await getOwnerEmailFromProject(projectName);
+    return sOwnerMail == email;
+  }
 }
