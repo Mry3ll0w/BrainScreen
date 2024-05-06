@@ -30,15 +30,19 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Widget> projectList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    initializeProjectList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
     // Bypass firebaseFunctions
     HomeController.registerCurrentUserIfNotCreated(user!.uid, user.email!);
-
-    //Inicializamos la lista de proyectos
-    initializeProjectList();
 
     //Vista de Home
     return Scaffold(

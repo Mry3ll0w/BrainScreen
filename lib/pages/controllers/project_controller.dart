@@ -12,7 +12,8 @@ class ProjectController {
       'name': p.name,
       'owner': _auth.currentUser!.uid,
       'members': [p.ownerUID],
-      'alexaUserID': ''
+      'alexaUserID': '',
+      'deleted': false,
     });
   }
 
@@ -24,12 +25,14 @@ class ProjectController {
     QuerySnapshot queryMiembros = await db
         .collection('projects')
         .where('members', arrayContains: _auth.currentUser!.uid)
+        .where('deleted', isEqualTo: false)
         .get();
     proyectos.addAll(queryMiembros.docs);
     // Consulta para proyectos donde el usuario es propietario
     QuerySnapshot queryPropietarios = await db
         .collection('projects')
         .where('owner', isEqualTo: _auth.currentUser!.uid)
+        .where('deleted', isEqualTo: false)
         .get();
 
     //Agregamos los proyectos que no esten ya en la lista de proyectos usando su nombre de proyecto
@@ -160,5 +163,25 @@ class ProjectController {
       String email, String projectName) async {
     String sOwnerMail = await getOwnerEmailFromProject(projectName);
     return sOwnerMail == email;
+  }
+
+  /// Deletes all projects with the given [projectName].
+  ///
+  /// This function queries the 'projects' collection in the database and SOFTDELETE
+  /// all documents where the 'name' field is equal to [projectName].
+  ///
+  /// Example usage:
+  /// ```dart
+  /// await eraseProject('MyProject');
+  /// ```
+  static Future<void> eraseProject(String projectName) async {
+    QuerySnapshot query = await db
+        .collection('projects')
+        .where('name', isEqualTo: projectName)
+        .get();
+    for (var doc in query.docs) {
+      // Agregamos el campo 'deleted' al documento y lo marcamos como true
+      db.collection('projects').doc(doc.id).update({'deleted': true});
+    }
   }
 }

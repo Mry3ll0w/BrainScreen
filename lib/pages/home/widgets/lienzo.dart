@@ -2,6 +2,7 @@ import 'package:brainscreen/pages/home/home_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class Lienzo extends StatefulWidget {
   //Required Elements
   String? sProjectName;

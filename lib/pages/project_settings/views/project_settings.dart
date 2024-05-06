@@ -1,3 +1,4 @@
+import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/pages/project_settings/components/add_user_dialog.dart';
 import 'package:brainscreen/pages/project_settings/components/member_options_menu.dart';
 import 'package:brainscreen/pages/project_settings/controllers/project_settings_controller.dart';
@@ -20,11 +21,19 @@ class _ProjectSettingsState extends State<ProjectSettings> {
   String strProjectName = '';
   final user = FirebaseAuth.instance.currentUser;
 
+  late Future<List<String>> _membersFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _membersFuture =
+        ProjectSettingsController.getMembersFromProject(widget.projectName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future:
-          ProjectSettingsController.getMembersFromProject(widget.projectName),
+      future: _membersFuture,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -86,6 +95,77 @@ class _ProjectSettingsState extends State<ProjectSettings> {
                       },
                     ),
                   ),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Center(
+                        child: FloatingActionButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          backgroundColor: Colors.red,
+                          onPressed: () => showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => Dialog(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      children: [
+                                        const Row(
+                                          children: [
+                                            Text(
+                                                '¿Estás seguro de que querer\neliminar el proyecto?')
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 20, left: 40, top: 20),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  // Llamamos a la función que elimina el proyecto
+                                                  // Navegamos a la pantalla principal, borrando todo contexto anterior
+                                                  ProjectController
+                                                      .eraseProject(
+                                                          widget.projectName);
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const Home()));
+                                                },
+                                                child: const Text('Sí'),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 20),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('No'),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                        ),
+                      )),
+                  const Padding(
+                      padding: EdgeInsets.only(top: 20), child: Divider()),
                   const Padding(
                     padding: EdgeInsets.only(top: 20.0),
                     child: Center(
@@ -231,7 +311,7 @@ class _ProjectSettingsState extends State<ProjectSettings> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('¡Proyecto creado con éxito!'),
+              title: const Text('¡Proyecto modificado con éxito!'),
               content: const Text(
                 'Se ha cambiado el nombre \n'
                 'puedes continuar cuando quieras.\n',
@@ -274,4 +354,6 @@ class _ProjectSettingsState extends State<ProjectSettings> {
       }
     }
   }
+
+  // ! AGREGAR FUNCIONALIDAD DE ELIMINAR PROYECTOS.
 }
