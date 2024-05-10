@@ -1,4 +1,6 @@
 import 'package:brainscreen/pages/home/home_controller.dart';
+import 'package:brainscreen/pages/home/widgets/lienzo.components/widget_grid.dart';
+import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +39,11 @@ class _LienzoState extends State<Lienzo> {
     // Inicializamos los datos requeridos
     await initializeData();
 
-    return Text('Proyecto cargado: ${widget.sProjectName}');
+    return Scaffold(
+      floatingActionButton: _widgetInsertionMenu(),
+      backgroundColor: BrainColors.backgroundColor,
+      body: WidgetGrid(),
+    );
   }
 
   // Initialize required data
@@ -47,5 +53,49 @@ class _LienzoState extends State<Lienzo> {
     // Obtenemos el nombre del proyecto
     widget.sProjectName ??=
         await HomeController.getFirstProjectName(widget.user!.uid);
+  }
+
+  Widget _widgetInsertionMenu() {
+    return PopupMenuButton<String>(
+        icon: const Icon(
+          Icons.app_registration_outlined,
+          size: 50,
+        ),
+        onSelected: (String result) {
+          // Aquí puedes manejar la selección del menú
+          print('Has seleccionado: $result');
+        },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'Opción 1',
+                child: Row(
+                  children: [
+                    Icon(Icons.add),
+                    Text('Botones'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Opción 2',
+                child: Row(
+                  children: [
+                    Icon(Icons.add),
+                    Text('Textfield'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Opción 2',
+                child: Row(
+                  children: [
+                    Icon(Icons.add),
+                    Text('Numberfields'),
+                  ],
+                ),
+              )
+            ],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ));
   }
 }

@@ -354,6 +354,4 @@ class _ProjectSettingsState extends State<ProjectSettings> {
       }
     }
   }
-
-  // ! AGREGAR FUNCIONALIDAD DE ELIMINAR PROYECTOS.
 }

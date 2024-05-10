@@ -54,8 +54,11 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: () =>
-              _scaffoldKey.currentState?.openDrawer(), // Open the drawer
+          onPressed: () {
+            // Antes de nada refrescamos la lista de proyectosœ
+            initializeProjectList();
+            _scaffoldKey.currentState?.openDrawer();
+          }, // Open the drawer
           tooltip: 'Despliegame!',
         ),
         actions: [
