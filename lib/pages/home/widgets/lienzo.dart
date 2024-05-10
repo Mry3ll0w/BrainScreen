@@ -1,8 +1,11 @@
 import 'package:brainscreen/pages/home/home_controller.dart';
+import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
 import 'package:brainscreen/pages/home/widgets/lienzo.components/widget_grid.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+// https://pub.dev/packages/flutter_reorderable_grid_view#supported-widgets
 
 // ignore: must_be_immutable
 class Lienzo extends StatefulWidget {
@@ -57,17 +60,18 @@ class _LienzoState extends State<Lienzo> {
 
   Widget _widgetInsertionMenu() {
     return PopupMenuButton<String>(
-        icon: const Icon(
-          Icons.app_registration_outlined,
-          size: 50,
+        icon: ClipRRect(
+          borderRadius: BorderRadius.circular(10.0),
+          child: Image.asset('img/addWidget.jpeg', width: 80, height: 80),
         ),
         onSelected: (String result) {
+          _handleMenuSelection(result);
           // Aquí puedes manejar la selección del menú
-          print('Has seleccionado: $result');
+          debugPrint('Has seleccionado: $result');
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
-                value: 'Opción 1',
+                value: 'button',
                 child: Row(
                   children: [
                     Icon(Icons.add),
@@ -76,7 +80,7 @@ class _LienzoState extends State<Lienzo> {
                 ),
               ),
               const PopupMenuItem<String>(
-                value: 'Opción 2',
+                value: 'textfield',
                 child: Row(
                   children: [
                     Icon(Icons.add),
@@ -85,11 +89,20 @@ class _LienzoState extends State<Lienzo> {
                 ),
               ),
               const PopupMenuItem<String>(
-                value: 'Opción 2',
+                value: 'numberfield',
                 child: Row(
                   children: [
                     Icon(Icons.add),
                     Text('Numberfields'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'graph',
+                child: Row(
+                  children: [
+                    Icon(Icons.add),
+                    Text('Gráficas'),
                   ],
                 ),
               )
@@ -97,5 +110,39 @@ class _LienzoState extends State<Lienzo> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ));
+  }
+
+  // Menu Handler
+  void _handleMenuSelection(String value) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog.fullscreen(
+          child: Container(
+            color: BrainColors.backgroundColor,
+            child: Column(
+              children: [
+                const Text(
+                  'Selecciona la posición del widget',
+                  style: TextStyle(
+                    color: Colors.amber,
+                    fontSize: 20,
+                  ),
+                ),
+                Expanded(
+                  child: ButtonSettings(),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancelar'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
