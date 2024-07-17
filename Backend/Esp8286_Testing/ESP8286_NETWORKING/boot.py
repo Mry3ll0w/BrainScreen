@@ -14,10 +14,12 @@ elif not sta_if.isconnected():
     print('connecting to network...')
     sta_if.connect(WIFI_SSID, WIFI_PASSWORD)
     while not sta_if.isconnected():
-        print("Connecting...")
+        print("...")
         pass
     print('network config:', sta_if.ifconfig())
-
+global bConnectionStablished
+bConnectionStablished = sta_if.isconnected()
+    
 
 
 
