@@ -1,7 +1,7 @@
 # This is script that run when device boot up or wake from sleep.
 import network
 from env import WIFI_PASSWORD, WIFI_SSID
-
+import urequests
 
 sta_if = network.WLAN(network.STA_IF) # Create object to connecto to wifi
 
@@ -20,6 +20,12 @@ elif not sta_if.isconnected():
 global bConnectionStablished
 bConnectionStablished = sta_if.isconnected()
     
-
+print("Probando request en boot.py")
+# Intenta hacer una solicitud GET simple aquí para verificar la conexión
+try:
+    response = urequests.get('http://example.com')
+    print("Response value:", response.text)
+except Exception as e:
+    print(e)
 
 
