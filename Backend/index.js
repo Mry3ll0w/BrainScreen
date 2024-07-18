@@ -114,6 +114,26 @@ nodeServer.get('/isLinked/:amazonUID', async (req, res) => {
   }
 });
 
+// Testing to if auth works
+nodeServer.get('/test', async (req, res) => {
+  const {firebaseUID, amazonUID}= req.query;
+  try {
+    if (firebaseUID === undefined || amazonUID === undefined) {
+      res.send('No accesible', 403);
+    } else {
+      const projectController = new ProjectController(DB);
+      // Check if user has access
+      const bUserAllowed = await projectController.
+          userAllowedForServerRequests(amazonUID, firebaseUID);
+      if (!bUserAllowed) {
+        res.status(403).send({res: 'test is error'});
+      }
+      res.status(200).send({res: 'test is ok'});
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
 
 nodeServer.listen(port, () => {
   console.log(`Servidor Backend en el puerto ${port}`);

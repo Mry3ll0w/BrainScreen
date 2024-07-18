@@ -14,8 +14,11 @@ if boot.bConnectionStablished:
     led.on()
     try:
         print("Comienzo Petición")
-        
-        response = getRequest(SERVER_URL+'test', timeout=10,firebaseUID=firebaseUID)
+        query_params={
+            "firebaseUID": firebaseUID,
+            "amazonUID":''
+        }
+        response = getRequest(SERVER_URL+'test',timeout=10)
         print("Body: ",response["body"])
         print("Headers: ",response["headers"])
         print("JSON: ",response["json"])

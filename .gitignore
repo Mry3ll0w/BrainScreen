@@ -50,3 +50,4 @@ Backend/requests.http
 Backend/brainscreen_backend_key.pem
 .env
 Backend/Esp8286_Testing/ESP8286_NETWORKING/env.py
+Backend/Esp8286_Testing/ESP-PyMaker/env.py
