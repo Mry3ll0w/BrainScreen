@@ -20,12 +20,5 @@ elif not sta_if.isconnected():
 global bConnectionStablished
 bConnectionStablished = sta_if.isconnected()
     
-print("Probando request en boot.py")
-# Intenta hacer una solicitud GET simple aquí para verificar la conexión
-try:
-    response = urequests.get('http://example.com')
-    print("Response value:", response.text)
-except Exception as e:
-    print(e)
 
 

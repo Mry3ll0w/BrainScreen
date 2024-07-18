@@ -15,8 +15,8 @@ if boot.bConnectionStablished:
     try:
         print("Comienzo Petición")
         
-        response = getRequest('http://example.com')
-        #print("Text: ",response["response_text"])
+        response = getRequest('http://192.168.1.131:3000/')
+        print("Text: ",response["response_text"])
         print("Fin Petición")
     finally:
         print("Response status:", response["status_code"])
