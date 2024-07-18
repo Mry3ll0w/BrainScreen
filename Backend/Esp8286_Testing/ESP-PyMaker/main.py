@@ -2,7 +2,7 @@
 import machine
 import time
 import boot
-from api_testing import getRequest
+from api_testing import getRequest,postRequest,patchRequest
 from env import SERVER_URL, firebaseUID
 led = machine.Pin(2, machine.Pin.OUT)
 
@@ -18,7 +18,7 @@ if boot.bConnectionStablished:
             "firebaseUID": firebaseUID,
             "amazonUID":''
         }
-        response = getRequest(SERVER_URL+'test',timeout=10)
+        response = patchRequest(SERVER_URL+'test',timeout=10,params=query_params,data={'dato1':'13'})
         print("Body: ",response["body"])
         print("Headers: ",response["headers"])
         print("JSON: ",response["json"])
