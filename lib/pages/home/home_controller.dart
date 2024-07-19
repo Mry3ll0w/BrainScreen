@@ -99,7 +99,7 @@ class HomeController {
         child: Text('Error: $e'),
       );
     }
-  }
+  
 
   // Funcion para bypasear el tener q pagar firebase admin features
 
@@ -108,7 +108,7 @@ class HomeController {
     // Check if the user is already registered
     final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('LoggedUsers')
-        .where('uid', isEqualTo: userID)
+        //.where('uid', isEqualTo: userID)
         .where('email', isEqualTo: userMail)
         .get();
 
