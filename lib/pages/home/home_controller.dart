@@ -99,7 +99,7 @@ class HomeController {
         child: Text('Error: $e'),
       );
     }
-  
+  }
 
   // Funcion para bypasear el tener q pagar firebase admin features
 
