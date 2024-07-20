@@ -1,5 +1,5 @@
 import 'package:brainscreen/pages/home/home_controller.dart';
-import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
+import 'package:brainscreen/pages/home/widgets/buttons/button_selector.dart';
 import 'package:brainscreen/pages/home/widgets/lienzo.components/widget_grid.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,7 +45,7 @@ class _LienzoState extends State<Lienzo> {
     return Scaffold(
       floatingActionButton: _widgetInsertionMenu(),
       backgroundColor: BrainColors.backgroundColor,
-      body: WidgetGrid(),
+      body: const WidgetGrid(),
     );
   }
 
@@ -122,21 +122,10 @@ class _LienzoState extends State<Lienzo> {
             color: BrainColors.backgroundColor,
             child: Column(
               children: [
-                const Text(
-                  'Selecciona la posición del widget',
-                  style: TextStyle(
-                    color: Colors.amber,
-                    fontSize: 20,
-                  ),
-                ),
                 Expanded(
-                  child: ButtonSettings(),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancelar'),
+                  child: ButtonSelector(
+                    sProjectName: widget.sProjectName,
+                  ),
                 ),
               ],
             ),
