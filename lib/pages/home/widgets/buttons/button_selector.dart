@@ -82,8 +82,9 @@ class _ButtonSelectorState extends State<ButtonSelector> {
           children: <Widget>[
             const SizedBox(width: 8),
             TextButton(
-              child:
-                  Text('Agregar widget al lienzo de ${widget.sProjectName!}'),
+              child: FittedBox(
+                child: Text('Agregar a ${widget.sProjectName!}'),
+              ),
               onPressed: () {
                 // TODO: Agregar funcionalidad de insertar boton en el lienzo.
                 Navigator.pushReplacement(
