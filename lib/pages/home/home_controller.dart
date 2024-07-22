@@ -25,7 +25,7 @@ class HomeController {
                 icon: const Icon(
                     Icons.settings), // Cambia esto por el icono que quieras
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => Home.named(
@@ -41,7 +41,7 @@ class HomeController {
             ],
           ),
           onTap: () {
-            Navigator.push(
+            Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) => Home.named(

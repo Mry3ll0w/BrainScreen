@@ -1,3 +1,4 @@
+import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -87,12 +88,15 @@ class _ButtonSelectorState extends State<ButtonSelector> {
               ),
               onPressed: () {
                 // TODO: Agregar funcionalidad de insertar boton en el lienzo.
+                WidgetController.addElevatedButtonToLienzo(
+                    widget.sProjectName!);
+                /*
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => Home.named(
                             title: widget.sProjectName,
-                            projectToLoad: widget.sProjectName)));
+                            projectToLoad: widget.sProjectName)));*/
               },
             ),
             const SizedBox(width: 8),

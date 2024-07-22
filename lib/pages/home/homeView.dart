@@ -134,7 +134,6 @@ class _HomeState extends State<Home> {
     } else {
       if (projectList.length > 1) {
         // Tenemos al menos 1 proyecto, por lo que seleccionamos el primero de la lista
-
         return Lienzo(); // Usamos el predeterminado que carga el primer proyecto
       } else {
         return Center(
