@@ -40,7 +40,7 @@ class _WidgetGridState extends State<WidgetGrid> {
   Widget build(BuildContext context) {
     return ReorderableGridView.count(
       dragEnabled: true,
-      crossAxisCount: 3,
+      crossAxisCount: 2,
       childAspectRatio: 1.0,
       children: imagePaths
           .map((String path) => Card(
@@ -52,6 +52,7 @@ class _WidgetGridState extends State<WidgetGrid> {
               ))
           .toList(),
       onReorder: (oldIndex, newIndex) {
+        debugPrint('VIEJO INDICE: $oldIndex \t NUEVO INDICE: $newIndex');
         String path = imagePaths.removeAt(oldIndex);
         imagePaths.insert(newIndex, path);
         setState(() {});
