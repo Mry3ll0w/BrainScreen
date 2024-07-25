@@ -115,7 +115,7 @@ nodeServer.get('/isLinked/:amazonUID', async (req, res) => {
 });
 
 // Testing to if auth works with post etc
-nodeServer.post('/test', async (req, res) => {
+nodeServer.put('/test', async (req, res) => {
   const {firebaseuid, amazonuid}= req.headers;
   console.log(req.body);
   try {

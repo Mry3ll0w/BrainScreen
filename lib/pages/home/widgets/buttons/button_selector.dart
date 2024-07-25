@@ -93,7 +93,7 @@ class _ButtonSelectorState extends State<ButtonSelector> {
                 // TODO: Agregar funcionalidad de insertar boton en el lienzo.
                 //WidgetController.addElevatedButtonToLienzo(
                 //    widget.sProjectName!);
-                HttpRequestsController.post(
+                HttpRequestsController.put(
                     dotenv.env['TESTING_SERVER_URL']!,
                     '/test',
                     {'data': 'Hola desde flutter'},
