@@ -115,20 +115,21 @@ nodeServer.get('/isLinked/:amazonUID', async (req, res) => {
 });
 
 // Testing to if auth works with post etc
-nodeServer.patch('/test', async (req, res) => {
-  const {firebaseUID, amazonUID}= req.query;
+nodeServer.post('/test', async (req, res) => {
+  const {firebaseuid, amazonuid}= req.headers;
+  console.log(req.body);
   try {
-    if (firebaseUID === undefined || amazonUID === undefined) {
-      es.status(403).send({res: 'test is error due to unauthorized'});
+    if (firebaseuid === undefined || amazonuid === undefined) {
+      res.status(403).send({res: 'test is error due to unauthorized'});
     } else {
       const projectController = new ProjectController(DB);
       // Check if user has access
       const bUserAllowed = await projectController.
-          userAllowedForServerRequests(amazonUID, firebaseUID);
+          userAllowedForServerRequests(amazonuid, firebaseuid);
       if (!bUserAllowed) {
-        res.status(403).send({res: 'test is error'});
+        res.status(403).send({res: 'test is error, user not allowed'});
       }
-      console.table(req.body);
+      console.log(req.body);
       res.status(200).send({res: 'test is ok'});
     }
   } catch (e) {

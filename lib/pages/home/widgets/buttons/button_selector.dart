@@ -1,3 +1,4 @@
+import 'package:brainscreen/pages/controllers/general_functions.dart';
 import 'package:brainscreen/pages/controllers/http_controller.dart';
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/homeView.dart';
@@ -92,9 +93,13 @@ class _ButtonSelectorState extends State<ButtonSelector> {
                 // TODO: Agregar funcionalidad de insertar boton en el lienzo.
                 //WidgetController.addElevatedButtonToLienzo(
                 //    widget.sProjectName!);
-                HttpRequestsController.get(
-                    dotenv.env['TESTING_SERVER_URL']!, '/', 'database', '', '');
-                /*
+                HttpRequestsController.post(
+                    dotenv.env['TESTING_SERVER_URL']!,
+                    '/test',
+                    {'data': 'Hola desde flutter'},
+                    GeneralFunctions.getLoggedUserUID(),
+                    '');
+                /* //! RECUERDA DESCOMENTAR PARA QUE FUNCIONE COMO DEBE
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
