@@ -1,6 +1,6 @@
 import 'package:brainscreen/pages/home/home_controller.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button_selector.dart';
-import 'package:brainscreen/pages/home/widgets/lienzo.components/widget_grid.dart';
+import 'package:brainscreen/pages/home/widgets/lienzo.components/button_grid.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +45,7 @@ class _LienzoState extends State<Lienzo> {
     return Scaffold(
       floatingActionButton: _widgetInsertionMenu(),
       backgroundColor: BrainColors.backgroundColor,
-      body: const WidgetGrid(),
+      body: const ButtonGrid(),
     );
   }
 

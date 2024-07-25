@@ -49,6 +49,7 @@ dependencies:
   flutter_signin_button: ^2.0.0 # Boton Sign In
   flutter_json_view: ^1.1.4 #Mostrar de forma mas amigable el formato JSON
   http: ^1.2.0
+  accordion: ^2.6.0
   flutter_dotenv: ^5.1.0
   reorderable_grid_view: ^2.2.5
   firebase_database: ^10.5.7

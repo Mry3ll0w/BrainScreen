@@ -1,11 +1,8 @@
-import 'package:brainscreen/pages/controllers/general_functions.dart';
-import 'package:brainscreen/pages/controllers/http_controller.dart';
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ButtonSelector extends StatefulWidget {
   //Required Elements
@@ -90,22 +87,14 @@ class _ButtonSelectorState extends State<ButtonSelector> {
                 child: Text('Agregar a ${widget.sProjectName!}'),
               ),
               onPressed: () {
-                // TODO: Agregar funcionalidad de insertar boton en el lienzo.
-                //WidgetController.addElevatedButtonToLienzo(
-                //    widget.sProjectName!);
-                HttpRequestsController.put(
-                    dotenv.env['TESTING_SERVER_URL']!,
-                    '/test',
-                    {'data': 'Hola desde flutter'},
-                    GeneralFunctions.getLoggedUserUID(),
-                    '');
-                /* //! RECUERDA DESCOMENTAR PARA QUE FUNCIONE COMO DEBE
+                WidgetController.addElevatedButtonToLienzo(
+                    widget.sProjectName!);
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => Home.named(
                             title: widget.sProjectName,
-                            projectToLoad: widget.sProjectName)));*/
+                            projectToLoad: widget.sProjectName)));
               },
             ),
             const SizedBox(width: 8),

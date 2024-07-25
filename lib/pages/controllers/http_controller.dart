@@ -82,6 +82,16 @@ class HttpRequestsController {
     } catch (e) {
       debugPrint('Exception $e');
     }
+
+    /** Ejemplo de como realizar llamadas a la funcion
+    HttpRequestsController.put(
+                    dotenv.env['TESTING_SERVER_URL']!,
+                    '/test',
+                    {'data': 'Hola desde flutter'},
+                    GeneralFunctions.getLoggedUserUID(),
+                    '');
+     */
+
     return null;
   }
 }
