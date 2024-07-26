@@ -67,7 +67,7 @@ class _HomeState extends State<Home> {
             child: IconButton(
               icon: const Icon(Icons.account_tree_outlined),
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const Profile()),
                 );

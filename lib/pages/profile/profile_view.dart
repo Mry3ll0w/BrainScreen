@@ -33,7 +33,7 @@ class _ProfileState extends State<Profile> {
                 onPressed: () {
                   //Salimos de la cuenta
                   _auth.signOut();
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => WelcomeHome()),
                   );

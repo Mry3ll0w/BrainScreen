@@ -5,8 +5,6 @@ import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-// https://pub.dev/packages/flutter_reorderable_grid_view#supported-widgets
-
 // ignore: must_be_immutable
 class Lienzo extends StatefulWidget {
   //Required Elements
@@ -45,7 +43,7 @@ class _LienzoState extends State<Lienzo> {
     return Scaffold(
       floatingActionButton: _widgetInsertionMenu(),
       backgroundColor: BrainColors.backgroundColor,
-      body: const ButtonGrid(),
+      body: ButtonGrid(sProjectName: widget.sProjectName),
     );
   }
 

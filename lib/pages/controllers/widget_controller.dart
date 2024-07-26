@@ -128,4 +128,38 @@ class WidgetController {
       (_) => caracteres.codeUnitAt(random.nextInt(caracteres.length)),
     ));
   }
+
+  /// Devuelve todos los botones de un lienzo de tipo elevatedButtons
+  /// @returns List<Map<String,String>>
+  static Future<List<dynamic>> fetchAllElevatedButtons(
+      String projectName) async {
+    try {
+      DatabaseReference _refDB =
+          FirebaseDatabase.instance.ref().child('lienzo/$projectName/buttons');
+      // to read once we use final
+      final snapshot = await _refDB.get();
+      var valueFromSnapshot = snapshot.value;
+      List<dynamic> elevatedButtonList = [];
+      if (valueFromSnapshot != null) {
+        // Suponiendo que valueFromSnapshot es una lista o un mapa que quieres convertir a un Set
+        // Para una lista, puedes hacer algo como esto:
+
+        if (valueFromSnapshot is List<dynamic>) {
+          // Obtenemos todos los botones elevatedButtons
+          for (var b in valueFromSnapshot.toList()) {
+            //ElevatedButton
+            if (b['type'] == '0') {
+              elevatedButtonList.add(b);
+            }
+          }
+        }
+        //devolvemos la lista con todos los elevatedButtons
+        return elevatedButtonList;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    return [];
+  }
 }
