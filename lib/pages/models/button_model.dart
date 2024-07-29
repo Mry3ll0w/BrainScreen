@@ -12,10 +12,18 @@ class ElevatedButtonModel {
 
   bool bIncomplete = false;
 
-  Map<String, String> payload_ = {};
+  dynamic payload_ = {};
 
-  ElevatedButtonModel(String label, String labelText, String type,
-      String baseURL, String apiURL, Map<String, String> payload) {
+  ElevatedButtonModel({
+    required String label,
+    required String labelText,
+    required String type,
+    required String petition,
+    required String baseURL,
+    required String apiURL,
+    required dynamic
+        payload, // 'required' indica que el parámetro debe ser proporcionado
+  }) {
     if (label.isEmpty ||
         labelText.isEmpty ||
         type.isEmpty ||
@@ -25,23 +33,28 @@ class ElevatedButtonModel {
     }
     label_ = label;
     labelText_ = labelText;
-    type = type_;
+    type_ = type;
     baseURL_ = baseURL;
     apiURL_ = apiURL;
     payload_ = payload;
+    petition_ = petition;
   }
 
   /// Funcion para construir el elevatedButton, los parametros los recibe en el constructor de clase
   /// @return ElevatedButton
 
   ElevatedButton buildElevatedButtonWidget() {
+    debugPrint('Valor de petition $petition_');
     switch (petition_) {
       case 'POST':
         return ElevatedButton(
           child: Text(labelText_),
           onPressed: () async {
+            debugPrint("Entro post");
             var responseStatus = await HttpRequestsController.post(baseURL_,
-                apiURL_, payload_, GeneralFunctions.getLoggedUserUID(), '');
+                    apiURL_, payload_, GeneralFunctions.getLoggedUserUID(), '')
+                .timeout(const Duration(seconds: 3));
+            debugPrint("Salgo post $responseStatus");
           },
         );
 
@@ -49,6 +62,7 @@ class ElevatedButtonModel {
         return ElevatedButton(
           child: Text(labelText_),
           onPressed: () async {
+            debugPrint("Entro PUT");
             var responseStatus = await HttpRequestsController.put(baseURL_,
                 apiURL_, payload_, GeneralFunctions.getLoggedUserUID(), '');
           },
@@ -57,6 +71,7 @@ class ElevatedButtonModel {
         return ElevatedButton(
           child: Text(labelText_),
           onPressed: () async {
+            debugPrint("Entro default");
             var responseStatus = await HttpRequestsController.post(baseURL_,
                 apiURL_, payload_, GeneralFunctions.getLoggedUserUID(), '');
           },

@@ -138,6 +138,29 @@ nodeServer.put('/test', async (req, res) => {
 });
 
 
+// Example to let the users test the post method 
+nodeServer.put('/test', async (req, res) => {
+  const {firebaseuid, amazonuid}= req.headers;
+  console.log(req.body);
+  try {
+    if (firebaseuid === undefined || amazonuid === undefined) {
+      res.status(403).send({res: 'test is error due to unauthorized'});
+    } else {
+      const projectController = new ProjectController(DB);
+      // Check if user has access
+      const bUserAllowed = await projectController.
+          userAllowedForServerRequests(amazonuid, firebaseuid);
+      if (!bUserAllowed) {
+        res.status(403).send({res: 'test is error, user not allowed'});
+      }
+      console.log(req.body);
+      res.status(200).send({res: 'test is ok'});
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 nodeServer.listen(port, () => {
   console.log(`Servidor Backend en el puerto ${port}`);
 });

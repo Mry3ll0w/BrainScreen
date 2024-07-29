@@ -36,8 +36,8 @@ class HttpRequestsController {
   /// @param firebaseUID: uid del usuario de firebase
   /// @param amazonUID: uid de amazon.
   /// @return int (status de la respuesta enviada)
-  static Future<dynamic> post(String serverUrl, String api,
-      Map<String, String> object, String firebaseUID, String amazonUID) async {
+  static Future<dynamic> post(String serverUrl, String api, dynamic object,
+      String firebaseUID, String amazonUID) async {
     try {
       var url = Uri.parse(serverUrl + api);
       var payload = convert.json.encode(object);
@@ -64,8 +64,8 @@ class HttpRequestsController {
   /// @param firebaseUID: uid del usuario de firebase
   /// @param amazonUID: uid de amazon.
   /// @return int (status de la respuesta enviada)
-  static Future<dynamic> put(String serverUrl, String api,
-      Map<String, String> object, String firebaseUID, String amazonUID) async {
+  static Future<dynamic> put(String serverUrl, String api, dynamic object,
+      String firebaseUID, String amazonUID) async {
     try {
       var url = Uri.parse(serverUrl + api);
       var payload = convert.json.encode(object);

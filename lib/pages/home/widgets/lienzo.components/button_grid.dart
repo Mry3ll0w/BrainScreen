@@ -120,20 +120,19 @@ class ButtonGrid extends StatelessWidget //__
         // Agregamos hasta dos botones por fila
         for (int j = i; j < i + 2 && j < buttonList.length; j++) {
           // Creamos el Modelo del boton
-
+          print(buttonList[j].toString());
           var b = ElevatedButtonModel(
-              buttonList[j]['label'],
-              buttonList[j]['labelText'],
-              buttonList[j]['type'],
-              buttonList[j]['baseurl'],
-              buttonList[j]['apiurl'],
-              {'dato': 'valor'});
+              label: buttonList[j]['label'],
+              labelText: buttonList[j]['labelText'],
+              type: buttonList[j]['type'],
+              petition: buttonList[j]['petition'],
+              baseURL: buttonList[j]['baseurl'],
+              apiURL: buttonList[j]['apiurl'],
+              payload: buttonList[j]['payload']);
           // Aquí puedes personalizar el estilo del botón según tus necesidades
-          buttonRow.add(ElevatedButton(
-            onPressed: () {}, // Define la acción al presionar el botón
-            child: Text(buttonList[j]
-                ['labelText']), // Suponiendo que buttonList contiene Strings
-          ));
+          buttonRow.add(
+              b.buildElevatedButtonWidget() // Suponiendo que buttonList contiene Strings
+              );
         }
 
         // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas

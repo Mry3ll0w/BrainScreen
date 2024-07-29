@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class WidgetController {
   final user = FirebaseAuth.instance.currentUser;
@@ -58,8 +59,8 @@ class WidgetController {
             "labelText": "Boton",
             "position": "0",
             "petition": "POST",
-            "baseurl": "http://cambiame.com",
-            "apiurl": "/datos",
+            "baseurl": dotenv.env['TESTING_SERVER_URL'],
+            "apiurl": "/test",
             "payload": {"dato": "valor"}
           };
 
@@ -90,8 +91,8 @@ class WidgetController {
               "labelText": "Boton",
               "position": "0",
               "petition": "POST",
-              "baseurl": "http://cambiame.com",
-              "apiurl": "/datos",
+              "baseurl": dotenv.env['TESTING_SERVER_URL'],
+              "apiurl": "/test",
               "payload": {"dato": "valor"}
             }
           ],
@@ -111,8 +112,8 @@ class WidgetController {
             "labelText": "Boton",
             "position": "0",
             "petition": "POST",
-            "baseurl": "http://cambiame.com",
-            "apiurl": "/datos",
+            "baseurl": dotenv.env['TESTING_SERVER_URL'],
+            "apiurl": "/test",
             "payload": {"dato": "valor"}
           }
         ],
