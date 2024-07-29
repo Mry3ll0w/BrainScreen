@@ -58,8 +58,9 @@ class WidgetController {
             "labelText": "Boton",
             "position": "0",
             "petition": "POST",
-            "url": "",
-            "responseValue": ""
+            "baseurl": "http://cambiame.com",
+            "apiurl": "/datos",
+            "payload": {"dato": "valor"}
           };
 
           setOfButtons.add(newButton);
@@ -89,8 +90,9 @@ class WidgetController {
               "labelText": "Boton",
               "position": "0",
               "petition": "POST",
-              "url": "",
-              "responseValue": ""
+              "baseurl": "http://cambiame.com",
+              "apiurl": "/datos",
+              "payload": {"dato": "valor"}
             }
           ],
         });
@@ -109,8 +111,9 @@ class WidgetController {
             "labelText": "Boton",
             "position": "0",
             "petition": "POST",
-            "url": "",
-            "responseValue": ""
+            "baseurl": "http://cambiame.com",
+            "apiurl": "/datos",
+            "payload": {"dato": "valor"}
           }
         ],
       });

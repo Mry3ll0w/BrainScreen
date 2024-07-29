@@ -1,6 +1,7 @@
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -44,7 +45,6 @@ class ButtonGrid extends StatelessWidget //__
           sectionClosingHapticFeedback: SectionHapticFeedback.light,
           children: [
             AccordionSection(
-              isOpen: true,
               contentVerticalPadding: 20,
               leftIcon:
                   const Icon(Icons.text_fields_rounded, color: Colors.white),
@@ -60,7 +60,6 @@ class ButtonGrid extends StatelessWidget //__
                   }),
             ),
             AccordionSection(
-              isOpen: true,
               contentVerticalPadding: 20,
               leftIcon:
                   const Icon(Icons.text_fields_rounded, color: Colors.white),
@@ -76,7 +75,6 @@ class ButtonGrid extends StatelessWidget //__
                   }),
             ),
             AccordionSection(
-              isOpen: true,
               contentVerticalPadding: 20,
               leftIcon:
                   const Icon(Icons.text_fields_rounded, color: Colors.white),
@@ -103,7 +101,60 @@ class ButtonGrid extends StatelessWidget //__
     for (var b in buttonList) {
       debugPrint(b['label']);
     }
-    return Text('hola');
+
+    //Devolvemos un row
+
+    return styledElevatedButtonsWidget(buttonList);
+  }
+
+  Widget styledElevatedButtonsWidget(List<dynamic> buttonList) {
+    // Creamos una lista para almacenar las filas (Rows) que contendrán los botones
+    List<Widget> rows = [];
+
+    try {
+      // Iteramos sobre la lista de botones
+      for (int i = 0; i < buttonList.length; i += 2) {
+        // Incrementamos de 2 en 2
+        // Creamos una lista temporal para almacenar los botones de cada fila
+        List<Widget> buttonRow = [];
+        // Agregamos hasta dos botones por fila
+        for (int j = i; j < i + 2 && j < buttonList.length; j++) {
+          // Creamos el Modelo del boton
+
+          var b = ElevatedButtonModel(
+              buttonList[j]['label'],
+              buttonList[j]['labelText'],
+              buttonList[j]['type'],
+              buttonList[j]['baseurl'],
+              buttonList[j]['apiurl'],
+              {'dato': 'valor'});
+          // Aquí puedes personalizar el estilo del botón según tus necesidades
+          buttonRow.add(ElevatedButton(
+            onPressed: () {}, // Define la acción al presionar el botón
+            child: Text(buttonList[j]
+                ['labelText']), // Suponiendo que buttonList contiene Strings
+          ));
+        }
+
+        // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
+        rows.add(Row(
+          mainAxisAlignment: MainAxisAlignment
+              .spaceEvenly, // Distribuye los botones en el espacio disponible
+          children: buttonRow,
+        ));
+      }
+    } catch (e) {
+      rows = [const Text('Se ha producido un error en la lectura del widget')];
+    }
+
+    // Creamos el contenedor que tendrá todas las filas con los botones estilados
+    Container c = Container(
+      child: Column(
+        children: rows,
+      ),
+    );
+
+    return c;
   }
 
   Future<Widget> initializeSwitches() async {
