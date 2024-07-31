@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:brainscreen/api/firebase_api.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,6 +21,8 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    await FirebaseApi()
+        .initNotification(); // Para permitir el mostrar notificaciones al usuarioc
   } else {
     await Firebase.initializeApp(
       name: 'BrainScreen',

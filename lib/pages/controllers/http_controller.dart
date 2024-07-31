@@ -22,7 +22,6 @@ class HttpRequestsController {
     if (response.statusCode == 200) {
       var jsonResponse =
           convert.jsonDecode(response.body) as Map<String, dynamic>;
-      debugPrint(jsonResponse[fieldValue]);
       return jsonResponse[fieldValue];
     } else {
       //throw exception and catch it in UI
@@ -38,23 +37,18 @@ class HttpRequestsController {
   /// @return int (status de la respuesta enviada)
   static Future<dynamic> post(String serverUrl, String api, dynamic object,
       String firebaseUID, String amazonUID) async {
-    try {
-      var url = Uri.parse(serverUrl + api);
-      var payload = convert.json.encode(object);
-      var headers = {
-        'Content-Type': 'application/json',
-        'firebaseUID': firebaseUID,
-        'amazonUID': amazonUID,
-      };
+    var url = Uri.parse(serverUrl + api);
+    var payload = convert.json.encode(object);
+    var headers = {
+      'Content-Type': 'application/json',
+      'firebaseUID': firebaseUID,
+      'amazonUID': amazonUID,
+    };
 
-      var response = await client_.post(url, body: payload, headers: headers);
-      debugPrint(response.statusCode.toString());
-      return response
-          .statusCode; // Siempre devolvemos el status code, ya que el post no espera respuesta compleja si no confirmacion de la accion.
-    } catch (e) {
-      debugPrint('Exception $e');
-    }
-    return null;
+    var response = await client_.post(url, body: payload, headers: headers);
+
+    return response
+        .statusCode; // Siempre devolvemos el status code, ya que el post no espera respuesta compleja si no confirmacion de la accion.
   }
 
   // Realiza una peticion de tipo PUT, pensado para los widgets.
@@ -66,22 +60,16 @@ class HttpRequestsController {
   /// @return int (status de la respuesta enviada)
   static Future<dynamic> put(String serverUrl, String api, dynamic object,
       String firebaseUID, String amazonUID) async {
-    try {
-      var url = Uri.parse(serverUrl + api);
-      var payload = convert.json.encode(object);
-      var headers = {
-        'Content-Type': 'application/json',
-        'firebaseUID': firebaseUID,
-        'amazonUID': amazonUID,
-      };
-      debugPrint('Valor de payload: $payload');
-      var response = await client_.put(url, body: payload, headers: headers);
-      debugPrint(response.statusCode.toString());
-      return response
-          .statusCode; // Siempre devolvemos el status code, ya que el post no espera respuesta compleja si no confirmacion de la accion.
-    } catch (e) {
-      debugPrint('Exception $e');
-    }
+    var url = Uri.parse(serverUrl + api);
+    var payload = convert.json.encode(object);
+    var headers = {
+      'Content-Type': 'application/json',
+      'firebaseUID': firebaseUID,
+      'amazonUID': amazonUID,
+    };
+    var response = await client_.put(url, body: payload, headers: headers);
+    return response
+        .statusCode; // Siempre devolvemos el status code, ya que el post no espera respuesta compleja si no confirmacion de la accion.
 
     /** Ejemplo de como realizar llamadas a la funcion
     HttpRequestsController.put(
@@ -91,7 +79,5 @@ class HttpRequestsController {
                     GeneralFunctions.getLoggedUserUID(),
                     '');
      */
-
-    return null;
   }
 }

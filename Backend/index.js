@@ -139,7 +139,7 @@ nodeServer.put('/test', async (req, res) => {
 
 
 // Example to let the users test the post method 
-nodeServer.put('/test', async (req, res) => {
+nodeServer.post('/test', async (req, res) => {
   const {firebaseuid, amazonuid}= req.headers;
   console.log(req.body);
   try {

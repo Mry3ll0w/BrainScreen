@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:brainscreen/pages/controllers/general_functions.dart';
 import 'package:brainscreen/pages/controllers/http_controller.dart';
 import 'package:flutter/material.dart';
@@ -44,17 +46,27 @@ class ElevatedButtonModel {
   /// @return ElevatedButton
 
   ElevatedButton buildElevatedButtonWidget() {
-    debugPrint('Valor de petition $petition_');
     switch (petition_) {
       case 'POST':
         return ElevatedButton(
           child: Text(labelText_),
           onPressed: () async {
-            debugPrint("Entro post");
-            var responseStatus = await HttpRequestsController.post(baseURL_,
-                    apiURL_, payload_, GeneralFunctions.getLoggedUserUID(), '')
-                .timeout(const Duration(seconds: 3));
-            debugPrint("Salgo post $responseStatus");
+            try {
+              var responseStatus = await HttpRequestsController.post(
+                      baseURL_,
+                      apiURL_,
+                      payload_,
+                      GeneralFunctions.getLoggedUserUID(),
+                      '')
+                  .timeout(const Duration(seconds: 3));
+              if (responseStatus != 200) {
+                //TODO Gestionar notificaciones
+              }
+            } on TimeoutException {
+              debugPrint("Excepcion tiempo");
+            } catch (e) {
+              debugPrint(e.toString());
+            }
           },
         );
 
@@ -62,18 +74,44 @@ class ElevatedButtonModel {
         return ElevatedButton(
           child: Text(labelText_),
           onPressed: () async {
-            debugPrint("Entro PUT");
-            var responseStatus = await HttpRequestsController.put(baseURL_,
-                apiURL_, payload_, GeneralFunctions.getLoggedUserUID(), '');
+            try {
+              var responseStatus = await HttpRequestsController.put(
+                      baseURL_,
+                      apiURL_,
+                      payload_,
+                      GeneralFunctions.getLoggedUserUID(),
+                      '')
+                  .timeout(const Duration(seconds: 3));
+              if (responseStatus != 200) {
+                //TODO Gestionar notificaciones
+              }
+            } on TimeoutException {
+              debugPrint("Excepcion tiempo");
+            } catch (e) {
+              debugPrint(e.toString());
+            }
           },
         );
       default:
         return ElevatedButton(
           child: Text(labelText_),
           onPressed: () async {
-            debugPrint("Entro default");
-            var responseStatus = await HttpRequestsController.post(baseURL_,
-                apiURL_, payload_, GeneralFunctions.getLoggedUserUID(), '');
+            try {
+              var responseStatus = await HttpRequestsController.post(
+                      baseURL_,
+                      apiURL_,
+                      payload_,
+                      GeneralFunctions.getLoggedUserUID(),
+                      '')
+                  .timeout(const Duration(seconds: 3));
+              if (responseStatus != 200) {
+                //TODO Gestionar notificaciones
+              }
+            } on TimeoutException {
+              debugPrint("Excepcion tiempo");
+            } catch (e) {
+              debugPrint(e.toString());
+            }
           },
         );
     }

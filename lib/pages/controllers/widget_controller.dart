@@ -42,7 +42,6 @@ class WidgetController {
 
           // Obtenemos todos los labels y lo metemos en lista para agregar el nuevo
           for (var b in setOfButtons) {
-            debugPrint(b['label']);
             String currentLabel = b['label'];
             setOfButtonLabels.add(currentLabel);
           }
