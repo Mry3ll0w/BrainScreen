@@ -1,16 +1,11 @@
 import 'dart:io';
-import 'package:brainscreen/api/firebase_api.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'pages/welcome.dart';
-
-/*
-void main() {
-  runApp(const MyApp());
-}
-*/
 
 void main() async {
   WidgetsFlutterBinding
@@ -21,8 +16,25 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    await FirebaseApi()
-        .initNotification(); // Para permitir el mostrar notificaciones al usuarioc
+    await AwesomeNotifications().initialize('resource://img/logo', [
+      NotificationChannel(
+          channelGroupKey: 'error_channel_group',
+          channelKey: 'error_channel',
+          channelName: 'ErrorNotification',
+          channelDescription: 'Notificacion de errores',
+          ledColor: BrainColors.mainBannerColor)
+    ], channelGroups: [
+      NotificationChannelGroup(
+          channelGroupKey: 'error_channel_group',
+          channelGroupName: 'error_channel_group')
+    ]);
+
+    // Comprobamos que tenemos permisos de notificar y lo solicitamos en caso contrario
+    bool bIsNotificationsAllowed =
+        await AwesomeNotifications().isNotificationAllowed();
+    if (!bIsNotificationsAllowed) {
+      AwesomeNotifications().requestPermissionToSendNotifications();
+    }
   } else {
     await Firebase.initializeApp(
       name: 'BrainScreen',
@@ -34,10 +46,14 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -47,13 +63,13 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
           fontFamily: 'SF'),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  MyHomePage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect

@@ -51,7 +51,7 @@ android {
         versionName flutterVersionName
         manifestPlaceholders += [auth0Domain: "dev-eo5wctv2g3bkaope.eu.auth0.com", auth0Scheme: "brainscreen"]
         
-    }
+    } 
 
     buildTypes {
         release {
