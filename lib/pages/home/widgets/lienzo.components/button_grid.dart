@@ -129,8 +129,8 @@ class ButtonGrid extends StatelessWidget //__
               apiURL: buttonList[j]['apiurl'],
               payload: buttonList[j]['payload']);
           // Aquí puedes personalizar el estilo del botón según tus necesidades
-          buttonRow.add(
-              b.buildElevatedButtonWidget() // Suponiendo que buttonList contiene Strings
+          buttonRow.add(b.buildElevatedButtonWidget(projectName_!,
+                  b.labelText_) // Suponiendo que buttonList contiene Strings
               );
         }
 
