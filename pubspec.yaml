@@ -91,6 +91,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - img/logo.jpeg
+    - img/notification.ico
     - img/google_logo.png
     - img/alexaLogo.png
     - img/no_projects_icon.jpeg

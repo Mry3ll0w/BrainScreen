@@ -62,32 +62,15 @@ class ElevatedButtonModel {
                       '')
                   .timeout(const Duration(seconds: 3));
               if (responseStatus != 200) {
-                AwesomeNotifications().createNotification(
-                    content: NotificationContent(
-                        id: 1,
-                        channelKey: 'error_channel',
-                        title: 'Error durante la peticion del botón',
-                        body:
-                            'En el proyecto $projectName al pulsar el boton con el label $buttonLabel se ha recibido el codigo HTTP: $responseStatus '));
+                _petitionErrorNotification(
+                    responseStatus, projectName, buttonLabel, false);
               }
             } on TimeoutException {
               debugPrint("Excepcion tiempo");
-              AwesomeNotifications().createNotification(
-                  content: NotificationContent(
-                      id: 1,
-                      channelKey: 'error_channel',
-                      title: 'Error durante la peticion del botón',
-                      body:
-                          'En el proyecto $projectName al pulsar el boton con el label $buttonLabel se ha tardado demasiado tiempo de respuesta, consulta el estado del servidor '));
+              _petitionErrorNotification(500, projectName, buttonLabel, true);
             } catch (e) {
               debugPrint(e.toString());
-              AwesomeNotifications().createNotification(
-                  content: NotificationContent(
-                      id: 1,
-                      channelKey: 'error_channel',
-                      title: 'Error durante la peticion del botón',
-                      body:
-                          'En el proyecto $projectName al pulsar el boton con el label $buttonLabel se ha producido un error desconocido. '));
+              _petitionErrorNotification(500, projectName, buttonLabel, false);
             }
           },
         );
@@ -105,15 +88,19 @@ class ElevatedButtonModel {
                       '')
                   .timeout(const Duration(seconds: 3));
               if (responseStatus != 200) {
-                //TODO Gestionar notificaciones
+                _petitionErrorNotification(
+                    responseStatus, projectName, buttonLabel, false);
               }
             } on TimeoutException {
               debugPrint("Excepcion tiempo");
+              _petitionErrorNotification(500, projectName, buttonLabel, true);
             } catch (e) {
               debugPrint(e.toString());
+              _petitionErrorNotification(500, projectName, buttonLabel, false);
             }
           },
         );
+
       default:
         return ElevatedButton(
           child: Text(labelText_),
@@ -127,15 +114,47 @@ class ElevatedButtonModel {
                       '')
                   .timeout(const Duration(seconds: 3));
               if (responseStatus != 200) {
-                //TODO Gestionar notificaciones
+                _petitionErrorNotification(
+                    responseStatus, projectName, buttonLabel, false);
               }
             } on TimeoutException {
               debugPrint("Excepcion tiempo");
+              _petitionErrorNotification(500, projectName, buttonLabel, true);
             } catch (e) {
               debugPrint(e.toString());
+              _petitionErrorNotification(500, projectName, buttonLabel, false);
             }
           },
         );
+    }
+  }
+
+  void _petitionErrorNotification(int errorCode, String projectName,
+      String buttonLabel, bool isTimeException) {
+    if (!isTimeException && errorCode == 500) {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del botón',
+              body:
+                  'En el proyecto $projectName al pulsar el boton con el label $buttonLabel se ha producido un error desconocido. '));
+    } else if (isTimeException) {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del botón',
+              body:
+                  'En el proyecto $projectName al pulsar el boton con el label $buttonLabel se ha tardado demasiado tiempo de respuesta, consulta el estado del servidor '));
+    } else {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del botón',
+              body:
+                  'En el proyecto $projectName al pulsar el boton con el label $buttonLabel se ha recibido el codigo HTTP: $errorCode '));
     }
   }
 }

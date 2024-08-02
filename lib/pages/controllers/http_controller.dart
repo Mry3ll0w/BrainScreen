@@ -1,6 +1,5 @@
 import 'dart:convert' as convert;
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 /// Gestiona las peticiones HTTP que realizan los widgets
