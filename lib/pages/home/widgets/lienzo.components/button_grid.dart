@@ -1,8 +1,10 @@
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class ButtonGrid extends StatelessWidget //__
 {
@@ -45,8 +47,21 @@ class ButtonGrid extends StatelessWidget //__
           children: [
             AccordionSection(
               contentVerticalPadding: 20,
-              leftIcon:
-                  const Icon(Icons.text_fields_rounded, color: Colors.white),
+              rightIcon: IconButton(
+                icon: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ButtonSettings(
+                                key: super.key,
+                                sProjectName: projectName_!,
+                              )));
+                },
+              ),
               header: const Text('Pulsadores', style: headerStyle),
               content: FutureBuilder(
                   future: initializeElevatedButtons(projectName_!),

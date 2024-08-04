@@ -1,3 +1,4 @@
+import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:math';
@@ -164,5 +165,28 @@ class WidgetController {
     }
 
     return [];
+  }
+
+  /// Pasa la lista de Dynamic a lista de ElevatedButtons
+
+  static Future<List<ElevatedButtonModel>> fetchElevatedButtonsModels(
+      String projectName) async {
+    List<ElevatedButtonModel> lElevatedButtonsModels = [];
+
+    List<dynamic> lRawElevatedButtons =
+        await fetchAllElevatedButtons(projectName);
+
+    for (var button in lRawElevatedButtons) {
+      lElevatedButtonsModels.add(ElevatedButtonModel(
+          label: button['label'],
+          labelText: button['labelText'],
+          type: button['type'],
+          petition: button['petition'],
+          baseURL: button['baseurl'],
+          apiURL: button['apiurl'],
+          payload: button['payload']));
+    }
+
+    return lElevatedButtonsModels;
   }
 }

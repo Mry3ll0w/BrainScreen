@@ -73,6 +73,7 @@ class ElevatedButtonModel {
               _petitionErrorNotification(500, projectName, buttonLabel, false);
             }
           },
+          onLongPress: () {},
         );
 
       case 'PUT':
