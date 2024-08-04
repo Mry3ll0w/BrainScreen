@@ -50,7 +50,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         manifestPlaceholders += [auth0Domain: "dev-eo5wctv2g3bkaope.eu.auth0.com", auth0Scheme: "brainscreen"]
-        
+        multiDexEnabled true
     } 
 
     buildTypes {
@@ -67,4 +67,5 @@ flutter {
 }
 
 dependencies {
+    implementation 'com.android.support:multidex:2.0.1'
 }
