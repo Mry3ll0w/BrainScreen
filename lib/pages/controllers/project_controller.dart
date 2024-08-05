@@ -2,6 +2,7 @@ import 'package:brainscreen/pages/controllers/general_functions.dart';
 import 'package:brainscreen/pages/models/project_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class ProjectController {
   static final db = FirebaseFirestore.instance;
@@ -89,6 +90,7 @@ class ProjectController {
             .collection('projects')
             .doc(queryMember.docs[0].id)
             .update({'name': newName});
+        renameRealtimeDatabasePath(strProjectName, newName);
       }
     } else {
       // Pertenece al usuario, por lo que actualizamos el nombre
@@ -96,6 +98,7 @@ class ProjectController {
           .collection('projects')
           .doc(queryOwner.docs[0].id)
           .update({'name': newName});
+      renameRealtimeDatabasePath(strProjectName, newName);
     }
 
     // Devolvemos el resultado de la operacion
@@ -111,7 +114,6 @@ class ProjectController {
           .where('email', isEqualTo: sMail)
           .get();
       if (querySnapshot.docs.isEmpty) {
-        print('No existe el usuario');
         return;
       } else {
         // Usamos las QuerySnapshot para obtener el uid del usuario
@@ -130,7 +132,6 @@ class ProjectController {
               .where('name', isEqualTo: strProjectName)
               .get();
           if (queryMember.docs.isEmpty) {
-            print('No tienes permisos para añadir miembros a este proyecto');
           } else {
             // Pertenece a la lista de miembros, por lo que actualizamos el nombre
             db.collection('projects').doc(queryMember.docs[0].id).update({
@@ -182,6 +183,33 @@ class ProjectController {
     for (var doc in query.docs) {
       // Agregamos el campo 'deleted' al documento y lo marcamos como true
       db.collection('projects').doc(doc.id).update({'deleted': true});
+    }
+  }
+
+  /// Rename document para cambiar el nombre
+
+  static Future<void> renameRealtimeDatabasePath(
+      String oldProjectName, String newProjectName) async {
+    // Pillamos el documento entero
+    DatabaseReference oldRef =
+        FirebaseDatabase.instance.ref().child('lienzo/$oldProjectName');
+
+    final snapshot = await oldRef.get();
+    if (snapshot.exists) {
+      // Ahora pasamos el valor a set
+      var oldSnapshot = snapshot.value;
+
+      // Classic bubble sort
+
+      // Copiamos datos viejos en nuevo
+      DatabaseReference newRef =
+          FirebaseDatabase.instance.ref("lienzo/$newProjectName");
+      newRef.set(oldSnapshot);
+
+      //Borramos la anterior
+      oldRef.remove();
+    } else {
+      return;
     }
   }
 }

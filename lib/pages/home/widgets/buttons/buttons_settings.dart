@@ -1,3 +1,4 @@
+import 'package:brainscreen/pages/controllers/project_controller.dart';
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:flutter/material.dart';
@@ -43,9 +44,15 @@ class _ButtonSettingsState extends State<ButtonSettings> {
       appBar: AppBar(
         title: const Text('Ajustes de botones'),
       ),
-      body: Center(
-        child: Row(children: _buildListTiles(lElevatedButtons)),
-      ),
+      body: Row(children: [
+        ElevatedButton(
+          child: const Text('pruebas'),
+          onPressed: () {
+            ProjectController.renameRealtimeDatabasePath(
+                'prueba crizada', 'el pepe');
+          },
+        )
+      ]),
     );
   }
 
