@@ -56,10 +56,8 @@ class ButtonGrid extends StatelessWidget //__
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ButtonSettings(
-                                key: super.key,
-                                sProjectName: projectName_!,
-                              )));
+                          builder: (context) => ButtonSettingsList(
+                              key: key, sProjectName: projectName_!)));
                 },
               ),
               header: const Text('Pulsadores', style: headerStyle),

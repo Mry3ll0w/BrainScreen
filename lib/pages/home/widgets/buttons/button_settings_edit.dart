@@ -1,22 +1,25 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
-import 'package:brainscreen/pages/home/widgets/buttons/button_settings_edit.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class ButtonSettingsList extends StatefulWidget {
+class ButtonSettingsEdit extends StatefulWidget {
   String _projectName = "";
-  var selectedButton;
+  ElevatedButtonModel? selectedButton;
   final user = FirebaseAuth.instance.currentUser;
-  ButtonSettingsList({required super.key, required String sProjectName}) {
+  ButtonSettingsEdit(
+      {required super.key,
+      required String sProjectName,
+      required ElevatedButtonModel btn}) {
     _projectName = sProjectName;
+    selectedButton = btn;
   }
 
   @override
-  State<ButtonSettingsList> createState() => _ButtonSettingsListState();
+  State<ButtonSettingsEdit> createState() => _ButtonSettingsEditState();
 }
 
-class _ButtonSettingsListState extends State<ButtonSettingsList> {
+class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -42,7 +45,7 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Ajustes de botones'),
+          title: const Text('Parámetros del botón'),
         ),
         body: _buildListTiles(lElevatedButtons));
   }
@@ -67,15 +70,7 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
                 leading: const Icon(Icons.bolt),
                 title: Text(aButtons[index].labelText_),
                 subtitle: Text(_buttonTypeString(aButtons[index].type_)),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ButtonSettingsEdit(
-                              key: widget.key,
-                              btn: aButtons[index],
-                              sProjectName: widget._projectName)));
-                },
+                onTap: () {},
               );
             }));
   }
