@@ -23,21 +23,11 @@ class ButtonSettingsEdit extends StatefulWidget {
 }
 
 class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
-  ElevatedButtonModel btn = ElevatedButtonModel(
-      label: '',
-      labelText: 'labelText',
-      type: 'type',
-      petition: 'petition',
-      baseURL: 'baseURL',
-      apiURL: 'apiURL',
-      payload: 'payload');
-
   Future<List<ElevatedButtonModel>> _lElevatedButtons = Future.value([]);
 
   @override
   void initState() {
     super.initState();
-    btn = widget.selectedButton!;
     _lElevatedButtons =
         WidgetController.fetchElevatedButtonsModels(widget._projectName);
   }
@@ -93,13 +83,15 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.save),
                             onPressed: () async {
-                              changeLabelText(
-                                  widget._projectName, btn.labelText_);
+                              changeLabelText(widget._projectName,
+                                  widget.selectedButton!.labelText_);
                             },
                           ),
                           label: Text(widget.selectedButton!.labelText_)),
                       onChanged: (value) {
-                        btn.labelText_ = value;
+                        setState(() {
+                          widget.selectedButton?.labelText_ = value;
+                        });
                       },
                     ),
                   ],
@@ -117,7 +109,6 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
       var lElevatedButtons =
           await WidgetController.fetchAllElevatedButtons(sProjectName);
 
-      String databaseURL = '/lienzo/$sProjectName/buttons';
       int iPosBtn = 0;
       for (var rawButton in lElevatedButtons) {
         if (widget.selectedButton?.label_ == rawButton['label']) {
@@ -127,12 +118,11 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
       }
 
       //Una vez obtenida la posicion del boton lo actualizamos.
-      databaseURL += '/$iPosBtn/labelText';
 
       try {
-        DatabaseReference refDB =
-            FirebaseDatabase.instance.ref().child(databaseURL);
-        await refDB.child(databaseURL).set(newLabelText);
+        DatabaseReference ref = FirebaseDatabase.instance
+            .ref("lienzo/$sProjectName/buttons/$iPosBtn");
+        await ref.update({"labelText": newLabelText});
       } catch (e) {
         // Print Dialog Error
       }
