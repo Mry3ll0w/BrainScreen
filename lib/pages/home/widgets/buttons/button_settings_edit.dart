@@ -38,7 +38,6 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
     );
   }
 
-  /// Inicializa el widget como Future y carga los elementos de los botones
   Future<Widget> _loadAllButtonsData(String projectName) async {
     List<ElevatedButtonModel> lElevatedButtons =
         await WidgetController.fetchElevatedButtonsModels(projectName);
@@ -47,42 +46,24 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
         appBar: AppBar(
           title: const Text('Parámetros del botón'),
         ),
-        body: _buildListTiles(lElevatedButtons));
-  }
-
-  // ! FIX ERROR TURBIO DE LAYOUT
-  Widget _buildListTiles(List<ElevatedButtonModel> aButtons) {
-    List<Widget> lTiles = [];
-    for (var b in aButtons) {
-      lTiles.add(ListTile(
-        leading: Icon(Icons.smart_button_outlined),
-        title: Text(b.labelText_),
-        subtitle: const Text("Botón"),
-      ));
-    }
-
-    return Container(
-        margin: const EdgeInsets.all(10.0),
-        child: ListView.builder(
-            itemCount: lTiles.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                leading: const Icon(Icons.bolt),
-                title: Text(aButtons[index].labelText_),
-                subtitle: Text(_buttonTypeString(aButtons[index].type_)),
-                onTap: () {},
-              );
-            }));
-  }
-
-  String _buttonTypeString(String type) {
-    switch (type) {
-      case '0':
-        return 'Btn. Unidireccional';
-      case '1':
-        return 'Btn. Switch';
-      default:
-        return 'Btn.';
-    }
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+              child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                      label: Text(widget.selectedButton!.labelText_)),
+                  onChanged: (value) {
+                    setState(() {
+                      widget.selectedButton?.labelText_ = value;
+                    });
+                  },
+                ),
+              )
+            ],
+          )),
+        ));
   }
 }
