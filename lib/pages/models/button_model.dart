@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:brainscreen/pages/controllers/general_functions.dart';
 import 'package:brainscreen/pages/controllers/http_controller.dart';
@@ -157,5 +156,9 @@ class ElevatedButtonModel {
               body:
                   'En el proyecto $projectName al pulsar el boton con el label $buttonLabel se ha recibido el codigo HTTP: $errorCode '));
     }
+  }
+
+  void setLabelText(String txt) {
+    labelText_ = txt;
   }
 }
