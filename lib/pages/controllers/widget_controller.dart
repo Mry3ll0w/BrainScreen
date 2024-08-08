@@ -22,11 +22,11 @@ class WidgetController {
   static void addElevatedButtonToLienzo(String sProjectName) async {
     //obtaining the list of buttons linked to that lienzo
     // 1st we get the db ref
-    DatabaseReference _refDB =
+    DatabaseReference refDB =
         FirebaseDatabase.instance.ref().child('lienzo/$sProjectName/buttons');
 
     // to read once we use final
-    final snapshot = await _refDB.get();
+    final snapshot = await refDB.get();
     Set<dynamic>? setOfButtons;
     if (snapshot.exists) {
       // Ahora pasamos el valor a set
@@ -138,10 +138,10 @@ class WidgetController {
   static Future<List<dynamic>> fetchAllElevatedButtons(
       String projectName) async {
     try {
-      DatabaseReference _refDB =
+      DatabaseReference refDB =
           FirebaseDatabase.instance.ref().child('lienzo/$projectName/buttons');
       // to read once we use final
-      final snapshot = await _refDB.get();
+      final snapshot = await refDB.get();
       var valueFromSnapshot = snapshot.value;
       List<dynamic> elevatedButtonList = [];
       if (valueFromSnapshot != null) {

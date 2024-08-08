@@ -1,4 +1,5 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -83,8 +84,11 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.save),
                             onPressed: () async {
-                              changeLabelText(widget._projectName,
-                                  widget.selectedButton!.labelText_);
+                              _buttonFieldUpdate(
+                                  widget._projectName,
+                                  'labelText',
+                                  widget.selectedButton?.labelText_,
+                                  widget.key);
                             },
                           ),
                           label: Text(widget.selectedButton!.labelText_)),
@@ -96,15 +100,60 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                     ),
                   ],
                 ),
-              )); // Asignar directamente snapshot.data ya que hemos verificado que no es null
+              ));
         }
       },
     );
   }
 
-  Future<void> changeLabelText(String sProjectName, String newLabelText) async {
+  /// Muestra un mensaje de error usando dialog si se produce alguno
+  void _updateErrorDialog(String sProjectName, var key) {
+    showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => Dialog(
+            child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child:
+                            Text('Error de actualizacion intentelo de nuevo.'),
+                      ),
+                      const SizedBox(height: 15),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ButtonSettingsList(
+                                    key: key,
+                                    sProjectName:
+                                        sProjectName)), // Replace NewView with the class of your new view
+                          );
+                        },
+                        child: const Text('Cerrar'),
+                      )
+                    ]))));
+  }
+
+  // Función genérica para actualizar los campos requeridos de un ElevatedButton dentro de un proyecto específico.
+  ///
+  /// Esta función busca un ElevatedButton por su nombre en un conjunto de botones asociados con un proyecto especificado,
+  /// y luego actualiza uno o más de sus campos basándose en los valores proporcionados. La actualización se realiza
+  /// mediante una operación asíncrona que interactúa con Firebase Reaktime Database.
+  ///
+  /// Los parámetros son:
+  /// - `sProjectName`: El nombre del proyecto al cual pertenece el botón a ser actualizado.
+  /// - `field`: El campo específico del botón que se desea actualizar.
+  /// - `newfieldValue`: El nuevo valor que se asignará al campo especificado.
+  /// - `key`: Una clave opcional que puede ser utilizada para identificar el contexto de la actualización.
+  Future<void> _buttonFieldUpdate(
+      String sProjectName, String field, dynamic newfieldValue, var key) async {
     //Si esta vacio pasamos de hacer nada
-    if (newLabelText.isNotEmpty) {
+    if (newfieldValue.isNotEmpty) {
       // Primero buscamos en el lienzo que toque
       var lElevatedButtons =
           await WidgetController.fetchAllElevatedButtons(sProjectName);
@@ -118,13 +167,13 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
       }
 
       //Una vez obtenida la posicion del boton lo actualizamos.
-
       try {
         DatabaseReference ref = FirebaseDatabase.instance
             .ref("lienzo/$sProjectName/buttons/$iPosBtn");
-        await ref.update({"labelText": newLabelText});
+        await ref.update({field: newfieldValue});
       } catch (e) {
         // Print Dialog Error
+        _updateErrorDialog(sProjectName, key);
       }
     }
   }
