@@ -26,6 +26,21 @@ class ButtonSettingsEdit extends StatefulWidget {
 class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
   Future<List<ElevatedButtonModel>> _lElevatedButtons = Future.value([]);
 
+  String? sBaseURLError;
+  String? sLabelErrorText;
+  String? sAPIErrorText;
+  String? sPayloadErrorText;
+  String? sPositionErrorText;
+
+  ElevatedButtonModel newButton = ElevatedButtonModel(
+      label: '',
+      labelText: '',
+      type: '',
+      petition: '',
+      baseURL: 'baseURL',
+      apiURL: 'apiURL',
+      payload: 'payload');
+
   @override
   void initState() {
     super.initState();
@@ -79,25 +94,67 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                     TextField(
                       decoration: InputDecoration(
                           filled: true,
+                          errorText: sLabelErrorText,
                           helperText:
-                              'Nombre que quieres que tenga el pulsador.',
+                              'Texto que quieres que tenga el pulsador.',
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.save),
                             onPressed: () async {
-                              _buttonFieldUpdate(
-                                  widget._projectName,
-                                  'labelText',
-                                  widget.selectedButton?.labelText_,
-                                  widget.key);
+                              if (sLabelErrorText == null) {
+                                _buttonFieldUpdate(
+                                    widget._projectName,
+                                    'labelText',
+                                    newButton.labelText_,
+                                    widget.key);
+                              }
                             },
                           ),
                           label: Text(widget.selectedButton!.labelText_)),
                       onChanged: (value) {
                         setState(() {
-                          widget.selectedButton?.labelText_ = value;
+                          newButton.labelText_ = value;
                         });
+                        if (value.isEmpty) {
+                          sLabelErrorText = 'No puedes dejar vacio ese campo';
+                        } else {
+                          sLabelErrorText = null;
+                        }
                       },
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 15, top: 15),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            filled: true,
+                            errorText: sBaseURLError,
+                            helperText:
+                                'Ruta base del servidor al que realizar la peticion',
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.save),
+                              onPressed: () async {
+                                if (sBaseURLError != null) {
+                                  _buttonFieldUpdate(
+                                      widget._projectName,
+                                      'labelText',
+                                      widget.selectedButton?.labelText_,
+                                      widget.key);
+                                }
+                              },
+                            ),
+                            label: Text(widget.selectedButton!.baseURL_)),
+                        onChanged: (value) {
+                          setState(() {
+                            widget.selectedButton?.baseURL_ = value;
+                          });
+                          if (!value.contains('http://')) {
+                            sBaseURLError =
+                                'Tiene que agregar http:// a la URL del servidor.';
+                          } else {
+                            sBaseURLError = null;
+                          }
+                        },
+                      ),
+                    )
                   ],
                 ),
               ));
