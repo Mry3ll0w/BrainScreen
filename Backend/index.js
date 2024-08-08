@@ -117,7 +117,7 @@ nodeServer.get('/isLinked/:amazonUID', async (req, res) => {
 // Testing to if auth works with post etc
 nodeServer.put('/test', async (req, res) => {
   const {firebaseuid, amazonuid}= req.headers;
-  console.log(req.body);
+  console.table({body: req.body, peticion: 'PUT'});
   try {
     if (firebaseuid === undefined || amazonuid === undefined) {
       res.status(403).send({res: 'test is error due to unauthorized'});
@@ -129,7 +129,6 @@ nodeServer.put('/test', async (req, res) => {
       if (!bUserAllowed) {
         res.status(403).send({res: 'test is error, user not allowed'});
       }
-      console.log(req.body);
       res.status(200).send({res: 'test is ok'});
     }
   } catch (e) {
@@ -141,7 +140,7 @@ nodeServer.put('/test', async (req, res) => {
 // Example to let the users test the post method 
 nodeServer.post('/test', async (req, res) => {
   const {firebaseuid, amazonuid}= req.headers;
-  console.log(req.body);
+  console.table({body: req.body, peticion: 'POST'});
   try {
     if (firebaseuid === undefined || amazonuid === undefined) {
       res.status(403).send({res: 'test is error due to unauthorized'});
@@ -153,7 +152,6 @@ nodeServer.post('/test', async (req, res) => {
       if (!bUserAllowed) {
         res.status(403).send({res: 'test is error, user not allowed'});
       }
-      console.log(req.body);
       res.status(200).send({res: 'test is ok'});
     }
   } catch (e) {

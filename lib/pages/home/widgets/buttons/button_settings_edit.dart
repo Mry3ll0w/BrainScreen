@@ -1,10 +1,12 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/home/widgets/buttons/button_payload_editor.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:json_editor/json_editor.dart';
 
 class ButtonSettingsEdit extends StatefulWidget {
   String _projectName = "";
@@ -31,6 +33,8 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
   String? sAPIErrorText;
   String? sPayloadErrorText;
   String? sPositionErrorText;
+
+  final List<String> _lsPetitionType = ['POST', 'PUT'];
 
   ElevatedButtonModel newButton = ElevatedButtonModel(
       label: '',
@@ -63,105 +67,214 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
               appBar: AppBar(
                 title: const Text('Parámetros del botón'),
               ),
-              body: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 8, bottom: 12, left: 8, right: 8),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: BrainColors.backgroundColor,
-                          border: Border.all(
-                            width: 2,
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 8, bottom: 12, left: 8, right: 8),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: BrainColors.backgroundColor,
+                            border: Border.all(
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'En esta seccion podras ajustar las variables del elemento seleccionado, pulsa el icono de guardar para que se guarden los cambios. ',
-                            style: TextStyle(
-                              fontSize: 20 *
-                                  MediaQuery.of(context).size.width /
-                                  360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'En esta seccion podras ajustar las variables del elemento seleccionado, pulsa el icono de guardar para que se guarden los cambios. ',
+                              style: TextStyle(
+                                fontSize: 20 *
+                                    MediaQuery.of(context).size.width /
+                                    360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                          filled: true,
-                          errorText: sLabelErrorText,
-                          helperText:
-                              'Texto que quieres que tenga el pulsador.',
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.save),
-                            onPressed: () async {
-                              if (sLabelErrorText == null) {
-                                bool bRes = await _buttonFieldUpdate(
-                                    widget._projectName,
-                                    'labelText',
-                                    newButton.labelText_,
-                                    widget.key);
-                                if (bRes) {
-                                  setState(() {
-                                    widget.selectedButton!.labelText_ =
-                                        newButton.labelText_;
-                                  });
-                                }
-                              }
-                            },
-                          ),
-                          label: Text(widget.selectedButton!.labelText_)),
-                      onChanged: (value) {
-                        setState(() {
-                          newButton.labelText_ = value;
-                        });
-                        if (value.isEmpty) {
-                          sLabelErrorText = 'No puedes dejar vacio ese campo';
-                        } else {
-                          sLabelErrorText = null;
-                        }
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 15, top: 15),
-                      child: TextField(
+                      TextField(
                         decoration: InputDecoration(
                             filled: true,
-                            errorText: sBaseURLError,
+                            errorText: sLabelErrorText,
                             helperText:
-                                'Ruta base del servidor al que realizar la peticion',
+                                'Texto que quieres que tenga el pulsador.',
                             suffixIcon: IconButton(
                               icon: const Icon(Icons.save),
                               onPressed: () async {
-                                if (sBaseURLError != null) {
-                                  _buttonFieldUpdate(
+                                if (sLabelErrorText == null) {
+                                  bool bRes = await _buttonFieldUpdate(
                                       widget._projectName,
                                       'labelText',
-                                      widget.selectedButton?.labelText_,
+                                      newButton.labelText_,
                                       widget.key);
+                                  if (bRes) {
+                                    setState(() {
+                                      widget.selectedButton!.labelText_ =
+                                          newButton.labelText_;
+                                    });
+                                  }
                                 }
                               },
                             ),
-                            label: Text(widget.selectedButton!.baseURL_)),
+                            label: Text(widget.selectedButton!.labelText_)),
                         onChanged: (value) {
                           setState(() {
-                            widget.selectedButton?.baseURL_ = value;
+                            newButton.labelText_ = value;
                           });
-                          if (!value.contains('http://')) {
-                            sBaseURLError =
-                                'Tiene que agregar http:// a la URL del servidor.';
+                          if (value.isEmpty) {
+                            sLabelErrorText = 'No puedes dejar vacio ese campo';
                           } else {
-                            sBaseURLError = null;
+                            sLabelErrorText = null;
                           }
                         },
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15, top: 15),
+                        child: TextField(
+                          decoration: InputDecoration(
+                              filled: true,
+                              errorText: sBaseURLError,
+                              helperText:
+                                  'Ruta base del servidor al que realizar la peticion',
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.save),
+                                onPressed: () async {
+                                  if (sBaseURLError == null) {
+                                    bool bRes = await _buttonFieldUpdate(
+                                        widget._projectName,
+                                        'baseurl',
+                                        newButton.baseURL_,
+                                        widget.key);
+                                    if (bRes) {
+                                      setState(() {
+                                        widget.selectedButton!.baseURL_ =
+                                            newButton.baseURL_;
+                                      });
+                                    }
+                                  }
+                                },
+                              ),
+                              label: Text(widget.selectedButton!.baseURL_)),
+                          onChanged: (value) {
+                            setState(() {
+                              newButton.baseURL_ = value;
+                            });
+                            if (!value.contains('http://')) {
+                              sBaseURLError =
+                                  'Tiene que agregar http:// a la URL del servidor.';
+                            } else {
+                              sBaseURLError = null;
+                            }
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15, top: 15),
+                        child: TextField(
+                          decoration: InputDecoration(
+                              filled: true,
+                              errorText: sAPIErrorText,
+                              helperText:
+                                  'API del servidor que quieras consumir',
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.save),
+                                onPressed: () async {
+                                  if (sAPIErrorText == null) {
+                                    bool bRes = await _buttonFieldUpdate(
+                                        widget._projectName,
+                                        'apiurl',
+                                        newButton.apiURL_,
+                                        widget.key);
+                                    if (bRes) {
+                                      setState(() {
+                                        widget.selectedButton!.apiURL_ =
+                                            newButton.apiURL_;
+                                      });
+                                    }
+                                  }
+                                },
+                              ),
+                              label: Text(widget.selectedButton!.apiURL_)),
+                          onChanged: (value) {
+                            setState(() {
+                              newButton.apiURL_ = value;
+                            });
+                            if (!value.contains('/') && value.isEmpty) {
+                              sAPIErrorText =
+                                  'No puede estar vacia y ademas tiene que contener /';
+                            } else {
+                              sAPIErrorText = null;
+                            }
+                          },
+                        ),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(bottom: 15, top: 15),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8.0, right: 8),
+                            child: Row(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 20.0),
+                                  child: Text(
+                                    'HTTP Method',
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ),
+                                DropdownMenu<String>(
+                                  initialSelection:
+                                      widget.selectedButton?.petition_,
+                                  onSelected: (String? value) async {
+                                    // Seleccion de item
+                                    setState(() {
+                                      newButton.petition_ = value!;
+                                      widget.selectedButton?.petition_ = value;
+                                    });
+                                    await _buttonFieldUpdate(
+                                        widget._projectName,
+                                        'petition',
+                                        newButton.petition_,
+                                        widget.key);
+                                  },
+                                  dropdownMenuEntries: _lsPetitionType
+                                      .map<DropdownMenuEntry<String>>(
+                                          (String value) {
+                                    return DropdownMenuEntry<String>(
+                                        value: value, label: value);
+                                  }).toList(),
+                                ),
+                              ],
+                            ),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15, top: 15),
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => JsonEditorView(
+                                        sProjectName: widget._projectName,
+                                        payload:
+                                            widget.selectedButton?.payload_,
+                                        label: widget.selectedButton!.label_)));
+                          },
+                          icon: const Icon(
+                            Icons.javascript,
+                            size: 40,
+                          ),
+                          label: const Text(
+                            'Editar Payload',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ));
         }
