@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,8 +33,7 @@ class _JsonEditorViewState extends State<JsonEditorView> {
     return Scaffold(
       floatingActionButton: IconButton(
           onPressed: () {
-            updatePayload(
-                widget._projectName, 'payload', widget._payload, widget.key);
+            updatePayload(widget._projectName, widget._payload, widget.key);
           },
           icon: const Icon(
             Icons.save,
@@ -66,54 +67,66 @@ class _JsonEditorViewState extends State<JsonEditorView> {
   }
 
   Future<bool> updatePayload(
-      String sProjectName, String field, dynamic newfieldValue, var key) async {
+      String sProjectName, dynamic payload, var key) async {
     //Si esta vacio pasamos de hacer nada
-    if (newfieldValue != null) {
-      // Primero buscamos en el lienzo que toque
-      var lElevatedButtons =
-          await WidgetController.fetchAllElevatedButtons(sProjectName);
 
-      int iPosBtn = 0;
-      for (var rawButton in lElevatedButtons) {
-        if (widget._label == rawButton['label']) {
-          break;
+    // Primero buscamos en el lienzo que toque
+    var lElevatedButtons =
+        await WidgetController.fetchAllElevatedButtons(sProjectName);
+
+    int iPosBtn = 0;
+    for (var rawButton in lElevatedButtons) {
+      if (widget._label == rawButton['label']) {
+        break;
+      }
+      iPosBtn++;
+    }
+
+    //Una vez obtenida la posicion del boton lo actualizamos.
+    try {
+      DatabaseReference ref = FirebaseDatabase.instance
+          .ref("lienzo/$sProjectName/buttons/$iPosBtn");
+
+      Map<String, String> newPayload = {};
+
+      Map<String, dynamic> jsonMap = jsonDecode(payload.toString());
+
+      // Convierte el Map<String, dynamic> a Map<String, String>
+
+      // Itera sobre el mapa original y agrega solo los valores de cadena al nuevo mapa
+      for (var entry in jsonMap.entries) {
+        if (entry.value is String) {
+          newPayload[entry.key] = entry.value;
         }
-        iPosBtn++;
       }
 
-      //Una vez obtenida la posicion del boton lo actualizamos.
-      try {
-        DatabaseReference ref = FirebaseDatabase.instance
-            .ref("lienzo/$sProjectName/buttons/$iPosBtn");
-        await ref.update({field: newfieldValue});
-        return true;
-      } catch (e) {
-        // Print Dialog Error
-        showDialog<String>(
-            context: context,
-            builder: (BuildContext context) => Dialog(
-                child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          const Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Text(
-                                'Error de actualizacion intentelo de nuevo.'),
-                          ),
-                          const SizedBox(height: 15),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Cerrar'),
-                          )
-                        ]))));
-        return false;
-      }
-    } else {
+      await ref.update({'payload': newPayload});
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      // Print Dialog Error
+      showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => Dialog(
+              child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                              'Error de actualizacion intentelo de nuevo.'),
+                        ),
+                        const SizedBox(height: 15),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cerrar'),
+                        )
+                      ]))));
       return false;
     }
   }
