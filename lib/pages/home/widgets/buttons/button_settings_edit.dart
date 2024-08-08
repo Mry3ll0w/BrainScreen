@@ -101,11 +101,17 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                             icon: const Icon(Icons.save),
                             onPressed: () async {
                               if (sLabelErrorText == null) {
-                                _buttonFieldUpdate(
+                                bool bRes = await _buttonFieldUpdate(
                                     widget._projectName,
                                     'labelText',
                                     newButton.labelText_,
                                     widget.key);
+                                if (bRes) {
+                                  setState(() {
+                                    widget.selectedButton!.labelText_ =
+                                        newButton.labelText_;
+                                  });
+                                }
                               }
                             },
                           ),
@@ -207,7 +213,7 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
   /// - `field`: El campo específico del botón que se desea actualizar.
   /// - `newfieldValue`: El nuevo valor que se asignará al campo especificado.
   /// - `key`: Una clave opcional que puede ser utilizada para identificar el contexto de la actualización.
-  Future<void> _buttonFieldUpdate(
+  Future<bool> _buttonFieldUpdate(
       String sProjectName, String field, dynamic newfieldValue, var key) async {
     //Si esta vacio pasamos de hacer nada
     if (newfieldValue.isNotEmpty) {
@@ -228,10 +234,14 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
         DatabaseReference ref = FirebaseDatabase.instance
             .ref("lienzo/$sProjectName/buttons/$iPosBtn");
         await ref.update({field: newfieldValue});
+        return true;
       } catch (e) {
         // Print Dialog Error
         _updateErrorDialog(sProjectName, key);
+        return false;
       }
+    } else {
+      return false;
     }
   }
 }
