@@ -189,4 +189,122 @@ class WidgetController {
 
     return lElevatedButtonsModels;
   }
+
+  /// Agrega un Switch al lienzo del proyecto especificado.
+  ///
+  /// Esta función escribe datos en la base de datos Firebase Realtime Database
+  /// bajo el nodo "lienzo/$sProjectName". Los datos incluyen información básica
+  /// como nombre, edad y dirección.
+  ///
+  /// @param sProjectName El nombre del proyecto al cual se agregará el botón elevado.
+  ///        Debe ser una cadena válida y corresponder al nombre de un proyecto existente.
+  /// @throws Exception Si ocurre un error al intentar escribir en la base de datos,
+  ///        como problemas de permisos o conectividad.
+  static void addSwitchToLienzo(String sProjectName) async {
+    //obtaining the list of buttons linked to that lienzo
+    // 1st we get the db ref
+    DatabaseReference refDB =
+        FirebaseDatabase.instance.ref().child('lienzo/$sProjectName/buttons');
+
+    // to read once we use final
+    final snapshot = await refDB.get();
+    Set<dynamic>? setOfSwitches;
+    if (snapshot.exists) {
+      // Ahora pasamos el valor a set
+      var valueFromSnapshot = snapshot.value;
+      if (valueFromSnapshot != null) {
+        // Suponiendo que valueFromSnapshot es una lista o un mapa que quieres convertir a un Set
+        // Para una lista, puedes hacer algo como esto:
+
+        if (valueFromSnapshot is List<dynamic>) {
+          setOfSwitches = {...valueFromSnapshot.toSet()};
+
+          // Al tener un set evitamos elementos repetidos, ahora iteramos la lista
+          var setOfSwitchLabels = Set();
+
+          // Obtenemos todos los labels y lo metemos en lista para agregar el nuevo
+          for (var b in setOfSwitches) {
+            String currentLabel = b['label'];
+            setOfSwitchLabels.add(currentLabel);
+          }
+          //Usamos la funcion generadora de labels
+          String newLabel = randomLabelGenerator(6);
+          while (setOfSwitchLabels.contains(newLabel)) {
+            newLabel = randomLabelGenerator(6);
+          }
+
+          //Una vez tenemos la nueva label creamos la instancia del switch vacio.
+          Map<String, dynamic> newSwitch = {
+            "label": newLabel,
+            "type": "1",
+            "labelText": "Switch",
+            "position": "0",
+            "baseurl_get":dotenv.env['TESTING_SERVER_URL'],
+            "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
+            "apiurl_post": "/test",
+            "apiurl_get":"/"
+            "payload": {"dato": "valor"}
+          };
+
+          setOfSwitches.add(newSwitch);
+
+          DatabaseReference ref =
+              FirebaseDatabase.instance.ref("lienzo/$sProjectName");
+
+          await ref.update({
+            "buttons": setOfSwitches.toList(),
+          });
+        }
+        // Para un mapa, puedes hacer algo como esto:
+        // if (valueFromSnapshot is Map<dynamic, dynamic>) {
+        //   setOfSwitches = {...valueFromSnapshot.keys.toSet()};
+        // }
+      } else {
+        // Si no es una lista, implica que no existen botones por lo que lo agregamos directamente
+        DatabaseReference ref =
+            FirebaseDatabase.instance.ref("lienzo/$sProjectName");
+
+        //Updating the button list
+        await ref.set({
+          "buttons": [
+            {
+            "label": newLabel,
+            "type": "1",
+            "labelText": "Switch",
+            "position": "0",
+            "baseurl_get":dotenv.env['TESTING_SERVER_URL'],
+            "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
+            "apiurl_post": "/test",
+            "apiurl_get":"/"
+            "payload": {"dato": "valor"}
+          }
+          ],
+        });
+      }
+    } else {
+      // Si no es una lista, implica que no existen botones por lo que lo agregamos directamente
+      DatabaseReference ref =
+          FirebaseDatabase.instance.ref("lienzo/$sProjectName");
+
+      //Updating the button list
+      await ref.set({
+        "buttons": [
+          {
+            {
+            "label": newLabel,
+            "type": "1",
+            "labelText": "Switch",
+            "position": "0",
+            "baseurl_get":dotenv.env['TESTING_SERVER_URL'],
+            "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
+            "apiurl_post": "/test",
+            "apiurl_get":"/"
+            "payload": {"dato": "valor"}
+          }
+        ],
+      });
+    }
+  }
+
+  
 }
