@@ -239,10 +239,10 @@ class WidgetController {
             "type": "1",
             "labelText": "Switch",
             "position": "0",
-            "baseurl_get":dotenv.env['TESTING_SERVER_URL'],
+            "baseurl_get": dotenv.env['TESTING_SERVER_URL'],
             "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
             "apiurl_post": "/test",
-            "apiurl_get":"/"
+            "apiurl_get": "/",
             "payload": {"dato": "valor"}
           };
 
@@ -268,16 +268,16 @@ class WidgetController {
         await ref.set({
           "buttons": [
             {
-            "label": newLabel,
-            "type": "1",
-            "labelText": "Switch",
-            "position": "0",
-            "baseurl_get":dotenv.env['TESTING_SERVER_URL'],
-            "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
-            "apiurl_post": "/test",
-            "apiurl_get":"/"
-            "payload": {"dato": "valor"}
-          }
+              "label": randomLabelGenerator(6),
+              "type": "1",
+              "labelText": "Switch",
+              "position": "0",
+              "baseurl_get": dotenv.env['TESTING_SERVER_URL'],
+              "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
+              "apiurl_post": "/test",
+              "apiurl_get": "/",
+              "payload": {"dato": "valor"}
+            }
           ],
         });
       }
@@ -290,21 +290,18 @@ class WidgetController {
       await ref.set({
         "buttons": [
           {
-            {
-            "label": newLabel,
+            "label": randomLabelGenerator(6),
             "type": "1",
             "labelText": "Switch",
             "position": "0",
-            "baseurl_get":dotenv.env['TESTING_SERVER_URL'],
+            "baseurl_get": dotenv.env['TESTING_SERVER_URL'],
             "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
             "apiurl_post": "/test",
-            "apiurl_get":"/"
+            "apiurl_get": "/",
             "payload": {"dato": "valor"}
           }
-        ],
+        ]
       });
     }
   }
-
-  
 }
