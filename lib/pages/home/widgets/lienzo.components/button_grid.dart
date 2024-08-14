@@ -171,6 +171,7 @@ class ButtonGrid extends StatelessWidget //__
   Future<Widget> initializeSwitches(String sProjectName) async {
     List<SwitchButtonModel> switchList =
         await WidgetController.fetchAllSwitchesFromProject(sProjectName);
+
     return styledSwitchesModels(switchList);
   }
 
@@ -186,7 +187,7 @@ class ButtonGrid extends StatelessWidget //__
         List<Widget> switchRow = [];
 
         // Agregamos hasta dos botones por fila
-        switchRow.add(s.buildSwitchWidget());
+        switchRow.add(s.buildSwitchWidget(super.key));
 
         // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
         rows.add(Row(

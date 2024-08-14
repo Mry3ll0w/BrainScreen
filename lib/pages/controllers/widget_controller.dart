@@ -244,7 +244,8 @@ class WidgetController {
             "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
             "apiurl_post": "/test",
             "apiurl_get": "/",
-            "payload": {"dato": "valor"}
+            "payload": {"dato": "valor"},
+            "value": "true"
           };
 
           setOfSwitches.add(newSwitch);
@@ -277,7 +278,8 @@ class WidgetController {
               "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
               "apiurl_post": "/test",
               "apiurl_get": "/",
-              "payload": {"dato": "valor"}
+              "payload": {"dato": "valor"},
+              "value": "true"
             }
           ],
         });
@@ -299,7 +301,8 @@ class WidgetController {
             "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
             "apiurl_post": "/test",
             "apiurl_get": "/",
-            "payload": {"dato": "valor"}
+            "payload": {"dato": "valor"},
+            "value": "true"
           }
         ]
       });
@@ -325,21 +328,26 @@ class WidgetController {
 
           // Iteramos la lista de switches
           for (var s in setOfSwitches) {
-            lSwitches.add(SwitchButtonModel(
-                type: s['type'],
-                position: s['position'],
-                label: s['label'],
-                labelText: s['labelText'],
-                baseurlGet: s['baseurl_get'],
-                baseurlPost: s['baseurl_post'],
-                apiurlGet: s['apiurl_get'],
-                apiurlPost: s['apiurl_post'],
-                payload: s['payload']));
+            if (s['type'] == '1') {
+              lSwitches.add(SwitchButtonModel(
+                  type: s['type'],
+                  position: s['position'],
+                  label: s['label'],
+                  labelText: s['labelText'],
+                  baseurlGet: s['baseurl_get'],
+                  baseurlPost: s['baseurl_post'],
+                  apiurlGet: s['apiurl_get'],
+                  apiurlPost: s['apiurl_post'],
+                  payload: s['payload'],
+                  bvalue: bool.parse(s['value'])));
+            }
           }
+
+          return lSwitches;
         }
       }
     } catch (e) {
-      debugPrint("Error");
+      debugPrint("Error $e");
     }
 
     return lSwitches;
