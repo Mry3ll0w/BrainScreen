@@ -159,6 +159,27 @@ nodeServer.post('/test', async (req, res) => {
   }
 });
 
+nodeServer.get('/test', async (req, res) => {
+  const {firebaseuid, amazonuid}= req.headers;
+  console.table({body: req.body, peticion: 'GET'});
+  try {
+    if (firebaseuid === undefined || amazonuid === undefined) {
+      res.status(403).send({res: 'test is error due to unauthorized'});
+    } else {
+      const projectController = new ProjectController(DB);
+      // Check if user has access
+      const bUserAllowed = await projectController.
+          userAllowedForServerRequests(amazonuid, firebaseuid);
+      if (!bUserAllowed) {
+        res.status(403).send({res: 'test is error, user not allowed'});
+      }
+      res.status(200).send({res: 'true'});
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 nodeServer.listen(port, () => {
   console.log(`Servidor Backend en el puerto ${port}`);
 });
