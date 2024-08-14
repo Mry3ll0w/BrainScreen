@@ -1,4 +1,5 @@
-import 'dart:ffi';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/material.dart';
 
 class SwitchButtonModel {
   // Declaramos los atributos
@@ -43,5 +44,38 @@ class SwitchButtonModel {
     _apiURL_GET = apiurlGet;
     _apiURL_POST = apiurlPost;
     _payload = payload;
+  }
+
+  void _petitionErrorNotification(
+      int errorCode, String projectName, bool isTimeException) {
+    if (!isTimeException && errorCode == 500) {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del botón',
+              body:
+                  'En el proyecto $projectName al pulsar el boton con el label $_labelText se ha producido un error desconocido. '));
+    } else if (isTimeException) {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del botón',
+              body:
+                  'En el proyecto $projectName al pulsar el boton con el label $_labelText se ha tardado demasiado tiempo de respuesta, consulta el estado del servidor '));
+    } else {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del botón',
+              body:
+                  'En el proyecto $projectName al pulsar el boton con el label $_labelText se ha recibido el codigo HTTP: $errorCode '));
+    }
+  }
+
+  Widget buildSwitchWidget() {
+    return const Text("pruebas");
   }
 }

@@ -166,7 +166,13 @@ class _ButtonSelectorState extends State<ButtonSelector> {
                 child: Text('Agregar a ${widget.sProjectName!}'),
               ),
               onPressed: () {
-                //TODO: Implementar controlador de agregar switches
+                WidgetController.addSwitchToLienzo(widget.sProjectName!);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Home.named(
+                            title: widget.sProjectName,
+                            projectToLoad: widget.sProjectName)));
               },
             ),
             const SizedBox(width: 8),

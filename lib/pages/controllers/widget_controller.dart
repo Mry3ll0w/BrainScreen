@@ -1,4 +1,5 @@
 import 'package:brainscreen/pages/models/button_model.dart';
+import 'package:brainscreen/pages/models/switch_button_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:math';
@@ -303,5 +304,44 @@ class WidgetController {
         ]
       });
     }
+  }
+
+  static Future<List<SwitchButtonModel>> fetchAllSwitchesFromProject(
+      String sProjectName) async {
+    List<SwitchButtonModel> lSwitches = [];
+    Set<dynamic>? setOfSwitches;
+    //Pillamos todos los switches de ese proyecto
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref("lienzo/$sProjectName/buttons");
+    final snapshot = await ref.get();
+    try {
+      var valueFromSnapshot = snapshot.value;
+      if (valueFromSnapshot != null) {
+        // Suponiendo que valueFromSnapshot es una lista o un mapa que quieres convertir a un Set
+        // Para una lista, puedes hacer algo como esto:
+
+        if (valueFromSnapshot is List<dynamic>) {
+          setOfSwitches = {...valueFromSnapshot.toSet()};
+
+          // Iteramos la lista de switches
+          for (var s in setOfSwitches) {
+            lSwitches.add(SwitchButtonModel(
+                type: s['type'],
+                position: s['position'],
+                label: s['label'],
+                labelText: s['labelText'],
+                baseurlGet: s['baseurl_get'],
+                baseurlPost: s['baseurl_post'],
+                apiurlGet: s['apiurl_get'],
+                apiurlPost: s['apiurl_post'],
+                payload: s['payload']));
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint("Error");
+    }
+
+    return lSwitches;
   }
 }

@@ -3,6 +3,7 @@ import 'package:accordion/controllers.dart';
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
+import 'package:brainscreen/pages/models/switch_button_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -92,7 +93,7 @@ class ButtonGrid extends StatelessWidget //__
                   const Icon(Icons.text_fields_rounded, color: Colors.white),
               header: const Text('Interruptores', style: headerStyle),
               content: FutureBuilder(
-                  future: initializeSwitches(),
+                  future: initializeSwitches(projectName_!),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return snapshot.data as Widget;
@@ -132,7 +133,6 @@ class ButtonGrid extends StatelessWidget //__
         // Agregamos hasta dos botones por fila
         for (int j = i; j < i + 2 && j < buttonList.length; j++) {
           // Creamos el Modelo del boton
-          print(buttonList[j].toString());
           var b = ElevatedButtonModel(
               label: buttonList[j]['label'],
               labelText: buttonList[j]['labelText'],
@@ -168,8 +168,45 @@ class ButtonGrid extends StatelessWidget //__
     return c;
   }
 
-  Future<Widget> initializeSwitches() async {
-    return Text('Switches');
+  Future<Widget> initializeSwitches(String sProjectName) async {
+    List<SwitchButtonModel> switchList =
+        await WidgetController.fetchAllSwitchesFromProject(sProjectName);
+    return styledSwitchesModels(switchList);
+  }
+
+  Widget styledSwitchesModels(List<SwitchButtonModel> switchList) {
+    // Creamos una lista para almacenar las filas (Rows) que contendrán los botones
+    List<Widget> rows = [];
+
+    try {
+      // Iteramos sobre la lista de botones
+      for (SwitchButtonModel s in switchList) {
+        // Incrementamos de 2 en 2
+        // Creamos una lista temporal para almacenar los botones de cada fila
+        List<Widget> switchRow = [];
+
+        // Agregamos hasta dos botones por fila
+        switchRow.add(s.buildSwitchWidget());
+
+        // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
+        rows.add(Row(
+          mainAxisAlignment: MainAxisAlignment
+              .spaceEvenly, // Distribuye los botones en el espacio disponible
+          children: switchRow,
+        ));
+      }
+    } catch (e) {
+      rows = [const Text('Se ha producido un error en la lectura del widget')];
+    }
+
+    // Creamos el contenedor que tendrá todas las filas con los botones estilados
+    Container c = Container(
+      child: Column(
+        children: rows,
+      ),
+    );
+
+    return c;
   }
 
   Future<Widget> intializeSliders() async {
