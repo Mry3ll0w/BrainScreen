@@ -4,6 +4,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:brainscreen/pages/controllers/general_functions.dart';
 import 'package:brainscreen/pages/controllers/http_controller.dart';
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class SwitchButtonModel {
@@ -63,8 +64,11 @@ class SwitchButtonModel {
   }
 
   // Método para construir el widget
-  Widget buildSwitchWidget(key) {
-    return SwitchWidgetBlock(s: this);
+  Widget buildSwitchWidget(key, String projectName) {
+    return SwitchWidgetBlock(
+      s: this,
+      sProjectName: projectName,
+    );
   }
 }
 
@@ -79,7 +83,12 @@ class SwitchWidgetBlock extends StatefulWidget {
       apiurlPost: 'apiurlPost',
       payload: 'payload',
       bvalue: true);
-  SwitchWidgetBlock({super.key, required SwitchButtonModel s}) : sw = s;
+  String _projectName = '';
+
+  SwitchWidgetBlock(
+      {super.key, required SwitchButtonModel s, required String sProjectName})
+      : sw = s,
+        _projectName = sProjectName;
 
   @override
   State<SwitchWidgetBlock> createState() => _SwitchWidgetBlockState();
@@ -126,13 +135,27 @@ class _SwitchWidgetBlockState extends State<SwitchWidgetBlock>
   Future<bool?> _handleValueChange() async {
     try {
       // POST
-      //debugPrint('Resultado de GET: ${res.toString()}');
-      return true;
+      dynamic res = await HttpRequestsController.post_with_response(
+              widget.sw._baseURL_POST,
+              widget.sw._apiURL_POST,
+              widget.sw.payload,
+              GeneralFunctions.getLoggedUserUID(),
+              '')
+          .timeout(const Duration(seconds: 2));
+
+      //Pillamos el resultado de la peticion
+      //! RECUERDA AL USUARIO QUE TIENE QUE HACER LAS PETICIONES CON RES:
+      bool newState = bool.parse(res['response']['res'].toString());
+      //Actualizamos el valor de ese modelo.
+      await _SwitchValueUpdate(
+          widget._projectName, 'value', newState.toString());
+
+      return newState;
     } on TimeoutException {
       _petitionErrorNotification(500, widget.sw._labelText, true);
       return null;
     } catch (e) {
-      debugPrint('ERROR en GET: $e');
+      debugPrint('ERROR en POST: $e');
       _petitionErrorNotification(500, widget.sw._labelText, false);
       return null;
     }
@@ -165,6 +188,39 @@ class _SwitchWidgetBlockState extends State<SwitchWidgetBlock>
               title: 'Error durante la peticion del Interruptor',
               body:
                   'Al pulsar el interruptor con el label $buttonLabel se ha recibido el codigo HTTP: $errorCode '));
+    }
+  }
+
+  // Updates the value in that Switch
+  Future<bool> _SwitchValueUpdate(
+      String sProjectName, String field, dynamic newfieldValue) async {
+    //Si esta vacio pasamos de hacer nada
+    if (newfieldValue.isNotEmpty) {
+      // Primero buscamos en el lienzo que toque
+      var lElevatedButtons =
+          await WidgetController.fetchAllElevatedButtons(sProjectName);
+
+      int iPosBtn = 0;
+      for (var rawButton in lElevatedButtons) {
+        if (widget.sw._label == rawButton['label']) {
+          break;
+        }
+        iPosBtn++;
+      }
+
+      //Una vez obtenida la posicion del boton lo actualizamos.
+      try {
+        DatabaseReference ref = FirebaseDatabase.instance
+            .ref("lienzo/$sProjectName/buttons/$iPosBtn");
+        await ref.update({field: newfieldValue});
+        return true;
+      } catch (e) {
+        // Print Dialog Error
+        _petitionErrorNotification(500, widget.sw._labelText, false);
+        return false;
+      }
+    } else {
+      return false;
     }
   }
 }

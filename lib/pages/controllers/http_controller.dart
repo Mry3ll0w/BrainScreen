@@ -50,6 +50,39 @@ class HttpRequestsController {
         .statusCode; // Siempre devolvemos el status code, ya que el post no espera respuesta compleja si no confirmacion de la accion.
   }
 
+  /// Realiza una peticion de tipo POST y reciba la respuesta, pensado para los widgets.
+  /// @param serverUrl: url del servidor original. (ej: google.es)
+  /// @param api: Seccion del servidor a la que queremos hacer la peticion (ej: google.es/getData ==> /getData)
+  /// @param object: Dato del cuerpo a enviar (ej: {"data": 4})
+  /// @param firebaseUID: uid del usuario de firebase
+  /// @param amazonUID: uid de amazon.
+  /// @return {status: int, response: dynamic}
+  static Future<dynamic> post_with_response(String serverUrl, String api,
+      dynamic object, String firebaseUID, String amazonUID) async {
+    var url = Uri.parse(serverUrl + api);
+    var payload = convert.json.encode(object);
+    var headers = {
+      'Content-Type': 'application/json',
+      'firebaseUID': firebaseUID,
+      'amazonUID': amazonUID,
+    };
+
+    var response = await client_.post(url, body: payload, headers: headers);
+
+    // Decode the JSON string to a Map<dynamic, dynamic>
+    Map<dynamic, dynamic> tempMap = convert.jsonDecode(response.body);
+
+    // Cast the Map<dynamic, dynamic> to Map<String, String>
+    Map<String, String> resultMap = tempMap.cast<String, String>();
+
+    // Pasamos el cuerpo respondido a json
+    var fullResponse = {
+      'status': response.statusCode.toString(),
+      'response': resultMap
+    };
+    return fullResponse; // Siempre devolvemos el status code, ya que el post no espera respuesta compleja si no confirmacion de la accion.
+  }
+
   // Realiza una peticion de tipo PUT, pensado para los widgets.
   /// @param serverUrl: url del servidor original. (ej: google.es)
   /// @param api: Seccion del servidor a la que queremos hacer la peticion (ej: google.es/getData ==> /getData)
