@@ -83,10 +83,10 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
           label: s.label,
           labelText: s.labelText,
           type: s.type,
-          petition: '',
-          baseURL: 'baseURL',
-          apiURL: 'apiURL',
-          payload: {}));
+          petition: 'POST',
+          baseURL: s.baseURLPOST,
+          apiURL: s.apiURLPOST,
+          payload: s.payload));
     }
 
     return Container(

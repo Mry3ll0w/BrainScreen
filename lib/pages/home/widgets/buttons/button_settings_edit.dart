@@ -144,11 +144,24 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                 icon: const Icon(Icons.save),
                                 onPressed: () async {
                                   if (sBaseURLError == null) {
-                                    bool bRes = await _buttonFieldUpdate(
-                                        widget._projectName,
-                                        'baseurl',
-                                        newButton.baseURL_,
-                                        widget.key);
+                                    bool bRes = true;
+                                    if (widget.selectedButton!.type_ == '0') {
+                                      bRes = await _buttonFieldUpdate(
+                                          widget._projectName,
+                                          'baseurl',
+                                          newButton.baseURL_,
+                                          widget.key);
+                                    } else if (widget.selectedButton!.type_ ==
+                                        '1') {
+                                      //Switch
+                                      bRes = await _buttonFieldUpdate(
+                                          widget._projectName,
+                                          'baseurl_post',
+                                          newButton.baseURL_,
+                                          widget.key);
+                                    } else {
+                                      //TODO AGREGAR SLIDER CUANDO ESTE LISTO
+                                    }
                                     if (bRes) {
                                       setState(() {
                                         widget.selectedButton!.baseURL_ =
@@ -184,11 +197,24 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                 icon: const Icon(Icons.save),
                                 onPressed: () async {
                                   if (sAPIErrorText == null) {
-                                    bool bRes = await _buttonFieldUpdate(
-                                        widget._projectName,
-                                        'apiurl',
-                                        newButton.apiURL_,
-                                        widget.key);
+                                    bool bRes = true;
+                                    if (widget.selectedButton!.type_ == '0') {
+                                      bRes = await _buttonFieldUpdate(
+                                          widget._projectName,
+                                          'apiurl',
+                                          newButton.baseURL_,
+                                          widget.key);
+                                    } else if (widget.selectedButton!.type_ ==
+                                        '1') {
+                                      //Switch
+                                      bRes = await _buttonFieldUpdate(
+                                          widget._projectName,
+                                          'apiurl_post',
+                                          newButton.baseURL_,
+                                          widget.key);
+                                    } else {
+                                      //TODO AGREGAR SLIDER CUANDO ESTE LISTO
+                                    }
                                     if (bRes) {
                                       setState(() {
                                         widget.selectedButton!.apiURL_ =
@@ -226,6 +252,9 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                   ),
                                 ),
                                 DropdownMenu<String>(
+                                  enabled: widget.selectedButton!.type_ == '0'
+                                      ? true
+                                      : false,
                                   initialSelection:
                                       widget.selectedButton?.petition_,
                                   onSelected: (String? value) async {
