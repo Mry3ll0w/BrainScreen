@@ -231,7 +231,7 @@ class ButtonGrid extends StatelessWidget //__
         List<Widget> switchRow = [];
 
         // Agregamos hasta dos botones por fila
-        switchRow.add(s.buildSwitchWidget(super.key));
+        switchRow.add(s.buildSwitchWidget(super.key, projectName_!));
 
         // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
         rows.add(Row(
@@ -247,7 +247,7 @@ class ButtonGrid extends StatelessWidget //__
     if (rows.isEmpty) {
       // Creamos el contenedor que tendrá todas las filas con los botones estilados
       return Container(
-        child: Column(
+        child: const Column(
           children: [Text('No hay elementos, agrega uno')],
         ),
       );

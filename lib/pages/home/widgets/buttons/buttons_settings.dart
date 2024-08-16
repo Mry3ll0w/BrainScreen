@@ -1,6 +1,7 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button_settings_edit.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
+import 'package:brainscreen/pages/models/switch_button_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -39,23 +40,53 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
   Future<Widget> _loadAllButtonsData(String projectName) async {
     List<ElevatedButtonModel> lElevatedButtons =
         await WidgetController.fetchElevatedButtonsModels(projectName);
+    List<SwitchButtonModel> lSwitchButtonModels =
+        await WidgetController.fetchAllSwitchesFromProject(widget._projectName);
 
     return Scaffold(
         appBar: AppBar(
           title: const Text('Ajustes de botones'),
         ),
-        body: _buildListTiles(lElevatedButtons));
+        body: _buildListTiles(lElevatedButtons, lSwitchButtonModels));
   }
 
-  // ! FIX ERROR TURBIO DE LAYOUT
-  Widget _buildListTiles(List<ElevatedButtonModel> aButtons) {
+  Widget _buildListTiles(
+      List<ElevatedButtonModel> aButtons, List<SwitchButtonModel> aSwitches) {
     List<Widget> lTiles = [];
+
     for (var b in aButtons) {
       lTiles.add(ListTile(
-        leading: Icon(Icons.smart_button_outlined),
+        leading: const Icon(Icons.smart_button_outlined),
         title: Text(b.labelText_),
         subtitle: const Text("Botón"),
       ));
+    }
+
+    for (var s in aSwitches) {
+      // Preparamos La lista de Filas
+      lTiles.add(ListTile(
+        leading: const Row(
+          children: [
+            Icon(Icons.light_mode),
+            Text(
+              '/',
+              style: TextStyle(fontSize: 20),
+            ),
+            Icon(Icons.light_mode_outlined)
+          ],
+        ),
+        title: Text(s.labelText),
+        subtitle: const Text("Interruptor"),
+      ));
+      // Parseamos de Switch a button
+      aButtons.add(ElevatedButtonModel(
+          label: s.label,
+          labelText: s.labelText,
+          type: s.type,
+          petition: '',
+          baseURL: 'baseURL',
+          apiURL: 'apiURL',
+          payload: {}));
     }
 
     return Container(
@@ -64,7 +95,7 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
             itemCount: lTiles.length,
             itemBuilder: (context, index) {
               return ListTile(
-                leading: const Icon(Icons.bolt),
+                leading: _iconSelector(aButtons[index].type_),
                 title: Text(aButtons[index].labelText_),
                 subtitle: Text(_buttonTypeString(aButtons[index].type_)),
                 onTap: () {
@@ -88,6 +119,16 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
         return 'Btn. Switch';
       default:
         return 'Btn.';
+    }
+  }
+
+  Widget _iconSelector(String type) {
+    if (type == '0') {
+      return const Icon(Icons.bolt);
+    } else if (type == '1') {
+      return const Icon(Icons.light_mode);
+    } else {
+      return const Icon(Icons.commit);
     }
   }
 }
