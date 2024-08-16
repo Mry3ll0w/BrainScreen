@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:brainscreen/pages/controllers/general_functions.dart';
 import 'package:brainscreen/pages/controllers/http_controller.dart';
@@ -123,15 +125,11 @@ class _SwitchWidgetBlockState extends State<SwitchWidgetBlock>
             value: widget.sw.value, // Usa el dato obtenido del Future
             onChanged: (v) async {
               //Aplicamos el cambio de valor
-              try {
-                var res = await _handleValueChange()
-                    .timeout(const Duration(seconds: 2));
+              var res = await _handleValueChange();
+              if (res != null) {
                 setState(() {
                   widget.sw.value = v;
                 });
-              } catch (e) {
-                debugPrint('ERROR en GET: $e');
-                //TODO SHOW DIALOG ERROR
               }
             }),
         Text(widget.sw.labelText)
@@ -140,16 +138,54 @@ class _SwitchWidgetBlockState extends State<SwitchWidgetBlock>
   }
 
   /// Gestiona los cambios de valor en un switch
-  Future<bool> _handleValueChange() async {
+  Future<bool?> _handleValueChange() async {
     try {
-      var res = await HttpRequestsController.get(widget.sw.baseURLGET,
-          widget.sw.apiURLGET, 'res', GeneralFunctions.getLoggedUserUID(), '');
+      var res = await HttpRequestsController.get(
+              widget.sw.baseURLGET,
+              widget.sw.apiURLGET,
+              'res',
+              GeneralFunctions.getLoggedUserUID(),
+              '')
+          .timeout(const Duration(seconds: 2));
       debugPrint(res);
       return true;
+    } on TimeoutException {
+      _petitionErrorNotification(500, widget.sw._labelText, true);
+      return null;
     } catch (e) {
-      debugPrint("Error de lectura del valor del switch: $e");
+      debugPrint('ERROR en GET: $e');
+      _petitionErrorNotification(500, widget.sw._labelText, false);
+      return null;
     }
+  }
 
-    return false;
+  /// Error de conexiones de switch
+  void _petitionErrorNotification(
+      int errorCode, String buttonLabel, bool isTimeException) {
+    if (!isTimeException && errorCode == 500) {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del Interruptor',
+              body:
+                  'Error al pulsar el interruptor con el label $buttonLabel se ha producido un error desconocido. '));
+    } else if (isTimeException) {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del Interruptor',
+              body:
+                  'Al pulsar el interruptor con el label $buttonLabel se ha tardado demasiado tiempo de respuesta, consulta el estado del servidor '));
+    } else {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del Interruptor',
+              body:
+                  'Al pulsar el interruptor con el label $buttonLabel se ha recibido el codigo HTTP: $errorCode '));
+    }
   }
 }
