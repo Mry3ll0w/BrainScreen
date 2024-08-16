@@ -4,6 +4,7 @@ import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:brainscreen/pages/models/switch_button_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_json_view/flutter_json_view.dart';
 
 class ButtonSettingsList extends StatefulWidget {
   String _projectName = "";

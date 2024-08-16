@@ -1,12 +1,14 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button_payload_editor.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
+import 'package:brainscreen/pages/home/widgets/lienzo.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:json_editor/json_editor.dart';
+import 'package:flutter_json_view/flutter_json_view.dart';
 
 class ButtonSettingsEdit extends StatefulWidget {
   String _projectName = "";
@@ -50,6 +52,15 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
     super.initState();
     _lElevatedButtons =
         WidgetController.fetchElevatedButtonsModels(widget._projectName);
+
+    //Comprobamos si se trata de un Switch, para en caso de serlo desplegar un dialog.
+    // Retrasar la verificación del tipo de botón para asegurar que el widget esté completamente inicializado
+    Future.delayed(Duration.zero, () {
+      if (widget.selectedButton != null &&
+          widget.selectedButton!.type_ == '1') {
+        _showSwitchRequirements(widget.key);
+      }
+    });
   }
 
   @override
@@ -301,7 +312,27 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                             style: TextStyle(fontSize: 20),
                           ),
                         ),
-                      )
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Home.named(
+                                          title: widget._projectName,
+                                          projectToLoad: widget._projectName)));
+                            },
+                            icon: const Icon(
+                              Icons.beenhere_sharp,
+                              size: 30,
+                            ),
+                            label: const Text(
+                              'Volver al lienzo',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ))
                     ],
                   ),
                 ),
@@ -385,5 +416,47 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
     } else {
       return false;
     }
+  }
+
+  /// Funcion para mostrar como hacer que el switch pueda ser integrado de forma correcta
+  /// con el servicio de turno.
+  /// Muestra un mensaje de error usando dialog si se produce alguno
+  void _showSwitchRequirements(var key) {
+    showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => Dialog(
+            child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          'Recuerda agregar en el servicio la respuesta al switch de la siguinte forma:',
+                          style: TextStyle(
+                              fontSize:
+                                  20 * MediaQuery.of(context).size.width / 360),
+                        ),
+                      ),
+                      Container(
+                        height: 300,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20)),
+                        child: JsonView.string(
+                          '{"res": "true"}',
+                          theme:
+                              const JsonViewTheme(viewType: JsonViewType.base),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cerrar'),
+                      )
+                    ]))));
   }
 }
