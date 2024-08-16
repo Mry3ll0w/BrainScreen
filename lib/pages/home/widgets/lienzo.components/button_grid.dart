@@ -48,6 +48,10 @@ class ButtonGrid extends StatelessWidget //__
           children: [
             AccordionSection(
               contentVerticalPadding: 20,
+              leftIcon: Icon(
+                Icons.bolt_sharp,
+                color: Colors.white,
+              ),
               rightIcon: IconButton(
                 icon: const Icon(
                   Icons.settings,
@@ -74,8 +78,20 @@ class ButtonGrid extends StatelessWidget //__
             ),
             AccordionSection(
               contentVerticalPadding: 20,
-              leftIcon:
-                  const Icon(Icons.text_fields_rounded, color: Colors.white),
+              leftIcon: const Icon(Icons.commit, color: Colors.white),
+              rightIcon: IconButton(
+                icon: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ButtonSettingsList(
+                              key: key, sProjectName: projectName_!)));
+                },
+              ),
               header: const Text('Sliders', style: headerStyle),
               content: FutureBuilder(
                   future: intializeSliders(),
@@ -89,8 +105,29 @@ class ButtonGrid extends StatelessWidget //__
             ),
             AccordionSection(
               contentVerticalPadding: 20,
-              leftIcon:
-                  const Icon(Icons.text_fields_rounded, color: Colors.white),
+              leftIcon: const Row(
+                children: [
+                  Icon(Icons.light_mode, color: Colors.white),
+                  const Text(
+                    '/',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  Icon(Icons.light_mode_outlined, color: Colors.white)
+                ],
+              ),
+              rightIcon: IconButton(
+                icon: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ButtonSettingsList(
+                              key: key, sProjectName: projectName_!)));
+                },
+              ),
               header: const Text('Interruptores', style: headerStyle),
               content: FutureBuilder(
                   future: initializeSwitches(projectName_!),

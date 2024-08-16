@@ -162,29 +162,6 @@ nodeServer.post('/test', async (req, res) => {
 // GESTION DE PRUEBAS CON SWITCH
 //---------------------------------------------------------------------------------------------------
 
-nodeServer.get('/testSwitch', async (req, res) => {
-  const {firebaseuid, amazonuid}= req.headers;
-  try {
-    if (firebaseuid === undefined || amazonuid === undefined) {
-      res.status(403).send({res: 'test is error due to unauthorized'});
-    } else {
-      const projectController = new ProjectController(DB);
-      // Check if user has access
-      const bUserAllowed = await projectController.
-          userAllowedForServerRequests(amazonuid, firebaseuid);
-      
-      if (!bUserAllowed) {
-        res.status(403).send({res: 'test is error, user not allowed'});
-      }else{
-        console.log('Se envia un 200 GET')
-        res.status(200).send({res: 'true'});
-      }
-    }
-  } catch (e) {
-    console.log(e);
-  }
-});
-
 nodeServer.post('/testSwitch', async (req, res) => {
   const {firebaseuid, amazonuid}= req.headers;
   try {
@@ -199,7 +176,9 @@ nodeServer.post('/testSwitch', async (req, res) => {
       if (!bUserAllowed) {
         res.status(403).send({res: 'test is error, user not allowed'});
       }else{
+        // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
         console.log('Se envia un 200 POST: ')
+        
         console.table(req.body)
 
         res.status(200).send({res: 'true'});

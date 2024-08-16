@@ -68,6 +68,7 @@ class SwitchButtonModel {
   }
 }
 
+/// Model de Switch a enviar para hacerlo mas limpio
 class SwitchWidgetBlock extends StatefulWidget {
   SwitchButtonModel sw = SwitchButtonModel(
       type: 'type',
