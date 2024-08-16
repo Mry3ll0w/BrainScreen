@@ -236,14 +236,12 @@ class WidgetController {
 
           //Una vez tenemos la nueva label creamos la instancia del switch vacio.
           Map<String, dynamic> newSwitch = {
-            "label": newLabel,
+            "label": randomLabelGenerator(6),
             "type": "1",
             "labelText": "Switch",
             "position": "0",
-            "baseurl_get": dotenv.env['TESTING_SERVER_URL'],
             "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
             "apiurl_post": "/test",
-            "apiurl_get": "/",
             "payload": {"dato": "valor"},
             "value": "true"
           };
@@ -274,10 +272,8 @@ class WidgetController {
               "type": "1",
               "labelText": "Switch",
               "position": "0",
-              "baseurl_get": dotenv.env['TESTING_SERVER_URL'],
               "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
               "apiurl_post": "/test",
-              "apiurl_get": "/",
               "payload": {"dato": "valor"},
               "value": "true"
             }
@@ -297,10 +293,8 @@ class WidgetController {
             "type": "1",
             "labelText": "Switch",
             "position": "0",
-            "baseurl_get": dotenv.env['TESTING_SERVER_URL'],
             "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
             "apiurl_post": "/test",
-            "apiurl_get": "/",
             "payload": {"dato": "valor"},
             "value": "true"
           }
@@ -334,9 +328,7 @@ class WidgetController {
                   position: s['position'],
                   label: s['label'],
                   labelText: s['labelText'],
-                  baseurlGet: s['baseurl_get'],
                   baseurlPost: s['baseurl_post'],
-                  apiurlGet: s['apiurl_get'],
                   apiurlPost: s['apiurl_post'],
                   payload: s['payload'],
                   bvalue: bool.parse(s['value'])));

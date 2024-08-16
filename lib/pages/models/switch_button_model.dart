@@ -10,12 +10,7 @@ class SwitchButtonModel {
   // Declaramos los atributos
 
   String _type = '', _position = '';
-  String _label = '',
-      _labelText = '',
-      _baseURL_GET = '',
-      _baseURL_POST = '',
-      _apiURL_POST = '',
-      _apiURL_GET = '';
+  String _label = '', _labelText = '', _baseURL_POST = '', _apiURL_POST = '';
   dynamic _payload = {};
 
   bool value = true;
@@ -26,9 +21,7 @@ class SwitchButtonModel {
       required String position,
       required String label,
       required String labelText,
-      required String baseurlGet,
       required String baseurlPost,
-      required String apiurlGet,
       required String apiurlPost,
       required dynamic payload,
       required bool bvalue})
@@ -36,9 +29,7 @@ class SwitchButtonModel {
         _position = position,
         _label = label,
         _labelText = labelText,
-        _baseURL_GET = baseurlGet,
         _baseURL_POST = baseurlPost,
-        _apiURL_GET = apiurlGet,
         _apiURL_POST = apiurlPost,
         _payload = payload,
         value = bvalue;
@@ -56,17 +47,11 @@ class SwitchButtonModel {
   String get labelText => _labelText;
   set labelText(String value) => _labelText = value;
 
-  String get baseURLGET => _baseURL_GET;
-  set baseURLGET(String value) => _baseURL_GET = value;
-
   String get baseURLPOST => _baseURL_POST;
   set baseURLPOST(String value) => _baseURL_POST = value;
 
   String get apiURLPOST => _apiURL_POST;
   set apiURLPOST(String value) => _apiURL_POST = value;
-
-  String get apiURLGET => _apiURL_GET;
-  set apiURLGET(String value) => _apiURL_GET = value;
 
   dynamic get payload => _payload;
   set payload(dynamic value) => _payload = value;
@@ -89,9 +74,7 @@ class SwitchWidgetBlock extends StatefulWidget {
       position: 'position',
       label: 'label',
       labelText: 'labelText',
-      baseurlGet: 'baseurlGet',
       baseurlPost: 'baseurlPost',
-      apiurlGet: 'apiurlGet',
       apiurlPost: 'apiurlPost',
       payload: 'payload',
       bvalue: true);
@@ -138,16 +121,11 @@ class _SwitchWidgetBlockState extends State<SwitchWidgetBlock>
   }
 
   /// Gestiona los cambios de valor en un switch
+
   Future<bool?> _handleValueChange() async {
     try {
-      var res = await HttpRequestsController.get(
-              widget.sw.baseURLGET,
-              widget.sw.apiURLGET,
-              'res',
-              GeneralFunctions.getLoggedUserUID(),
-              '')
-          .timeout(const Duration(seconds: 2));
-      debugPrint(res);
+      // POST
+      //debugPrint('Resultado de GET: ${res.toString()}');
       return true;
     } on TimeoutException {
       _petitionErrorNotification(500, widget.sw._labelText, true);

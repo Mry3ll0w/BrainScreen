@@ -158,14 +158,21 @@ class ButtonGrid extends StatelessWidget //__
       rows = [const Text('Se ha producido un error en la lectura del widget')];
     }
 
-    // Creamos el contenedor que tendrá todas las filas con los botones estilados
-    Container c = Container(
-      child: Column(
-        children: rows,
-      ),
-    );
-
-    return c;
+    if (rows.isEmpty) {
+      // Creamos el contenedor que tendrá todas las filas con los botones estilados
+      return Container(
+        child: Column(
+          children: [Text('No hay elementos, agrega uno')],
+        ),
+      );
+    } else {
+      // Creamos el contenedor que tendrá todas las filas con los botones estilados
+      return Container(
+        child: Column(
+          children: rows,
+        ),
+      );
+    }
   }
 
   Future<Widget> initializeSwitches(String sProjectName) async {
@@ -200,14 +207,21 @@ class ButtonGrid extends StatelessWidget //__
       rows = [const Text('Se ha producido un error en la lectura del widget')];
     }
 
-    // Creamos el contenedor que tendrá todas las filas con los botones estilados
-    Container c = Container(
-      child: Column(
-        children: rows,
-      ),
-    );
-
-    return c;
+    if (rows.isEmpty) {
+      // Creamos el contenedor que tendrá todas las filas con los botones estilados
+      return Container(
+        child: Column(
+          children: [Text('No hay elementos, agrega uno')],
+        ),
+      );
+    } else {
+      // Creamos el contenedor que tendrá todas las filas con los botones estilados
+      return Container(
+        child: Column(
+          children: rows,
+        ),
+      );
+    }
   }
 
   Future<Widget> intializeSliders() async {
