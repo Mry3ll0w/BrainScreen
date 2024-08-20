@@ -186,7 +186,7 @@ nodeServer.post('/testSwitch', async (req, res) => {
   }
 });
 
-//FUNCIONES DE ALEXA
+//FUNCIONES DE ALEXA-----------------------------------------------------------
 
 /// Funcion para devolver el valor de un botón a alexa
 
