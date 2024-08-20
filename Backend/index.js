@@ -186,6 +186,37 @@ nodeServer.post('/testSwitch', async (req, res) => {
   }
 });
 
+//FUNCIONES DE ALEXA
+
+/// Funcion para devolver el valor de un botón a alexa
+
+nodeServer.get('/buttonValue', async (req, res) => {
+  
+  try {
+    const {firebaseuid, amazonuid,buttonLabel, projectName}= req.headers;
+    
+    if (firebaseuid === undefined || amazonuid === undefined) {
+      res.status(403).send({res: 'test is error due to unauthorized'});
+    } else {
+      const projectController = new ProjectController(DB);
+      // Check if user has access
+      const bUserAllowed = await projectController.
+          userAllowedForServerRequests(amazonuid, firebaseuid);
+      
+      if (!bUserAllowed) {
+        res.status(403).send({res: 'test is error, user not allowed'});
+      }else{
+        // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
+        const {dato} = req.body;
+        console.log("Petición de Alexa recibida")
+        res.status(200).send({res: dato == 'true' ? 'true': 'false'});
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 nodeServer.listen(port, () => {
   console.log(`Servidor Backend en el puerto ${port}`);
 });
