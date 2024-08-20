@@ -190,18 +190,18 @@ nodeServer.post('/testSwitch', async (req, res) => {
 
 /// Funcion para devolver el valor de un botón a alexa
 
-nodeServer.get('/buttonValue', async (req, res) => {
+nodeServer.get('/buttonValue/:amazonuid/:projectName/:buttonLabel', async (req, res) => {
   
   try {
-    const {firebaseuid, amazonuid,buttonLabel, projectName}= req.headers;
+    const {amazonuid,buttonLabel, projectName}= req.params;
     
-    if (firebaseuid === undefined || amazonuid === undefined) {
+    if (amazonuid === undefined) {
       res.status(403).send({res: 'test is error due to unauthorized'});
     } else {
       const projectController = new ProjectController(DB);
       // Check if user has access
       const bUserAllowed = await projectController.
-          userAllowedForServerRequests(amazonuid, firebaseuid);
+          userAllowedForServerRequests(amazonuid, '');
       
       if (!bUserAllowed) {
         res.status(403).send({res: 'test is error, user not allowed'});
@@ -209,6 +209,8 @@ nodeServer.get('/buttonValue', async (req, res) => {
         // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
         const {dato} = req.body;
         console.log("Petición de Alexa recibida")
+        console.table(req.params)
+        
         res.status(200).send({res: dato == 'true' ? 'true': 'false'});
       }
     }
