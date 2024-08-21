@@ -24,7 +24,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const {getFirestore, collection, getDocs} = require('firebase/firestore');
 const DB = getFirestore(firebaseApp);
 const ProjectController = require('./Controllers/ProjectController');
-
+const ButtonController = require('./Controllers/ButtonController');
 // Express Server initialization
 const express = require('express');
 
@@ -37,9 +37,12 @@ nodeServer.use(express.json());
 
 nodeServer.get('/', async (req, res) => {
   try {
+
     const projectsCol = collection(DB, 'projects');
     const projectSnapShot = await getDocs(projectsCol);
     const projectList = projectSnapShot.docs.map((doc) => doc.data());
+    const BtnController = new ButtonController(DB);
+    await BtnController.getButtonValue('rename', 'test',DB);
     console.log('peticion desde: ' + req.ip);
     if (projectList.length === 0) {
       res.status(200).send({database: 'error'});
@@ -208,8 +211,7 @@ nodeServer.get('/buttonValue/:amazonuid/:projectName/:buttonLabel', async (req, 
       }else{
         // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
         const {dato} = req.body;
-        console.log("Petición de Alexa recibida")
-        console.table(req.params)
+        // TODO IMPLEMENTAR FUNCION OBTENER VALOR DEL BOTON
         
         res.status(200).send({res: dato == 'true' ? 'true': 'false'});
       }
