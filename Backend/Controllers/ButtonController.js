@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 const {collection, getDocs, updateDoc, doc} = require('firebase/firestore');
 const { initializeApp } =require ("firebase/app");
-const { getDatabase,ref,onValue } = require("firebase/database");
+const { getDatabase,ref,get,onValue,child } = require("firebase/database");
 
 const firebaseConfig = {
   // The value of `databaseURL` depends on the location of the database
@@ -34,13 +34,26 @@ class ButtonController {
         //Search for btn
 
         // if exists return value else return null
-        
-        
-        const starCountRef = ref(this.database, '/lienzo' + projectName + '/buttons');
-        onValue(starCountRef, (snapshot) => {
-            const data = snapshot.val();
-            console.table(data);
-        });
+        const resValue = {value: null};
+
+        const dbRef = ref(this.database);
+        get(child(dbRef, `/lienzo/${projectName}/buttons`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                for (const key in snapshot.val()) {
+                    console.log(snapshot.val()[key])
+                    if (snapshot.val()[key].labelText === buttonLabel) {
+                        console.log('Boton encontrado')
+                        //TODO HACER DISTINCION ENTRE BOTON Y SWITCH
+                    }
+                }
+                
+            } else {
+                return resValue;
+            }
+        }).catch((error) => {
+            console.error(error);
+            return resValue;
+    });
 
     }
 

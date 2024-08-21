@@ -42,7 +42,7 @@ nodeServer.get('/', async (req, res) => {
     const projectSnapShot = await getDocs(projectsCol);
     const projectList = projectSnapShot.docs.map((doc) => doc.data());
     const BtnController = new ButtonController(DB);
-    await BtnController.getButtonValue('rename', 'test',DB);
+    await BtnController.getButtonValue('rename', 'Boton',DB);
     console.log('peticion desde: ' + req.ip);
     if (projectList.length === 0) {
       res.status(200).send({database: 'error'});
