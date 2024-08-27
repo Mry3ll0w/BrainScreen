@@ -210,10 +210,11 @@ nodeServer.get('/buttonValue/:amazonuid/:projectName/:buttonLabel', async (req, 
         res.status(403).send({res: 'test is error, user not allowed'});
       }else{
         // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
-        const {dato} = req.body;
-        // TODO IMPLEMENTAR FUNCION OBTENER VALOR DEL BOTON
         
-        res.status(200).send({res: dato == 'true' ? 'true': 'false'});
+        // TODO IMPLEMENTAR FUNCION OBTENER VALOR DEL BOTON
+        var switchValue = await ButtonController.getButtonValue(projectName, buttonLabel);
+        
+        res.status(200).send({res: dato == switchValue });
       }
     }
   } catch (e) {

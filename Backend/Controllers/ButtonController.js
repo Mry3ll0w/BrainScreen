@@ -27,7 +27,7 @@ class ButtonController {
     /**
     Función encargada de obtener el valor de un botón.
      */
-    async getButtonValue(projectName, buttonLabel, DB){
+    static async getButtonValue(projectName, buttonLabel){
 
         //Fetch database 
 
@@ -43,7 +43,12 @@ class ButtonController {
                     console.log(snapshot.val()[key])
                     if (snapshot.val()[key].labelText === buttonLabel) {
                         console.log('Boton encontrado')
-                        //TODO HACER DISTINCION ENTRE BOTON Y SWITCH
+                        var button = snapshot.val()[key];
+                        if(button.type == '1'){
+                            resValue.value = button.value;
+                        }else{
+                            resValue.value = 'elevated';//Si es elevated no sirve para obtener el valor
+                        }
                     }
                 }
                 
