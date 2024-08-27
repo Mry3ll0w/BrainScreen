@@ -26,42 +26,36 @@ class ButtonController {
     /**
     Función encargada de obtener el valor de un botón.
      */
-    static async getButtonValue(projectName, buttonLabel,DB){
-
-        //Fetch database 
-
-        //Search for btn
-
-        // if exists return value else return null
-        const resValue = {value: null};
-        var database = getDatabase();
-        //const dbRef = ref(DB);
-        const urlPath = '/lienzo/'+ projectName + '/buttons'
+    static async getButtonValue(projectName, buttonLabel, DB) {
+    let resValue = null;
+    
+    try {
+        const database = getDatabase();
+        const urlPath = '/lienzo/' + projectName + '/buttons';
         
-        get(ref(database, urlPath)).then((snapshot) => {
-            if (snapshot.exists()) {
-                for (const key in snapshot.val()) {
-                    console.log(snapshot.val()[key])
-                    if (snapshot.val()[key].labelText === buttonLabel) {
-                        console.log('Boton encontrado')
-                        var button = snapshot.val()[key];
-                        if(button.type == '1'){
-                            resValue.value = button.value;
-                        }else{
-                            resValue.value = 'elevated';//Si es elevated no sirve para obtener el valor
-                        }
+        const snapshot = await get(ref(database, urlPath));
+        
+        if (snapshot.exists()) {
+            for (const key in snapshot.val()) {
+                if (snapshot.val()[key].labelText === buttonLabel) {
+                    var button = snapshot.val()[key];
+                    
+                    if(button.type === '1'){
+                        resValue = button.value;
+                        break;
+                    }else{
+                        resValue = 'elevated'; // Si es elevated no sirve para obtener el valor
                     }
                 }
-                
-            } else {
-                return resValue;
             }
-        }).catch((error) => {
-            console.error(error);
-            return resValue;
-    });
-
+        }
+    } catch (error) {
+        console.error(error);
     }
+
+    return resValue;
+}
+
 
 
 }

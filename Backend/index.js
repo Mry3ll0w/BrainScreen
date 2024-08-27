@@ -212,7 +212,7 @@ nodeServer.get('/buttonValue/:amazonuid/:projectName/:buttonLabel', async (req, 
         
         // TODO IMPLEMENTAR FUNCION OBTENER VALOR DEL BOTON
         var switchValue = await ButtonController.getButtonValue(projectName, buttonLabel,DB);
-      
+        console.log('recibo '+ switchValue)
 
         res.status(200).send({res: switchValue });
       }
