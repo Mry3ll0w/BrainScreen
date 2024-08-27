@@ -209,7 +209,7 @@ nodeServer.get('/buttonValue/:amazonuid/:projectName/:buttonLabel', async (req, 
         res.status(403).send({res: 'test is error, user not allowed'});
       }else{
         // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
-        
+        console.table({btnLabel: buttonLabel, projectname: projectName})
         // TODO IMPLEMENTAR FUNCION OBTENER VALOR DEL BOTON
         var switchValue = await ButtonController.getButtonValue(projectName, buttonLabel,DB);
         console.log('recibo '+ switchValue)
