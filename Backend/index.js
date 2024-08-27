@@ -4,6 +4,7 @@
 // Import the functions you need from the SDKs you need
 const {initializeApp} = require('firebase/app');
 
+const { getDatabase,ref,get,onValue,child } = require("firebase/database");
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
@@ -41,8 +42,6 @@ nodeServer.get('/', async (req, res) => {
     const projectsCol = collection(DB, 'projects');
     const projectSnapShot = await getDocs(projectsCol);
     const projectList = projectSnapShot.docs.map((doc) => doc.data());
-    const BtnController = new ButtonController(DB);
-    await BtnController.getButtonValue('rename', 'Boton',DB);
     console.log('peticion desde: ' + req.ip);
     if (projectList.length === 0) {
       res.status(200).send({database: 'error'});
@@ -212,9 +211,10 @@ nodeServer.get('/buttonValue/:amazonuid/:projectName/:buttonLabel', async (req, 
         // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
         
         // TODO IMPLEMENTAR FUNCION OBTENER VALOR DEL BOTON
-        var switchValue = await ButtonController.getButtonValue(projectName, buttonLabel);
-        
-        res.status(200).send({res: dato == switchValue });
+        var switchValue = await ButtonController.getButtonValue(projectName, buttonLabel,DB);
+      
+
+        res.status(200).send({res: switchValue });
       }
     }
   } catch (e) {
