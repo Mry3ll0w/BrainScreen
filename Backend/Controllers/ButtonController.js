@@ -37,7 +37,7 @@ class ButtonController {
         
         if (snapshot.exists()) {
             for (const key in snapshot.val()) {
-                if (snapshot.val()[key].labelText === buttonLabel) {
+                if (snapshot.val()[key].labelText.toLowerCase() === buttonLabel.toLowerCase()) {
                     var button = snapshot.val()[key];
                     
                     if(button.type === '1'){
