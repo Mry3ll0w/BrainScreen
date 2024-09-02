@@ -26,7 +26,6 @@ class _CustomSliderState extends State<CustomSlider> {
         if (widget.onLongPressed != null) {
           widget.onLongPressed!();
         }
-        showAboutDialog(context: context);
       },
       child: SliderTheme(
         data: SliderThemeData(

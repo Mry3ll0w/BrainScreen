@@ -75,6 +75,7 @@ class _ButtonSelectorState extends State<ButtonSelector> {
                       child: CustomSlider(
                         onLongPressed: () {
                           //TODO Implemnt onLongPress
+                          _showSliderInfoDialog();
                         },
                       )),
                 ],
@@ -124,6 +125,28 @@ class _ButtonSelectorState extends State<ButtonSelector> {
               child: Container(
                 color: BrainColors.backgroundColor,
                 child: _getSwitchInfo(context),
+              ),
+            ),
+          );
+        });
+  }
+
+  void _showSliderInfoDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: Card.outlined(
+              color: BrainColors.backgroundColor,
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(15), // Redondea las esquinas
+              ),
+              elevation: 4, // Altura de la sombra
+              margin: EdgeInsets.all(20), // Margen alrededor del Card
+              child: Container(
+                color: BrainColors.backgroundColor,
+                child: _getSliderInfo(context),
               ),
             ),
           );
@@ -194,6 +217,48 @@ class _ButtonSelectorState extends State<ButtonSelector> {
               ),
               onPressed: () {
                 WidgetController.addSwitchToLienzo(widget.sProjectName!);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Home.named(
+                            title: widget.sProjectName,
+                            projectToLoad: widget.sProjectName)));
+              },
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _getSliderInfo(var context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ListTile(
+          leading: const Icon(Icons.help_center),
+          title: const Text('Uso'),
+          subtitle: Text(
+            'Sirvo para actualizar valores enumerados de forma sencilla, actualizando su cambio.',
+            style: TextStyle(
+              fontSize: 20 *
+                  MediaQuery.of(context).size.width /
+                  360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+            ),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            const SizedBox(width: 8),
+            TextButton(
+              child: FittedBox(
+                child: Text('Agregar a ${widget.sProjectName!}'),
+              ),
+              onPressed: () {
+                //TODO agregar funcion de switch al lienzo
+                //WidgetController.addSwitchToLienzo(widget.sProjectName!);
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
