@@ -1,5 +1,6 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/homeView.dart';
+import 'package:brainscreen/pages/models/slider_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,39 +21,65 @@ class ButtonSelector extends StatefulWidget {
 
 class _ButtonSelectorState extends State<ButtonSelector> {
   bool bSwitch = true;
+  double _currentSliderValue = 20;
   @override
   Widget build(BuildContext context) {
+    //Screen Size
+    final ScreenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tipos de Botones'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Row(
+        child: Column(
           children: [
-            Container(
-              width: 150,
-              height: 75,
-              child: ElevatedButton(
-                onPressed: () {
-                  _showButtonInfoDialog();
-                },
-                child: const Text('Pulsame'),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 150,
+                    height: 75,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _showButtonInfoDialog();
+                      },
+                      child: const Text('Pulsame'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 150,
+                    height: 75,
+                    child: Switch(
+                      value: bSwitch,
+                      onChanged: (value) {
+                        setState(() {
+                          bSwitch = value;
+                        });
+                        _showSwitchInfoDialog();
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(
-              width: 150,
-              height: 75,
-              child: Switch(
-                value: bSwitch,
-                onChanged: (value) {
-                  setState(() {
-                    bSwitch = value;
-                  });
-                  _showSwitchInfoDialog();
-                },
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                children: [
+                  SizedBox(
+                      width: ScreenSize.width - 80,
+                      height: 75,
+                      child: CustomSlider(
+                        onLongPressed: () {
+                          //TODO Implemnt onLongPress
+                        },
+                      )),
+                ],
               ),
-            )
+            ),
           ],
         ),
       ),
