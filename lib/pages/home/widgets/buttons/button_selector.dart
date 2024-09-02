@@ -121,7 +121,7 @@ class _ButtonSelectorState extends State<ButtonSelector> {
                     BorderRadius.circular(15), // Redondea las esquinas
               ),
               elevation: 4, // Altura de la sombra
-              margin: EdgeInsets.all(20), // Margen alrededor del Card
+              margin: const EdgeInsets.all(20), // Margen alrededor del Card
               child: Container(
                 color: BrainColors.backgroundColor,
                 child: _getSwitchInfo(context),
@@ -143,7 +143,7 @@ class _ButtonSelectorState extends State<ButtonSelector> {
                     BorderRadius.circular(15), // Redondea las esquinas
               ),
               elevation: 4, // Altura de la sombra
-              margin: EdgeInsets.all(20), // Margen alrededor del Card
+              margin: const EdgeInsets.all(20), // Margen alrededor del Card
               child: Container(
                 color: BrainColors.backgroundColor,
                 child: _getSliderInfo(context),
@@ -258,7 +258,7 @@ class _ButtonSelectorState extends State<ButtonSelector> {
               ),
               onPressed: () {
                 //TODO agregar funcion de switch al lienzo
-                //WidgetController.addSwitchToLienzo(widget.sProjectName!);
+                WidgetController.addSliderToLienzo(widget.sProjectName!);
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

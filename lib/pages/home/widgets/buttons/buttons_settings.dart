@@ -1,6 +1,7 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button_settings_edit.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
+import 'package:brainscreen/pages/models/slider_model.dart';
 import 'package:brainscreen/pages/models/switch_button_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -44,15 +45,18 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
     List<SwitchButtonModel> lSwitchButtonModels =
         await WidgetController.fetchAllSwitchesFromProject(widget._projectName);
 
+    List<CustomSliderModel> lSliders =
+        await WidgetController.fetchAllSlidersFromProject(widget._projectName);
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Ajustes de botones'),
         ),
-        body: _buildListTiles(lElevatedButtons, lSwitchButtonModels));
+        body: _buildListTiles(lElevatedButtons, lSwitchButtonModels, lSliders));
   }
 
-  Widget _buildListTiles(
-      List<ElevatedButtonModel> aButtons, List<SwitchButtonModel> aSwitches) {
+  Widget _buildListTiles(List<ElevatedButtonModel> aButtons,
+      List<SwitchButtonModel> aSwitches, List<CustomSliderModel> aSliders) {
     List<Widget> lTiles = [];
 
     for (var b in aButtons) {
@@ -90,6 +94,33 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
           payload: s.payload));
     }
 
+    for (var sl in aSliders) {
+      // Preparamos La lista de Filas
+      lTiles.add(ListTile(
+        leading: const Row(
+          children: [
+            Icon(Icons.light_mode),
+            Text(
+              '/',
+              style: TextStyle(fontSize: 20),
+            ),
+            Icon(Icons.light_mode_outlined)
+          ],
+        ),
+        title: Text(sl.labelText),
+        subtitle: const Text("Interruptor"),
+      ));
+      // Parseamos de Switch a button
+      aButtons.add(ElevatedButtonModel(
+          label: sl.label,
+          labelText: sl.labelText,
+          type: sl.type,
+          petition: 'POST',
+          baseURL: sl.baseURLPOST,
+          apiURL: sl.apiURLPOST,
+          payload: sl.payload));
+    }
+
     return Container(
         margin: const EdgeInsets.all(10.0),
         child: ListView.builder(
@@ -118,6 +149,8 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
         return 'Btn. Unidireccional';
       case '1':
         return 'Btn. Switch';
+      case '2':
+        return 'Slider';
       default:
         return 'Btn.';
     }
