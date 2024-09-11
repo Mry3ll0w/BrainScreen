@@ -4,6 +4,7 @@ import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:brainscreen/pages/models/switch_button_model.dart';
+import 'package:brainscreen/pages/models/slider_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -94,7 +95,8 @@ class ButtonGrid extends StatelessWidget //__
               ),
               header: const Text('Sliders', style: headerStyle),
               content: FutureBuilder(
-                  future: intializeSliders(),
+                  future: intializeSliders(
+                      projectName_!), //! AGREGAR LISTA DE SLIDERS
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return snapshot.data as Widget;
@@ -261,7 +263,54 @@ class ButtonGrid extends StatelessWidget //__
     }
   }
 
-  Future<Widget> intializeSliders() async {
-    return Text('Sliders');
+  /// Inicializa la lista de sliders
+  Future<Widget> intializeSliders(String sProjectName) async {
+    List<dynamic> lSliders =
+        await WidgetController.fetchAllSlidersFromProject(sProjectName);
+
+    return styledSlidersWidget(lSliders);
+  }
+
+  /// Muestra la vista de los sliders
+  Widget styledSlidersWidget(List<dynamic> lSliders) {
+    // Creamos una lista para almacenar las filas (Rows) que contendrán los botones
+    List<Widget> rows = [];
+
+    try {
+      // Iteramos sobre la lista de botones
+      for (CustomSliderModel sl in lSliders) {
+        // Incrementamos de 2 en 2
+        // Creamos una lista temporal para almacenar los botones de cada fila
+        List<Widget> switchRow = [];
+
+        // Agregamos hasta dos botones por fila
+        switchRow.add(sl.buildSliderWidget(super.key, projectName_!));
+
+        // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
+        rows.add(Row(
+          mainAxisAlignment: MainAxisAlignment
+              .spaceEvenly, // Distribuye los botones en el espacio disponible
+          children: switchRow,
+        ));
+      }
+    } catch (e) {
+      rows = [const Text('Se ha producido un error en la lectura del widget')];
+    }
+
+    if (rows.isEmpty) {
+      // Creamos el contenedor que tendrá todas las filas con los botones estilados
+      return Container(
+        child: const Column(
+          children: [Text('No hay elementos, agrega uno')],
+        ),
+      );
+    } else {
+      // Creamos el contenedor que tendrá todas las filas con los botones estilados
+      return Container(
+        child: Column(
+          children: rows,
+        ),
+      );
+    }
   }
 }

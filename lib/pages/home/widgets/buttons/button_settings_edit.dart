@@ -57,7 +57,9 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
     // Retrasar la verificación del tipo de botón para asegurar que el widget esté completamente inicializado
     Future.delayed(Duration.zero, () {
       if (widget.selectedButton != null &&
-          widget.selectedButton!.type_ == '1') {
+              widget.selectedButton!.type_ == '1' ||
+          widget.selectedButton!.type_ == '2') {
+        // Tambien aplicable para sliders
         _showSwitchRequirements(widget.key);
       }
     });

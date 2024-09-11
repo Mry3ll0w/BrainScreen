@@ -377,8 +377,8 @@ class WidgetController {
                   payload: s['payload'],
                   dValue: double.parse(s['value'])));
             }
+            debugPrint(s.toString());
           }
-          debugPrint('La lista de sliders es: ${lSliders.toString()}');
           return lSliders;
         }
       }

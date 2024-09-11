@@ -257,7 +257,6 @@ class _ButtonSelectorState extends State<ButtonSelector> {
                 child: Text('Agregar a ${widget.sProjectName!}'),
               ),
               onPressed: () {
-                //TODO agregar funcion de switch al lienzo
                 WidgetController.addSliderToLienzo(widget.sProjectName!);
                 Navigator.pushReplacement(
                     context,

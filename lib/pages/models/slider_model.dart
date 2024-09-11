@@ -1,11 +1,23 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:brainscreen/pages/controllers/general_functions.dart';
+import 'package:brainscreen/pages/controllers/http_controller.dart';
+import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 class CustomSlider extends StatefulWidget {
   final Function()? onLongPressed;
+  final CustomSliderModel? sl;
+  final String sProjectName;
+  //Def Constructor
+  const CustomSlider(
+      {super.key, this.onLongPressed, this.sl, this.sProjectName = ''});
 
-  const CustomSlider({
-    this.onLongPressed,
-  });
+  const CustomSlider.slider(
+      {required super.key,
+      this.onLongPressed,
+      required this.sl,
+      required this.sProjectName});
 
   @override
   State<CustomSlider> createState() => _CustomSliderState();
@@ -13,9 +25,14 @@ class CustomSlider extends StatefulWidget {
 
 class _CustomSliderState extends State<CustomSlider> {
   double _currentSliderValue = 20;
+
   @override
   void initState() {
     super.initState();
+    //Si no es null implica
+    if (widget.sl != null) {
+      _currentSliderValue = widget.sl!.value;
+    }
   }
 
   @override
@@ -46,6 +63,71 @@ class _CustomSliderState extends State<CustomSlider> {
         ),
       ),
     );
+  }
+
+  //Handle changes
+
+  // Updates the value in that Switch
+  Future<bool> _SwitchValueUpdate(
+      String sProjectName, String field, dynamic newfieldValue) async {
+    //Si esta vacio pasamos de hacer nada
+    if (newfieldValue.isNotEmpty) {
+      // Primero buscamos en el lienzo que toque
+      var lElevatedButtons =
+          await WidgetController.fetchAllElevatedButtons(sProjectName);
+
+      int iPosBtn = 0;
+      for (var rawButton in lElevatedButtons) {
+        if (widget.sl!._label == rawButton['label']) {
+          break;
+        }
+        iPosBtn++;
+      }
+
+      //Una vez obtenida la posicion del boton lo actualizamos.
+      try {
+        DatabaseReference ref = FirebaseDatabase.instance
+            .ref("lienzo/$sProjectName/buttons/$iPosBtn");
+        await ref.update({field: newfieldValue});
+        return true;
+      } catch (e) {
+        // Print Dialog Error
+        _petitionErrorNotification(500, widget.sl!._labelText, false);
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  /// Error de conexiones de switch
+  void _petitionErrorNotification(
+      int errorCode, String buttonLabel, bool isTimeException) {
+    if (!isTimeException && errorCode == 500) {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del Interruptor',
+              body:
+                  'Error al pulsar el interruptor con el label $buttonLabel se ha producido un error desconocido. '));
+    } else if (isTimeException) {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del Interruptor',
+              body:
+                  'Al pulsar el interruptor con el label $buttonLabel se ha tardado demasiado tiempo de respuesta, consulta el estado del servidor '));
+    } else {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del Interruptor',
+              body:
+                  'Al pulsar el interruptor con el label $buttonLabel se ha recibido el codigo HTTP: $errorCode '));
+    }
   }
 }
 
@@ -108,7 +190,12 @@ class CustomSliderModel {
   }
 
   // Método para construir el widget
-  Widget buildSwitchWidget(key, String projectName) {
-    return const CustomSlider();
+  Widget buildSliderWidget(key, String projectName) {
+    return CustomSlider.slider(
+      onLongPressed: () {},
+      sl: this,
+      sProjectName: projectName,
+      key: key,
+    );
   }
 }
