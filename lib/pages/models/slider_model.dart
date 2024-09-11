@@ -55,10 +55,18 @@ class _CustomSliderState extends State<CustomSlider> {
           max: 100,
           divisions: 10,
           label: _currentSliderValue.toString(),
-          onChanged: (double value) {
+          onChanged: (double value) async {
+            var previousValue = widget.sl!.value;
             setState(() {
               _currentSliderValue = value;
             });
+            var res = await _handleValueChange();
+            if (res == null) {
+              setState(() {
+                _currentSliderValue =
+                    previousValue; // Considerable mejora visual
+              });
+            }
           },
         ),
       ),
@@ -68,7 +76,7 @@ class _CustomSliderState extends State<CustomSlider> {
   //Handle changes
 
   // Updates the value in that Switch
-  Future<bool> _SwitchValueUpdate(
+  Future<bool> _SliderValueUpdate(
       String sProjectName, String field, dynamic newfieldValue) async {
     //Si esta vacio pasamos de hacer nada
     if (newfieldValue.isNotEmpty) {
@@ -127,6 +135,33 @@ class _CustomSliderState extends State<CustomSlider> {
               title: 'Error durante la peticion del Interruptor',
               body:
                   'Al pulsar el interruptor con el label $buttonLabel se ha recibido el codigo HTTP: $errorCode '));
+    }
+  }
+
+  /// Gestiona las actualizaciones junto con el servidor
+  Future<bool?> _handleValueChange() async {
+    try {
+      // POST
+      dynamic res = await HttpRequestsController.post_with_response(
+              widget.sl!._baseURL_POST,
+              widget.sl!._apiURL_POST,
+              widget.sl!.payload,
+              GeneralFunctions.getLoggedUserUID(),
+              '')
+          .timeout(const Duration(seconds: 2));
+
+      //Pillamos el resultado de la peticion
+      //! RECUERDA AL USUARIO QUE TIENE QUE HACER LAS PETICIONES CON RES:
+      bool newState = bool.parse(res['response']['res'].toString());
+      //Actualizamos el valor de ese modelo.
+      await _SliderValueUpdate(
+          widget.sProjectName, 'value', newState.toString());
+
+      return newState;
+    } catch (e) {
+      debugPrint('ERROR en POST: $e');
+      _petitionErrorNotification(500, widget.sl!._labelText, false);
+      return null;
     }
   }
 }
