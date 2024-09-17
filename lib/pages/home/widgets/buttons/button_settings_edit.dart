@@ -2,7 +2,8 @@ import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button_payload_editor.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
-import 'package:brainscreen/pages/home/widgets/lienzo.dart';
+import 'package:flutter/services.dart';
+import 'dart:convert';
 import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -46,14 +47,14 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
       baseURL: 'baseURL',
       apiURL: 'apiURL',
       payload: 'payload');
-
   @override
   void initState() {
     super.initState();
     _lElevatedButtons =
         WidgetController.fetchElevatedButtonsModels(widget._projectName);
+    // Parse elementos API Switch/Slider a APIURL
 
-    //Comprobamos si se trata de un Switch, para en caso de serlo desplegar un dialog.
+    //Comprobamos si se trata de un Switch u slider, para en caso de serlo desplegar un dialog.
     // Retrasar la verificación del tipo de botón para asegurar que el widget esté completamente inicializado
     Future.delayed(Duration.zero, () {
       if (widget.selectedButton != null &&
@@ -61,6 +62,8 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
           widget.selectedButton!.type_ == '2') {
         // Tambien aplicable para sliders
         _showSwitchRequirements(widget.key);
+
+        // Parseamos los elementos del switch/slider a button
       }
     });
   }
@@ -219,11 +222,13 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                           widget.key);
                                     } else if (widget.selectedButton!.type_ ==
                                         '1') {
-                                      //Switch
+                                      // TODO FIX UPDATE SWITCH API VALUE
+                                      debugPrint(
+                                          'Estoy en el switch FIELD UPDATE');
                                       bRes = await _buttonFieldUpdate(
                                           widget._projectName,
                                           'apiurl_post',
-                                          newButton.baseURL_,
+                                          newButton.apiURL_,
                                           widget.key);
                                     } else {
                                       //TODO AGREGAR SLIDER CUANDO ESTE LISTO
@@ -399,6 +404,42 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
       int iPosBtn = 0;
       for (var rawButton in lElevatedButtons) {
         if (widget.selectedButton?.label_ == rawButton['label']) {
+          break;
+        }
+        iPosBtn++;
+      }
+
+      //Una vez obtenida la posicion del boton lo actualizamos.
+      try {
+        DatabaseReference ref = FirebaseDatabase.instance
+            .ref("lienzo/$sProjectName/buttons/$iPosBtn");
+        await ref.update({field: newfieldValue});
+        return true;
+      } catch (e) {
+        // Print Dialog Error
+        _updateErrorDialog(sProjectName, key);
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  //LO MISMO PERO PARA SWITCHES
+  Future<bool> _switchFieldUpdate(
+      String sProjectName, String field, dynamic newfieldValue, var key) async {
+    //Si esta vacio pasamos de hacer nada
+    debugPrint(
+        'sProjectName: ${sProjectName} Field: ${field}, newFieldValue: ${newfieldValue}');
+    if (newfieldValue.isNotEmpty) {
+      // Primero buscamos en el lienzo que toque
+      var lSwitches =
+          await WidgetController.fetchAllSwitchesFromProject(sProjectName);
+
+      int iPosBtn = 0;
+      for (var sw in lSwitches) {
+        if (widget.selectedButton?.label_ == sw.label) {
+          debugPrint('Switch encontrado ${sw.label}');
           break;
         }
         iPosBtn++;
