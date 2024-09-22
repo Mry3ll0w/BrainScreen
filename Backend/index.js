@@ -188,6 +188,33 @@ nodeServer.post('/testSwitch', async (req, res) => {
   }
 });
 
+// GESTION DE PRUEBAS CON SLIDER
+//---------------------------------------------------------------------------------------------------
+
+nodeServer.post('/testSlider', async (req, res) => {
+  const {firebaseuid, amazonuid}= req.headers;
+  try {
+    if (firebaseuid === undefined || amazonuid === undefined) {
+      res.status(403).send({res: 'test is error due to unauthorized'});
+    } else {
+      const projectController = new ProjectController(DB);
+      // Check if user has access
+      const bUserAllowed = await projectController.
+          userAllowedForServerRequests(amazonuid, firebaseuid);
+      
+      if (!bUserAllowed) {
+        res.status(403).send({res: 'test is error, user not allowed'});
+      }else{
+        // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
+        const {dato} = req.body;
+        res.status(200).send({res: dato == 'true' ? 'true': 'false'});
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 //FUNCIONES DE ALEXA-----------------------------------------------------------
 
 /// Funcion para devolver el valor de un botón a alexa

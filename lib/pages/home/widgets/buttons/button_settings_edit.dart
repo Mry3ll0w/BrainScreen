@@ -403,6 +403,7 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
   /// - `field`: El campo específico del botón que se desea actualizar.
   /// - `newfieldValue`: El nuevo valor que se asignará al campo especificado.
   /// - `key`: Una clave opcional que puede ser utilizada para identificar el contexto de la actualización.
+  /// - `type`: Determina el tipo del boton {ElevatedButton(0), Switch(1), Slider(0) }
   Future<bool> _buttonFieldUpdate(String sProjectName, String field,
       dynamic newfieldValue, var key, String type) async {
     //Si esta vacio pasamos de hacer nada

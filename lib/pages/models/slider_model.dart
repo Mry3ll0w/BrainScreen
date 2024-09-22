@@ -56,7 +56,9 @@ class _CustomSliderState extends State<CustomSlider> {
           divisions: 10,
           label: _currentSliderValue.toString(),
           onChanged: (double value) async {
-            var previousValue = widget.sl!.value;
+            //El slider de pruebas no tiene value asi que asignamos 1
+            var previousValue =
+                widget.sl?.value == null ? 10.0 : widget.sl!.value;
             setState(() {
               _currentSliderValue = value;
             });
