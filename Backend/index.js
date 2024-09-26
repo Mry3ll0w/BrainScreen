@@ -197,6 +197,7 @@ nodeServer.post('/testSlider', async (req, res) => {
     if (firebaseuid === undefined || amazonuid === undefined) {
       res.status(403).send({res: 'test is error due to unauthorized'});
     } else {
+      console.log(req.body)
       const projectController = new ProjectController(DB);
       // Check if user has access
       const bUserAllowed = await projectController.
