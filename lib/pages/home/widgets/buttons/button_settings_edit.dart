@@ -50,11 +50,20 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
   @override
   void initState() {
     super.initState();
+
     _lElevatedButtons =
         WidgetController.fetchElevatedButtonsModels(widget._projectName);
     // Parse elementos API Switch/Slider a APIURL
 
-    //Comprobamos si se trata de un Switch u slider, para en caso de serlo desplegar un dialog.
+    //Comprobamos los campos a cambiar si es un switch u slider:
+    if (widget.selectedButton != null && widget.selectedButton!.type_ == '1' ||
+        widget.selectedButton!.type_ == '2') {
+      newButton = widget.selectedButton!;
+
+      //Ajustamos el campo fieldurl
+    }
+
+    //Comprobamos si se trata de un Switch, para en caso de serlo desplegar un dialog.
     // Retrasar la verificación del tipo de botón para asegurar que el widget esté completamente inicializado
     Future.delayed(Duration.zero, () {
       if (widget.selectedButton != null &&
@@ -126,7 +135,8 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                       widget._projectName,
                                       'labelText',
                                       newButton.labelText_,
-                                      widget.key);
+                                      widget.key,
+                                      widget.selectedButton!.type_);
                                   if (bRes) {
                                     setState(() {
                                       widget.selectedButton!.labelText_ =
@@ -166,7 +176,8 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                           widget._projectName,
                                           'baseurl',
                                           newButton.baseURL_,
-                                          widget.key);
+                                          widget.key,
+                                          widget.selectedButton!.type_);
                                     } else if (widget.selectedButton!.type_ ==
                                         '1') {
                                       //Switch
@@ -174,7 +185,8 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                           widget._projectName,
                                           'baseurl_post',
                                           newButton.baseURL_,
-                                          widget.key);
+                                          widget.key,
+                                          widget.selectedButton!.type_);
                                     } else {
                                       //TODO AGREGAR SLIDER CUANDO ESTE LISTO
                                     }
@@ -219,7 +231,8 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                           widget._projectName,
                                           'apiurl',
                                           newButton.baseURL_,
-                                          widget.key);
+                                          widget.key,
+                                          widget.selectedButton!.type_);
                                     } else if (widget.selectedButton!.type_ ==
                                         '1') {
                                       // TODO FIX UPDATE SWITCH API VALUE
@@ -228,8 +241,9 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                       bRes = await _buttonFieldUpdate(
                                           widget._projectName,
                                           'apiurl_post',
-                                          newButton.apiURL_,
-                                          widget.key);
+                                          widget.selectedButton!.apiURL_,
+                                          widget.key,
+                                          widget.selectedButton!.type_);
                                     } else {
                                       //TODO AGREGAR SLIDER CUANDO ESTE LISTO
                                     }
@@ -285,7 +299,8 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                         widget._projectName,
                                         'petition',
                                         newButton.petition_,
-                                        widget.key);
+                                        widget.key,
+                                        widget.selectedButton!.type_);
                                   },
                                   dropdownMenuEntries: _lsPetitionType
                                       .map<DropdownMenuEntry<String>>(
@@ -393,13 +408,27 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
   /// - `field`: El campo específico del botón que se desea actualizar.
   /// - `newfieldValue`: El nuevo valor que se asignará al campo especificado.
   /// - `key`: Una clave opcional que puede ser utilizada para identificar el contexto de la actualización.
-  Future<bool> _buttonFieldUpdate(
-      String sProjectName, String field, dynamic newfieldValue, var key) async {
+  /// - `type`: Determina el tipo del boton {ElevatedButton(0), Switch(1), Slider(0) }
+  Future<bool> _buttonFieldUpdate(String sProjectName, String field,
+      dynamic newfieldValue, var key, String type) async {
     //Si esta vacio pasamos de hacer nada
     if (newfieldValue.isNotEmpty) {
       // Primero buscamos en el lienzo que toque
-      var lElevatedButtons =
-          await WidgetController.fetchAllElevatedButtons(sProjectName);
+
+      //Debemos controlar si se trata de un switch/slider u boton;
+      var lElevatedButtons;
+
+      if (type == '0') {
+        lElevatedButtons =
+            await WidgetController.fetchAllElevatedButtons(sProjectName);
+      } else if (type == '1') {
+        lElevatedButtons =
+            await WidgetController.fetchAllSwitchesRAW(sProjectName);
+      } else {
+        //Slider
+        lElevatedButtons =
+            await WidgetController.fetchAllSlidersRAW(sProjectName);
+      }
 
       int iPosBtn = 0;
       for (var rawButton in lElevatedButtons) {

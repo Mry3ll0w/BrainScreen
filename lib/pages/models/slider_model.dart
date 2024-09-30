@@ -44,45 +44,58 @@ class _CustomSliderState extends State<CustomSlider> {
           widget.onLongPressed!();
         }
       },
-      child: SliderTheme(
-        data: SliderThemeData(
-          thumbShape: RoundSliderThumbShape(
-              enabledThumbRadius: screen_size.width < 400 ? 8 : 12),
-          trackHeight: screen_size.width < 400 ? 6 : 8,
-        ),
-        child: Slider(
-          value: _currentSliderValue,
-          max: 100,
-          divisions: 10,
-          label: _currentSliderValue.toString(),
-          onChanged: (double value) async {
-            var previousValue = widget.sl!.value;
-            setState(() {
-              _currentSliderValue = value;
-            });
-            var res = await _handleValueChange();
-            if (res == null) {
-              setState(() {
-                _currentSliderValue =
-                    previousValue; // Considerable mejora visual
-              });
-            }
-          },
-        ),
+      child: Column(
+        children: [
+          SliderTheme(
+            data: SliderThemeData(
+              thumbShape: RoundSliderThumbShape(
+                  enabledThumbRadius: screen_size.width < 400 ? 8 : 12),
+              trackHeight: screen_size.width < 400 ? 6 : 8,
+            ),
+            child: Slider(
+              value: _currentSliderValue,
+              max: 100,
+              divisions: 10,
+              label: _currentSliderValue.toString(),
+              onChanged: (double value) async {
+                //El slider de pruebas no tiene value asi que asignamos 1
+                var previousValue =
+                    widget.sl?.value == null ? 10.0 : widget.sl!.value;
+                setState(() {
+                  _currentSliderValue = value;
+                });
+                // En caso de pruebas
+                if (widget.sl?.value != null || widget.sProjectName == "") {
+                  widget.sl!.value = _currentSliderValue;
+                  var res = await _handleValueChange();
+                  if (res == null) {
+                    setState(() {
+                      _currentSliderValue =
+                          previousValue; // Considerable mejora visual
+                    });
+                  }
+                }
+              },
+            ),
+          ),
+          Text(widget.sl?._labelText == null
+              ? 'Soy un slider de prueba'
+              : widget.sl!._labelText)
+        ],
       ),
     );
   }
 
   //Handle changes
 
-  // Updates the value in that Switch
+  // Updates the value in that Slider
   Future<bool> _SliderValueUpdate(
       String sProjectName, String field, dynamic newfieldValue) async {
     //Si esta vacio pasamos de hacer nada
     if (newfieldValue.isNotEmpty) {
       // Primero buscamos en el lienzo que toque
       var lElevatedButtons =
-          await WidgetController.fetchAllElevatedButtons(sProjectName);
+          await WidgetController.fetchAllSlidersRAW(sProjectName);
 
       int iPosBtn = 0;
       for (var rawButton in lElevatedButtons) {
@@ -139,28 +152,30 @@ class _CustomSliderState extends State<CustomSlider> {
   }
 
   /// Gestiona las actualizaciones junto con el servidor
-  Future<bool?> _handleValueChange() async {
+  Future<String?> _handleValueChange() async {
     try {
       // POST
       dynamic res = await HttpRequestsController.post_with_response(
               widget.sl!._baseURL_POST,
               widget.sl!._apiURL_POST,
-              widget.sl!.payload,
+              {'res': widget.sl!.value.toString()},
               GeneralFunctions.getLoggedUserUID(),
               '')
           .timeout(const Duration(seconds: 2));
 
       //Pillamos el resultado de la peticion
-      //! RECUERDA AL USUARIO QUE TIENE QUE HACER LAS PETICIONES CON RES:
-      bool newState = bool.parse(res['response']['res'].toString());
+      debugPrint(res.toString());
+      String newState = res['response']['res'].toString();
       //Actualizamos el valor de ese modelo.
-      await _SliderValueUpdate(
-          widget.sProjectName, 'value', newState.toString());
+      await _SliderValueUpdate(widget.sProjectName, 'value', newState);
 
       return newState;
     } catch (e) {
       debugPrint('ERROR en POST: $e');
-      _petitionErrorNotification(500, widget.sl!._labelText, false);
+      var strLabelText = widget.sl?._labelText == null
+          ? "Error en el label de prueba"
+          : widget.sl!._labelText;
+      _petitionErrorNotification(500, strLabelText, false);
       return null;
     }
   }
