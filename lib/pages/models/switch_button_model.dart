@@ -118,10 +118,16 @@ class _SwitchWidgetBlockState extends State<SwitchWidgetBlock>
             value: widget.sw.value, // Usa el dato obtenido del Future
             onChanged: (v) async {
               //Aplicamos el cambio de valor
+              var prevValue = widget.sw.value;
+              setState(() {
+                widget.sw.value = v;
+              });
+
+              // De esta forma hacemos que quede mucho mejor visualmente, ya que el feedback es instantaneo.
               var res = await _handleValueChange();
-              if (res != null) {
+              if (res == null) {
                 setState(() {
-                  widget.sw.value = v;
+                  widget.sw.value = prevValue;
                 });
               }
             }),
