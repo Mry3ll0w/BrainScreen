@@ -66,6 +66,7 @@ class _CustomSliderState extends State<CustomSlider> {
                 });
                 // En caso de pruebas
                 if (widget.sl?.value != null || widget.sProjectName == "") {
+                  widget.sl!.value = _currentSliderValue;
                   var res = await _handleValueChange();
                   if (res == null) {
                     setState(() {
@@ -151,24 +152,22 @@ class _CustomSliderState extends State<CustomSlider> {
   }
 
   /// Gestiona las actualizaciones junto con el servidor
-  Future<bool?> _handleValueChange() async {
+  Future<String?> _handleValueChange() async {
     try {
       // POST
-      //! FIX: NO ENVIA LAS COSAS AL BACKEND
       dynamic res = await HttpRequestsController.post_with_response(
               widget.sl!._baseURL_POST,
               widget.sl!._apiURL_POST,
-              widget.sl!.payload,
+              {'res': widget.sl!.value.toString()},
               GeneralFunctions.getLoggedUserUID(),
               '')
           .timeout(const Duration(seconds: 2));
 
       //Pillamos el resultado de la peticion
-
-      bool newState = bool.parse(res['response']['res'].toString());
+      debugPrint(res.toString());
+      String newState = res['response']['res'].toString();
       //Actualizamos el valor de ese modelo.
-      await _SliderValueUpdate(
-          widget.sProjectName, 'value', newState.toString());
+      await _SliderValueUpdate(widget.sProjectName, 'value', newState);
 
       return newState;
     } catch (e) {

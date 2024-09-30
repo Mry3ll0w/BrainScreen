@@ -207,8 +207,8 @@ nodeServer.post('/testSlider', async (req, res) => {
         res.status(403).send({res: 'test is error, user not allowed'});
       }else{
         // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
-        const {dato} = req.body;
-        res.status(200).send({res: dato == 'true' ? 'true': 'false'});
+        
+        res.status(200).send({res: req.body.res});
       }
     }
   } catch (e) {
