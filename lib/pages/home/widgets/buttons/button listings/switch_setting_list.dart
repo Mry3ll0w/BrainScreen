@@ -1,29 +1,27 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button_settings_edit.dart';
-import 'package:brainscreen/pages/models/button_model.dart';
-import 'package:brainscreen/pages/models/slider_model.dart';
+import 'package:brainscreen/pages/home/widgets/buttons/editors/switch_editor_view.dart';
 import 'package:brainscreen/pages/models/switch_button_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_json_view/flutter_json_view.dart';
 
-class ButtonSettingsList extends StatefulWidget {
+class SwitchSettingsList extends StatefulWidget {
   String _projectName = "";
   var selectedButton;
   final user = FirebaseAuth.instance.currentUser;
-  ButtonSettingsList({required super.key, required String sProjectName}) {
+  SwitchSettingsList({required super.key, required String sProjectName}) {
     _projectName = sProjectName;
   }
 
   @override
-  State<ButtonSettingsList> createState() => _ButtonSettingsListState();
+  State<SwitchSettingsList> createState() => _SwitchSettingsListState();
 }
 
-class _ButtonSettingsListState extends State<ButtonSettingsList> {
+class _SwitchSettingsListState extends State<SwitchSettingsList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _loadAllButtonsData(widget._projectName),
+      future: _loadAllSwitchesData(widget._projectName),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator(); // Mostrar un indicador de carga mientras se espera
@@ -39,34 +37,21 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
   }
 
   /// Inicializa el widget como Future y carga los elementos de los botones
-  Future<Widget> _loadAllButtonsData(String projectName) async {
-    List<ElevatedButtonModel> lElevatedButtons =
-        await WidgetController.fetchElevatedButtonsModels(projectName);
+  Future<Widget> _loadAllSwitchesData(String projectName) async {
     List<SwitchButtonModel> lSwitchButtonModels =
         await WidgetController.fetchAllSwitchesFromProject(widget._projectName);
-
-    List<CustomSliderModel> lSliders =
-        await WidgetController.fetchAllSlidersFromProject(widget._projectName);
 
     return Scaffold(
         appBar: AppBar(
           title: const Text('Ajustes de botones'),
         ),
-        body: _buildListTiles(lElevatedButtons, lSwitchButtonModels, lSliders));
+        body: _buildListTiles(lSwitchButtonModels));
   }
 
-  Widget _buildListTiles(List<ElevatedButtonModel> aButtons,
-      List<SwitchButtonModel> aSwitches, List<CustomSliderModel> aSliders) {
+  Widget _buildListTiles(List<SwitchButtonModel> aSwitches) {
     List<Widget> lTiles = [];
 
-    for (var b in aButtons) {
-      lTiles.add(ListTile(
-        leading: const Icon(Icons.smart_button_outlined),
-        title: Text(b.labelText_),
-        subtitle: const Text("Botón"),
-      ));
-    }
-
+    // Cargamos la lista de switches
     for (var s in aSwitches) {
       // Preparamos La lista de Filas
       lTiles.add(ListTile(
@@ -84,41 +69,6 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
         subtitle: const Text("Interruptor"),
       ));
       // Parseamos de Switch a button
-      aButtons.add(ElevatedButtonModel(
-          label: s.label,
-          labelText: s.labelText,
-          type: s.type,
-          petition: 'POST',
-          baseURL: s.baseURLPOST,
-          apiURL: s.apiURLPOST,
-          payload: s.payload));
-    }
-
-    for (var sl in aSliders) {
-      // Preparamos La lista de Filas
-      lTiles.add(ListTile(
-        leading: const Row(
-          children: [
-            Icon(Icons.light_mode),
-            Text(
-              '/',
-              style: TextStyle(fontSize: 20),
-            ),
-            Icon(Icons.light_mode_outlined)
-          ],
-        ),
-        title: Text(sl.labelText),
-        subtitle: const Text("Interruptor"),
-      ));
-      // Parseamos de Switch a button
-      aButtons.add(ElevatedButtonModel(
-          label: sl.label,
-          labelText: sl.labelText,
-          type: sl.type,
-          petition: 'POST',
-          baseURL: sl.baseURLPOST,
-          apiURL: sl.apiURLPOST,
-          payload: sl.payload));
     }
 
     return Container(
@@ -127,16 +77,16 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
             itemCount: lTiles.length,
             itemBuilder: (context, index) {
               return ListTile(
-                leading: _iconSelector(aButtons[index].type_),
-                title: Text(aButtons[index].labelText_),
-                subtitle: Text(_buttonTypeString(aButtons[index].type_)),
+                leading: _iconSelector(aSwitches[index].type),
+                title: Text(aSwitches[index].labelText),
+                subtitle: Text(_buttonTypeString(aSwitches[index].type)),
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ButtonSettingsEdit(
+                          builder: (context) => SwitchSettingsEdit(
                               key: widget.key,
-                              btn: aButtons[index],
+                              btn: aSwitches[index],
                               sProjectName: widget._projectName)));
                 },
               );

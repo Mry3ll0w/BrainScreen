@@ -13,12 +13,12 @@ import 'package:flutter_json_view/flutter_json_view.dart';
 
 // EDITOR DE SLIDERS
 
-class ButtonSettingsEdit extends StatefulWidget {
+class SliderSettingsEdit extends StatefulWidget {
   String _projectName = "";
   ElevatedButtonModel? selectedButton;
   final user = FirebaseAuth.instance.currentUser;
 
-  ButtonSettingsEdit(
+  SliderSettingsEdit(
       {required super.key,
       required String sProjectName,
       required ElevatedButtonModel btn}) {
@@ -27,10 +27,10 @@ class ButtonSettingsEdit extends StatefulWidget {
   }
 
   @override
-  State<ButtonSettingsEdit> createState() => _ButtonSettingsEditState();
+  State<SliderSettingsEdit> createState() => _SliderSettingsEditState();
 }
 
-class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
+class _SliderSettingsEditState extends State<SliderSettingsEdit> {
   Future<List<ElevatedButtonModel>> _lElevatedButtons = Future.value([]);
 
   String? sBaseURLError;

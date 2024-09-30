@@ -5,21 +5,20 @@ import 'package:brainscreen/pages/models/slider_model.dart';
 import 'package:brainscreen/pages/models/switch_button_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_json_view/flutter_json_view.dart';
 
-class ButtonSettingsList extends StatefulWidget {
+class SwitchSettingsList extends StatefulWidget {
   String _projectName = "";
   var selectedButton;
   final user = FirebaseAuth.instance.currentUser;
-  ButtonSettingsList({required super.key, required String sProjectName}) {
+  SwitchSettingsList({required super.key, required String sProjectName}) {
     _projectName = sProjectName;
   }
 
   @override
-  State<ButtonSettingsList> createState() => _ButtonSettingsListState();
+  State<SwitchSettingsList> createState() => _SwitchSettingsListState();
 }
 
-class _ButtonSettingsListState extends State<ButtonSettingsList> {
+class _SwitchSettingsListState extends State<SwitchSettingsList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(

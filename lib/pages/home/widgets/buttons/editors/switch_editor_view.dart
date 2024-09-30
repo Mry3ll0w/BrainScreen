@@ -8,28 +8,29 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_json_view/flutter_json_view.dart';
+import 'package:brainscreen/pages/models/switch_button_model.dart';
 
 // EDITOR DE SWITCH
 
-class ButtonSettingsEdit extends StatefulWidget {
+class SwitchSettingsEdit extends StatefulWidget {
   String _projectName = "";
-  ElevatedButtonModel? selectedButton;
+  SwitchButtonModel? selectedButton;
   final user = FirebaseAuth.instance.currentUser;
 
-  ButtonSettingsEdit(
+  SwitchSettingsEdit(
       {required super.key,
       required String sProjectName,
-      required ElevatedButtonModel btn}) {
+      required SwitchButtonModel btn}) {
     _projectName = sProjectName;
     selectedButton = btn;
   }
 
   @override
-  State<ButtonSettingsEdit> createState() => _ButtonSettingsEditState();
+  State<SwitchSettingsEdit> createState() => _SwitchSettingsEditState();
 }
 
-class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
-  Future<List<ElevatedButtonModel>> _lElevatedButtons = Future.value([]);
+class _SwitchSettingsEditState extends State<SwitchSettingsEdit> {
+  Future<List<SwitchButtonModel>> _lElevatedButtons = Future.value([]);
 
   String? sBaseURLError;
   String? sLabelErrorText;
@@ -39,25 +40,26 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
 
   final List<String> _lsPetitionType = ['POST', 'PUT'];
 
-  ElevatedButtonModel newButton = ElevatedButtonModel(
+  SwitchButtonModel newButton = SwitchButtonModel(
       label: '',
       labelText: '',
       type: '',
-      petition: '',
-      baseURL: 'baseURL',
-      apiURL: 'apiURL',
-      payload: 'payload');
+      position: '',
+      baseurlPost: 'baseURL',
+      apiurlPost: 'apiURL',
+      payload: 'payload',
+      bvalue: true);
   @override
   void initState() {
     super.initState();
 
     _lElevatedButtons =
-        WidgetController.fetchElevatedButtonsModels(widget._projectName);
+        WidgetController.fetchAllSwitchesFromProject(widget._projectName);
     // Parse elementos API Switch/Slider a APIURL
 
     //Comprobamos los campos a cambiar si es un switch u slider:
-    if (widget.selectedButton != null && widget.selectedButton!.type_ == '1' ||
-        widget.selectedButton!.type_ == '2') {
+    if (widget.selectedButton != null && widget.selectedButton!.type == '1' ||
+        widget.selectedButton!.type == '2') {
       newButton = widget.selectedButton!;
 
       //Ajustamos el campo fieldurl
@@ -66,9 +68,8 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
     //Comprobamos si se trata de un Switch, para en caso de serlo desplegar un dialog.
     // Retrasar la verificación del tipo de botón para asegurar que el widget esté completamente inicializado
     Future.delayed(Duration.zero, () {
-      if (widget.selectedButton != null &&
-              widget.selectedButton!.type_ == '1' ||
-          widget.selectedButton!.type_ == '2') {
+      if (widget.selectedButton != null && widget.selectedButton!.type == '1' ||
+          widget.selectedButton!.type == '2') {
         // Tambien aplicable para sliders
         _showSwitchRequirements(widget.key);
 
@@ -134,22 +135,22 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                   bool bRes = await _buttonFieldUpdate(
                                       widget._projectName,
                                       'labelText',
-                                      newButton.labelText_,
+                                      newButton.labelText,
                                       widget.key,
-                                      widget.selectedButton!.type_);
+                                      widget.selectedButton!.type);
                                   if (bRes) {
                                     setState(() {
-                                      widget.selectedButton!.labelText_ =
-                                          newButton.labelText_;
+                                      widget.selectedButton!.labelText =
+                                          newButton.labelText;
                                     });
                                   }
                                 }
                               },
                             ),
-                            label: Text(widget.selectedButton!.labelText_)),
+                            label: Text(widget.selectedButton!.labelText)),
                         onChanged: (value) {
                           setState(() {
-                            newButton.labelText_ = value;
+                            newButton.labelText = value;
                           });
                           if (value.isEmpty) {
                             sLabelErrorText = 'No puedes dejar vacio ese campo';
@@ -171,38 +172,38 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                 onPressed: () async {
                                   if (sBaseURLError == null) {
                                     bool bRes = true;
-                                    if (widget.selectedButton!.type_ == '0') {
+                                    if (widget.selectedButton!.type == '0') {
                                       bRes = await _buttonFieldUpdate(
                                           widget._projectName,
                                           'baseurl',
-                                          newButton.baseURL_,
+                                          newButton.baseURLPOST,
                                           widget.key,
-                                          widget.selectedButton!.type_);
-                                    } else if (widget.selectedButton!.type_ ==
+                                          widget.selectedButton!.type);
+                                    } else if (widget.selectedButton!.type ==
                                         '1') {
                                       //Switch
                                       bRes = await _buttonFieldUpdate(
                                           widget._projectName,
-                                          'baseurl_post',
-                                          newButton.baseURL_,
+                                          'baseURLPOSTpost',
+                                          newButton.baseURLPOST,
                                           widget.key,
-                                          widget.selectedButton!.type_);
+                                          widget.selectedButton!.type);
                                     } else {
                                       //TODO AGREGAR SLIDER CUANDO ESTE LISTO
                                     }
                                     if (bRes) {
                                       setState(() {
-                                        widget.selectedButton!.baseURL_ =
-                                            newButton.baseURL_;
+                                        widget.selectedButton!.baseURLPOST =
+                                            newButton.baseURLPOST;
                                       });
                                     }
                                   }
                                 },
                               ),
-                              label: Text(widget.selectedButton!.baseURL_)),
+                              label: Text(widget.selectedButton!.baseURLPOST)),
                           onChanged: (value) {
                             setState(() {
-                              newButton.baseURL_ = value;
+                              newButton.baseURLPOST = value;
                             });
                             if (!value.contains('http://')) {
                               sBaseURLError =
@@ -226,40 +227,40 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                 onPressed: () async {
                                   if (sAPIErrorText == null) {
                                     bool bRes = true;
-                                    if (widget.selectedButton!.type_ == '0') {
+                                    if (widget.selectedButton!.type == '0') {
                                       bRes = await _buttonFieldUpdate(
                                           widget._projectName,
                                           'apiurl',
-                                          newButton.baseURL_,
+                                          newButton.baseURLPOST,
                                           widget.key,
-                                          widget.selectedButton!.type_);
-                                    } else if (widget.selectedButton!.type_ ==
+                                          widget.selectedButton!.type);
+                                    } else if (widget.selectedButton!.type ==
                                         '1') {
                                       // TODO FIX UPDATE SWITCH API VALUE
                                       debugPrint(
                                           'Estoy en el switch FIELD UPDATE');
                                       bRes = await _buttonFieldUpdate(
                                           widget._projectName,
-                                          'apiurl_post',
-                                          widget.selectedButton!.apiURL_,
+                                          'apiURLPOSTpost',
+                                          widget.selectedButton!.apiURLPOST,
                                           widget.key,
-                                          widget.selectedButton!.type_);
+                                          widget.selectedButton!.type);
                                     } else {
                                       //TODO AGREGAR SLIDER CUANDO ESTE LISTO
                                     }
                                     if (bRes) {
                                       setState(() {
-                                        widget.selectedButton!.apiURL_ =
-                                            newButton.apiURL_;
+                                        widget.selectedButton!.apiURLPOST =
+                                            newButton.apiURLPOST;
                                       });
                                     }
                                   }
                                 },
                               ),
-                              label: Text(widget.selectedButton!.apiURL_)),
+                              label: Text(widget.selectedButton!.apiURLPOST)),
                           onChanged: (value) {
                             setState(() {
-                              newButton.apiURL_ = value;
+                              newButton.apiURLPOST = value;
                             });
                             if (!value.contains('/') && value.isEmpty) {
                               sAPIErrorText =
@@ -284,23 +285,23 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                   ),
                                 ),
                                 DropdownMenu<String>(
-                                  enabled: widget.selectedButton!.type_ == '0'
+                                  enabled: widget.selectedButton!.type == '0'
                                       ? true
                                       : false,
                                   initialSelection:
-                                      widget.selectedButton?.petition_,
+                                      widget.selectedButton?.position,
                                   onSelected: (String? value) async {
                                     // Seleccion de item
                                     setState(() {
-                                      newButton.petition_ = value!;
-                                      widget.selectedButton?.petition_ = value;
+                                      newButton.position = value!;
+                                      widget.selectedButton?.position = value;
                                     });
                                     await _buttonFieldUpdate(
                                         widget._projectName,
                                         'petition',
-                                        newButton.petition_,
+                                        newButton.position,
                                         widget.key,
-                                        widget.selectedButton!.type_);
+                                        widget.selectedButton!.type);
                                   },
                                   dropdownMenuEntries: _lsPetitionType
                                       .map<DropdownMenuEntry<String>>(
@@ -321,9 +322,8 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                 MaterialPageRoute(
                                     builder: (context) => JsonEditorView(
                                         sProjectName: widget._projectName,
-                                        payload:
-                                            widget.selectedButton?.payload_,
-                                        label: widget.selectedButton!.label_)));
+                                        payload: widget.selectedButton?.payload,
+                                        label: widget.selectedButton!.label)));
                           },
                           icon: const Icon(
                             Icons.javascript,
@@ -418,21 +418,12 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
       //Debemos controlar si se trata de un switch/slider u boton;
       var lElevatedButtons;
 
-      if (type == '0') {
-        lElevatedButtons =
-            await WidgetController.fetchAllElevatedButtons(sProjectName);
-      } else if (type == '1') {
-        lElevatedButtons =
-            await WidgetController.fetchAllSwitchesRAW(sProjectName);
-      } else {
-        //Slider
-        lElevatedButtons =
-            await WidgetController.fetchAllSlidersRAW(sProjectName);
-      }
+      lElevatedButtons =
+          await WidgetController.fetchAllSwitchesRAW(sProjectName);
 
       int iPosBtn = 0;
       for (var rawButton in lElevatedButtons) {
-        if (widget.selectedButton?.label_ == rawButton['label']) {
+        if (widget.selectedButton?.label == rawButton['label']) {
           break;
         }
         iPosBtn++;
@@ -467,7 +458,7 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
 
       int iPosBtn = 0;
       for (var sw in lSwitches) {
-        if (widget.selectedButton?.label_ == sw.label) {
+        if (widget.selectedButton?.label == sw.label) {
           debugPrint('Switch encontrado ${sw.label}');
           break;
         }
