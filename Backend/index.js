@@ -181,7 +181,8 @@ nodeServer.post('/testSwitch', async (req, res) => {
       }else{
         // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
         const {dato} = req.body;
-        res.status(200).send({res: dato == 'true' ? 'true': 'false'});
+        
+        res.status(200).send({res: dato == 'true' ? 'false': 'true'});
       }
     }
   } catch (e) {

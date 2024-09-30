@@ -185,7 +185,7 @@ class _SwitchSettingsEditState extends State<SwitchSettingsEdit> {
                                       //Switch
                                       bRes = await _buttonFieldUpdate(
                                           widget._projectName,
-                                          'baseURLPOSTpost',
+                                          'baseurl_post',
                                           newButton.baseURLPOST,
                                           widget.key,
                                           widget.selectedButton!.type);
@@ -242,7 +242,7 @@ class _SwitchSettingsEditState extends State<SwitchSettingsEdit> {
                                           'Estoy en el switch FIELD UPDATE');
                                       bRes = await _buttonFieldUpdate(
                                           widget._projectName,
-                                          'apiURLPOSTpost',
+                                          'apiurl_post',
                                           widget.selectedButton!.apiURLPOST,
                                           widget.key,
                                           widget.selectedButton!.type);
