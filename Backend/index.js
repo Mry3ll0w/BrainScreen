@@ -166,6 +166,7 @@ nodeServer.post('/test', async (req, res) => {
 
 nodeServer.post('/testSwitch', async (req, res) => {
   const {firebaseuid, amazonuid}= req.headers;
+  console.table({route: 'TESTSWITCH', body: req.body})
   try {
     if (firebaseuid === undefined || amazonuid === undefined) {
       res.status(403).send({res: 'test is error due to unauthorized'});
