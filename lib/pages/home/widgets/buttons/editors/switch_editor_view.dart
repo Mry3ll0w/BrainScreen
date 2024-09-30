@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_json_view/flutter_json_view.dart';
 
-// EDITOR DE ELEVATED BUTTONS
+// EDITOR DE SWITCH
 
 class ButtonSettingsEdit extends StatefulWidget {
   String _projectName = "";

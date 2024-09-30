@@ -2,6 +2,8 @@ import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button_payload_editor.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
+import 'package:flutter/services.dart';
+import 'dart:convert';
 import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_json_view/flutter_json_view.dart';
 
-// EDITOR DE ELEVATED BUTTONS
+// EDITOR DE SLIDERS
 
 class ButtonSettingsEdit extends StatefulWidget {
   String _projectName = "";
