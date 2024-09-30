@@ -1,6 +1,7 @@
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/home/widgets/buttons/button%20listings/slider_setting_list.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:brainscreen/pages/models/switch_button_model.dart';
@@ -95,8 +96,7 @@ class ButtonGrid extends StatelessWidget //__
               ),
               header: const Text('Sliders', style: headerStyle),
               content: FutureBuilder(
-                  future: intializeSliders(
-                      projectName_!), //! AGREGAR LISTA DE SLIDERS
+                  future: intializeSliders(projectName_!),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return snapshot.data as Widget;
@@ -126,7 +126,7 @@ class ButtonGrid extends StatelessWidget //__
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ButtonSettingsList(
+                          builder: (context) => SwitchSettingsList(
                               key: key, sProjectName: projectName_!)));
                 },
               ),
