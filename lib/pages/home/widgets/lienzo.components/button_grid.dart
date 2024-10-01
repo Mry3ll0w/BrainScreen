@@ -2,6 +2,7 @@ import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button%20listings/slider_setting_list.dart';
+import 'package:brainscreen/pages/home/widgets/buttons/button%20listings/switch_setting_list.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:brainscreen/pages/models/switch_button_model.dart';
@@ -80,7 +81,8 @@ class ButtonGrid extends StatelessWidget //__
             ),
             AccordionSection(
               contentVerticalPadding: 20,
-              leftIcon: const Icon(Icons.commit, color: Colors.white),
+              leftIcon:
+                  const Icon(Icons.commit, color: Colors.white), // ! SLIDERS
               rightIcon: IconButton(
                 icon: const Icon(
                   Icons.settings,
@@ -90,7 +92,7 @@ class ButtonGrid extends StatelessWidget //__
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ButtonSettingsList(
+                          builder: (context) => SliderSettingsList(
                               key: key, sProjectName: projectName_!)));
                 },
               ),
@@ -126,7 +128,7 @@ class ButtonGrid extends StatelessWidget //__
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SliderSettingsList(
+                          builder: (context) => SwitchSettingsList(
                               key: key, sProjectName: projectName_!)));
                 },
               ),
@@ -200,7 +202,7 @@ class ButtonGrid extends StatelessWidget //__
     if (rows.isEmpty) {
       // Creamos el contenedor que tendrá todas las filas con los botones estilados
       return Container(
-        child: const Column(
+        child: Column(
           children: [Text('No hay elementos, agrega uno')],
         ),
       );

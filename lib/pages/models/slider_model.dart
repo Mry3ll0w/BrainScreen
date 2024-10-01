@@ -65,7 +65,7 @@ class _CustomSliderState extends State<CustomSlider> {
                   _currentSliderValue = value;
                 });
                 // En caso de pruebas
-                if (widget.sl?.value != null || widget.sProjectName == "") {
+                if (widget.sl?.value != null) {
                   widget.sl!.value = _currentSliderValue;
                   var res = await _handleValueChange();
                   if (res == null) {
