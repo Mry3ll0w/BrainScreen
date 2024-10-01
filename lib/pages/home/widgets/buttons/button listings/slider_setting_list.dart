@@ -1,22 +1,23 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/home/widgets/buttons/editors/slider_editor_view.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/editors/switch_editor_view.dart';
-import 'package:brainscreen/pages/models/switch_button_model.dart';
+import 'package:brainscreen/pages/models/slider_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class SwitchSettingsList extends StatefulWidget {
+class SliderSettingsList extends StatefulWidget {
   String _projectName = "";
   var selectedButton;
   final user = FirebaseAuth.instance.currentUser;
-  SwitchSettingsList({required super.key, required String sProjectName}) {
+  SliderSettingsList({required super.key, required String sProjectName}) {
     _projectName = sProjectName;
   }
 
   @override
-  State<SwitchSettingsList> createState() => _SwitchSettingsListState();
+  State<SliderSettingsList> createState() => _SliderSettingsListState();
 }
 
-class _SwitchSettingsListState extends State<SwitchSettingsList> {
+class _SliderSettingsListState extends State<SliderSettingsList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -37,20 +38,20 @@ class _SwitchSettingsListState extends State<SwitchSettingsList> {
 
   /// Inicializa el widget como Future y carga los elementos de los botones
   Future<Widget> _loadAllButtonsData(String projectName) async {
-    List<SwitchButtonModel> lSwitchButtonModels =
-        await WidgetController.fetchAllSwitchesFromProject(widget._projectName);
+    List<CustomSliderModel> lCustomSliderModels =
+        await WidgetController.fetchAllSlidersFromProject(widget._projectName);
 
     return Scaffold(
         appBar: AppBar(
           title: const Text('Ajustes de botones'),
         ),
-        body: _buildListTiles(lSwitchButtonModels));
+        body: _buildListTiles(lCustomSliderModels));
   }
 
-  Widget _buildListTiles(List<SwitchButtonModel> aSwitches) {
+  Widget _buildListTiles(List<CustomSliderModel> aSliders) {
     List<Widget> lTiles = [];
 
-    for (var s in aSwitches) {
+    for (var s in aSliders) {
       // Preparamos La lista de Filas
       lTiles.add(ListTile(
         leading: const Row(
@@ -75,16 +76,16 @@ class _SwitchSettingsListState extends State<SwitchSettingsList> {
             itemCount: lTiles.length,
             itemBuilder: (context, index) {
               return ListTile(
-                leading: _iconSelector(aSwitches[index].type),
-                title: Text(aSwitches[index].labelText),
-                subtitle: Text(_buttonTypeString(aSwitches[index].type)),
+                leading: _iconSelector(aSliders[index].type),
+                title: Text(aSliders[index].labelText),
+                subtitle: Text(_buttonTypeString(aSliders[index].type)),
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SwitchSettingsEdit(
+                          builder: (context) => SliderSettingsEdit(
                               key: widget.key,
-                              btn: aSwitches[index],
+                              btn: aSliders[index],
                               sProjectName: widget._projectName)));
                 },
               );

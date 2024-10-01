@@ -190,7 +190,7 @@ nodeServer.post('/testSwitch', async (req, res) => {
   }
 });
 
-// GESTION DE PRUEBAS CON SLIDER
+// GESTION DE PRUEBAS CON SLIDERS
 //---------------------------------------------------------------------------------------------------
 
 nodeServer.post('/testSlider', async (req, res) => {

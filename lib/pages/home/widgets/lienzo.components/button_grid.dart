@@ -110,7 +110,7 @@ class ButtonGrid extends StatelessWidget //__
               leftIcon: const Row(
                 children: [
                   Icon(Icons.light_mode, color: Colors.white),
-                  const Text(
+                  Text(
                     '/',
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
@@ -126,7 +126,7 @@ class ButtonGrid extends StatelessWidget //__
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SwitchSettingsList(
+                          builder: (context) => SliderSettingsList(
                               key: key, sProjectName: projectName_!)));
                 },
               ),
@@ -200,7 +200,7 @@ class ButtonGrid extends StatelessWidget //__
     if (rows.isEmpty) {
       // Creamos el contenedor que tendrá todas las filas con los botones estilados
       return Container(
-        child: Column(
+        child: const Column(
           children: [Text('No hay elementos, agrega uno')],
         ),
       );
