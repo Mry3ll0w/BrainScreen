@@ -3,16 +3,13 @@ import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button_payload_editor.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
 import 'package:brainscreen/pages/models/slider_model.dart';
-import 'package:flutter/services.dart';
-import 'dart:convert';
-import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_json_view/flutter_json_view.dart';
 
-// EDITOR DE SLIDERS
+// EDITOR DE ELEVATED BUTTONS
 
 class SliderSettingsEdit extends StatefulWidget {
   String _projectName = "";
@@ -24,7 +21,7 @@ class SliderSettingsEdit extends StatefulWidget {
       required String sProjectName,
       required CustomSliderModel btn}) {
     _projectName = sProjectName;
-    selectedButton = btn;
+    selectedButton = btn; //! FIX UPDATE CRUZADO DE SLIDER Y SWITCH
   }
 
   @override
@@ -50,29 +47,19 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
       baseurlPost: 'baseURL',
       apiurlPost: 'apiURL',
       payload: 'payload',
-      dValue: 10);
+      dValue: 20);
   @override
   void initState() {
     super.initState();
 
-    //Comprobamos los campos a cambiar si es un switch u slider:
-    if (widget.selectedButton != null && widget.selectedButton!.type == '1' ||
-        widget.selectedButton!.type == '2') {
-      newButton = widget.selectedButton!;
+    newButton = widget.selectedButton!;
 
-      //Ajustamos el campo fieldurl
-    }
+    print('Label SLIDER RECIBIDO: ${newButton.label}');
 
     //Comprobamos si se trata de un Switch, para en caso de serlo desplegar un dialog.
     // Retrasar la verificación del tipo de botón para asegurar que el widget esté completamente inicializado
     Future.delayed(Duration.zero, () {
-      if (widget.selectedButton != null && widget.selectedButton!.type == '1' ||
-          widget.selectedButton!.type == '2') {
-        // Tambien aplicable para sliders
-        _showSwitchRequirements(widget.key);
-
-        // Parseamos los elementos del switch/slider a button
-      }
+      _showSwitchRequirements(widget.key); //Mostramos el pop up
     });
   }
 
@@ -170,25 +157,12 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
                                 onPressed: () async {
                                   if (sBaseURLError == null) {
                                     bool bRes = true;
-                                    if (widget.selectedButton!.type == '0') {
-                                      bRes = await _buttonFieldUpdate(
-                                          widget._projectName,
-                                          'baseurl',
-                                          newButton.baseURLPOST,
-                                          widget.key,
-                                          widget.selectedButton!.type);
-                                    } else if (widget.selectedButton!.type ==
-                                        '1') {
-                                      //Switch
-                                      bRes = await _buttonFieldUpdate(
-                                          widget._projectName,
-                                          'baseURLPOSTpost',
-                                          newButton.baseURLPOST,
-                                          widget.key,
-                                          widget.selectedButton!.type);
-                                    } else {
-                                      //TODO AGREGAR SLIDER CUANDO ESTE LISTO
-                                    }
+                                    bRes = await _buttonFieldUpdate(
+                                        widget._projectName,
+                                        'baseurl_post',
+                                        newButton.baseURLPOST,
+                                        widget.key,
+                                        widget.selectedButton!.type);
                                     if (bRes) {
                                       setState(() {
                                         widget.selectedButton!.baseURLPOST =
@@ -225,27 +199,12 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
                                 onPressed: () async {
                                   if (sAPIErrorText == null) {
                                     bool bRes = true;
-                                    if (widget.selectedButton!.type == '0') {
-                                      bRes = await _buttonFieldUpdate(
-                                          widget._projectName,
-                                          'apiurl',
-                                          newButton.baseURLPOST,
-                                          widget.key,
-                                          widget.selectedButton!.type);
-                                    } else if (widget.selectedButton!.type ==
-                                        '1') {
-                                      // TODO FIX UPDATE SWITCH API VALUE
-                                      debugPrint(
-                                          'Estoy en el switch FIELD UPDATE');
-                                      bRes = await _buttonFieldUpdate(
-                                          widget._projectName,
-                                          'apiurl_post',
-                                          widget.selectedButton!.apiURLPOST,
-                                          widget.key,
-                                          widget.selectedButton!.type);
-                                    } else {
-                                      //TODO AGREGAR SLIDER CUANDO ESTE LISTO
-                                    }
+                                    bRes = await _buttonFieldUpdate(
+                                        widget._projectName,
+                                        'apiurl_post',
+                                        widget.selectedButton!.apiURLPOST,
+                                        widget.key,
+                                        widget.selectedButton!.type);
                                     if (bRes) {
                                       setState(() {
                                         widget.selectedButton!.apiURLPOST =
@@ -374,62 +333,17 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
       //Debemos controlar si se trata de un switch/slider u boton;
       var lElevatedButtons;
 
-      if (type == '0') {
-        lElevatedButtons =
-            await WidgetController.fetchAllElevatedButtons(sProjectName);
-      } else if (type == '1') {
-        lElevatedButtons =
-            await WidgetController.fetchAllSwitchesRAW(sProjectName);
-      } else {
-        //Slider
-        lElevatedButtons =
-            await WidgetController.fetchAllSlidersRAW(sProjectName);
-      }
-
+      //Slider
+      lElevatedButtons =
+          await WidgetController.fetchAllButtonsFromProject(sProjectName);
       int iPosBtn = 0;
       for (var rawButton in lElevatedButtons) {
-        if (widget.selectedButton?.label == rawButton['label']) {
+        if (newButton.label == rawButton['label']) {
           break;
         }
         iPosBtn++;
       }
-
-      //Una vez obtenida la posicion del boton lo actualizamos.
-      try {
-        DatabaseReference ref = FirebaseDatabase.instance
-            .ref("lienzo/$sProjectName/buttons/$iPosBtn");
-        await ref.update({field: newfieldValue});
-        return true;
-      } catch (e) {
-        // Print Dialog Error
-        _updateErrorDialog(sProjectName, key);
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-
-  //LO MISMO PERO PARA SWITCHES
-  Future<bool> _switchFieldUpdate(
-      String sProjectName, String field, dynamic newfieldValue, var key) async {
-    //Si esta vacio pasamos de hacer nada
-    debugPrint(
-        'sProjectName: ${sProjectName} Field: ${field}, newFieldValue: ${newfieldValue}');
-    if (newfieldValue.isNotEmpty) {
-      // Primero buscamos en el lienzo que toque
-      var lSwitches =
-          await WidgetController.fetchAllSwitchesFromProject(sProjectName);
-
-      int iPosBtn = 0;
-      for (var sw in lSwitches) {
-        if (widget.selectedButton?.label == sw.label) {
-          debugPrint('Switch encontrado ${sw.label}');
-          break;
-        }
-        iPosBtn++;
-      }
-
+      debugPrint('Ruta obtenida "lienzo/$sProjectName/buttons/$iPosBtn');
       //Una vez obtenida la posicion del boton lo actualizamos.
       try {
         DatabaseReference ref = FirebaseDatabase.instance

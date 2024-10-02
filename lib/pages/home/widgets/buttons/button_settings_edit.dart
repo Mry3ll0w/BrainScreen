@@ -416,19 +416,8 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
       // Primero buscamos en el lienzo que toque
 
       //Debemos controlar si se trata de un switch/slider u boton;
-      var lElevatedButtons;
-
-      if (type == '0') {
-        lElevatedButtons =
-            await WidgetController.fetchAllElevatedButtons(sProjectName);
-      } else if (type == '1') {
-        lElevatedButtons =
-            await WidgetController.fetchAllSwitchesRAW(sProjectName);
-      } else {
-        //Slider
-        lElevatedButtons =
-            await WidgetController.fetchAllSlidersRAW(sProjectName);
-      }
+      var lElevatedButtons =
+          await WidgetController.fetchAllButtonsFromProject(sProjectName);
 
       int iPosBtn = 0;
       for (var rawButton in lElevatedButtons) {

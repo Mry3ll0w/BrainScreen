@@ -420,7 +420,7 @@ class _SwitchSettingsEditState extends State<SwitchSettingsEdit> {
       var lElevatedButtons;
 
       lElevatedButtons =
-          await WidgetController.fetchAllSwitchesRAW(sProjectName);
+          await WidgetController.fetchAllButtonsFromProject(sProjectName);
 
       int iPosBtn = 0;
       for (var rawButton in lElevatedButtons) {

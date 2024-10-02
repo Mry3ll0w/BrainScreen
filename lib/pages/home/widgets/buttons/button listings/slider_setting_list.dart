@@ -1,6 +1,6 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/editors/slider_editor_view.dart';
-import 'package:brainscreen/pages/home/widgets/buttons/editors/switch_editor_view.dart';
+
 import 'package:brainscreen/pages/models/slider_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
