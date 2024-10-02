@@ -42,21 +42,14 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
   Future<Widget> _loadAllButtonsData(String projectName) async {
     List<ElevatedButtonModel> lElevatedButtons =
         await WidgetController.fetchElevatedButtonsModels(projectName);
-    List<SwitchButtonModel> lSwitchButtonModels =
-        await WidgetController.fetchAllSwitchesFromProject(widget._projectName);
-
-    List<CustomSliderModel> lSliders =
-        await WidgetController.fetchAllSlidersFromProject(widget._projectName);
-
     return Scaffold(
         appBar: AppBar(
           title: const Text('Ajustes de botones'),
         ),
-        body: _buildListTiles(lElevatedButtons, lSwitchButtonModels, lSliders));
+        body: _buildListTiles(lElevatedButtons));
   }
 
-  Widget _buildListTiles(List<ElevatedButtonModel> aButtons,
-      List<SwitchButtonModel> aSwitches, List<CustomSliderModel> aSliders) {
+  Widget _buildListTiles(List<ElevatedButtonModel> aButtons) {
     List<Widget> lTiles = [];
 
     for (var b in aButtons) {
@@ -65,60 +58,6 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
         title: Text(b.labelText_),
         subtitle: const Text("Botón"),
       ));
-    }
-
-    for (var s in aSwitches) {
-      // Preparamos La lista de Filas
-      lTiles.add(ListTile(
-        leading: const Row(
-          children: [
-            Icon(Icons.light_mode),
-            Text(
-              '/',
-              style: TextStyle(fontSize: 20),
-            ),
-            Icon(Icons.light_mode_outlined)
-          ],
-        ),
-        title: Text(s.labelText),
-        subtitle: const Text("Interruptor"),
-      ));
-      // Parseamos de Switch a button
-      aButtons.add(ElevatedButtonModel(
-          label: s.label,
-          labelText: s.labelText,
-          type: s.type,
-          petition: 'POST',
-          baseURL: s.baseURLPOST,
-          apiURL: s.apiURLPOST,
-          payload: s.payload));
-    }
-
-    for (var sl in aSliders) {
-      // Preparamos La lista de Filas
-      lTiles.add(ListTile(
-        leading: const Row(
-          children: [
-            Icon(Icons.light_mode),
-            Text(
-              '/',
-              style: TextStyle(fontSize: 20),
-            ),
-            Icon(Icons.light_mode_outlined)
-          ],
-        ),
-        title: Text(sl.labelText),
-        subtitle: const Text("Interruptor"),
-      ));
-      // Parseamos de Switch a button
-      aButtons.add(ElevatedButtonModel(
-          label: sl.label,
-          labelText: sl.labelText,
-          type: sl.type,
-          petition: 'POST',
-          baseURL: sl.baseURLPOST,
-          apiURL: sl.apiURLPOST,
-          payload: sl.payload));
     }
 
     return Container(
