@@ -1,5 +1,6 @@
 import 'package:brainscreen/pages/home/home_controller.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button_selector.dart';
+import 'package:brainscreen/pages/home/widgets/fields_widgets/fieldWidgetSelector.dart';
 import 'package:brainscreen/pages/home/widgets/lienzo.components/button_grid.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -110,24 +111,76 @@ class _LienzoState extends State<Lienzo> {
 
   // Menu Handler
   void _handleMenuSelection(String value) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog.fullscreen(
-          child: Container(
-            color: BrainColors.backgroundColor,
-            child: Column(
-              children: [
-                Expanded(
-                  child: ButtonSelector(
-                    sProjectName: widget.sProjectName,
-                  ),
+    switch (value) {
+      case 'button':
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog.fullscreen(
+              child: Container(
+                color: BrainColors.backgroundColor,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ButtonSelector(
+                        sProjectName: widget.sProjectName,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
-      },
-    );
+        break;
+
+      case 'textfield':
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog.fullscreen(
+              child: Container(
+                color: BrainColors.backgroundColor,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: FieldWidgetSelector(
+                        sProjectName: widget.sProjectName,
+                        bIsNumberField: false,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+        break;
+
+      case 'numberfield':
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog.fullscreen(
+              child: Container(
+                color: BrainColors.backgroundColor,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: FieldWidgetSelector(
+                        sProjectName: widget.sProjectName,
+                        bIsNumberField: true,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+        break;
+      case 'graph':
+        break;
+    }
   }
 }
