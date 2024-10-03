@@ -162,7 +162,7 @@ class ElementGrid extends StatelessWidget //__
               ),
               header: const Text('TextFields', style: headerStyle),
               content: FutureBuilder(
-                  future: initializeSwitches(projectName_!),
+                  future: initializeTextFields(projectName_!),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return snapshot.data as Widget;
@@ -194,7 +194,7 @@ class ElementGrid extends StatelessWidget //__
               ),
               header: const Text('NumberFields', style: headerStyle),
               content: FutureBuilder(
-                  future: initializeSwitches(projectName_!),
+                  future: initializeNumberFields(projectName_!),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return snapshot.data as Widget;
@@ -418,6 +418,57 @@ class ElementGrid extends StatelessWidget //__
   }
 
   Widget styledTextFieldsModels(List<SwitchButtonModel> switchList) {
+    // Creamos una lista para almacenar las filas (Rows) que contendrán los botones
+    List<Widget> rows = [];
+
+    try {
+      // Iteramos sobre la lista de botones
+      for (SwitchButtonModel s in switchList) {
+        // Incrementamos de 2 en 2
+        // Creamos una lista temporal para almacenar los botones de cada fila
+        List<Widget> switchRow = [];
+
+        // Agregamos hasta dos botones por fila
+        switchRow.add(s.buildSwitchWidget(super.key, projectName_!));
+
+        // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
+        rows.add(Row(
+          mainAxisAlignment: MainAxisAlignment
+              .spaceEvenly, // Distribuye los botones en el espacio disponible
+          children: switchRow,
+        ));
+      }
+    } catch (e) {
+      rows = [const Text('Se ha producido un error en la lectura del widget')];
+    }
+
+    if (rows.isEmpty) {
+      // Creamos el contenedor que tendrá todas las filas con los botones estilados
+      return Container(
+        child: const Column(
+          children: [Text('No hay elementos, agrega uno')],
+        ),
+      );
+    } else {
+      // Creamos el contenedor que tendrá todas las filas con los botones estilados
+      return Container(
+        child: Column(
+          children: rows,
+        ),
+      );
+    }
+  }
+
+  // ! Seccion de inicializacion de Numberfields
+  //??TODO IMPLEMENTAR BACKEND
+  Future<Widget> initializeNumberFields(String sProjectName) async {
+    List<SwitchButtonModel> switchList =
+        await WidgetController.fetchAllSwitchesFromProject(sProjectName);
+
+    return styledSwitchesModels(switchList);
+  }
+
+  Widget styledNumberFieldsModels(List<SwitchButtonModel> switchList) {
     // Creamos una lista para almacenar las filas (Rows) que contendrán los botones
     List<Widget> rows = [];
 
