@@ -43,7 +43,7 @@ class _LienzoState extends State<Lienzo> {
     return Scaffold(
       floatingActionButton: _widgetInsertionMenu(),
       backgroundColor: BrainColors.backgroundColor,
-      body: ButtonGrid(sProjectName: widget.sProjectName),
+      body: ElementGrid(sProjectName: widget.sProjectName),
     );
   }
 
@@ -64,8 +64,6 @@ class _LienzoState extends State<Lienzo> {
         ),
         onSelected: (String result) {
           _handleMenuSelection(result);
-          // Aquí puedes manejar la selección del menú
-          debugPrint('Has seleccionado: $result');
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(

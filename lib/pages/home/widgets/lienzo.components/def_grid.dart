@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
-class ButtonGrid extends StatefulWidget {
-  const ButtonGrid({super.key});
+class ElementGrid extends StatefulWidget {
+  const ElementGrid({super.key});
 
   @override
-  State<ButtonGrid> createState() => _ButtonGridState();
+  State<ElementGrid> createState() => _ElementGridState();
 }
 
-class _ButtonGridState extends State<ButtonGrid> {
+class _ElementGridState extends State<ElementGrid> {
   List<String> imagePaths = [
     'https://images.unsplash.com/photo-1524024973431-2ad916746881?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
     'https://images.unsplash.com/photo-1444845026749-81acc3926736?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=864&q=80',

@@ -9,10 +9,10 @@ import 'package:brainscreen/pages/models/switch_button_model.dart';
 import 'package:brainscreen/pages/models/slider_model.dart';
 import 'package:flutter/material.dart';
 
-class ButtonGrid extends StatelessWidget //__
+class ElementGrid extends StatelessWidget //__
 {
   String? projectName_;
-  ButtonGrid({required sProjectName, super.key}) {
+  ElementGrid({required sProjectName, super.key}) {
     projectName_ = sProjectName;
   }
   static const headerStyle = TextStyle(
@@ -29,9 +29,6 @@ class ButtonGrid extends StatelessWidget //__
   @override
   build(context) => Scaffold(
         backgroundColor: Colors.blueGrey[100],
-        appBar: AppBar(
-          title: const Text('Botonera'),
-        ),
         body: Accordion(
           headerBorderColor: Colors.blueGrey,
           headerBorderColorOpened: Colors.transparent,
@@ -50,7 +47,7 @@ class ButtonGrid extends StatelessWidget //__
           children: [
             AccordionSection(
               contentVerticalPadding: 20,
-              leftIcon: Icon(
+              leftIcon: const Icon(
                 Icons.bolt_sharp,
                 color: Colors.white,
               ),
@@ -132,6 +129,102 @@ class ButtonGrid extends StatelessWidget //__
                 },
               ),
               header: const Text('Interruptores', style: headerStyle),
+              content: FutureBuilder(
+                  future: initializeSwitches(projectName_!),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return snapshot.data as Widget;
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  }),
+            ),
+            AccordionSection(
+              //! Seccion de TextField
+              contentVerticalPadding: 20,
+              leftIcon: const Row(
+                children: [
+                  Icon(Icons.translate, color: Colors.white),
+                ],
+              ),
+              rightIcon: IconButton(
+                icon: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SwitchSettingsList(
+                              key: key, sProjectName: projectName_!)));
+                },
+              ),
+              header: const Text('TextFields', style: headerStyle),
+              content: FutureBuilder(
+                  future: initializeSwitches(projectName_!),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return snapshot.data as Widget;
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  }),
+            ),
+            AccordionSection(
+              //! Seccion de NumberFields
+              contentVerticalPadding: 20,
+              leftIcon: const Row(
+                children: [
+                  Icon(Icons.twenty_four_mp, color: Colors.white),
+                ],
+              ),
+              rightIcon: IconButton(
+                icon: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SwitchSettingsList(
+                              key: key, sProjectName: projectName_!)));
+                },
+              ),
+              header: const Text('NumberFields', style: headerStyle),
+              content: FutureBuilder(
+                  future: initializeSwitches(projectName_!),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return snapshot.data as Widget;
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  }),
+            ),
+            AccordionSection(
+              //! Seccion de Grafica
+              contentVerticalPadding: 20,
+              leftIcon: const Row(
+                children: [
+                  Icon(Icons.auto_graph, color: Colors.white),
+                ],
+              ),
+              rightIcon: IconButton(
+                icon: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SwitchSettingsList(
+                              key: key, sProjectName: projectName_!)));
+                },
+              ),
+              header: const Text('BigData', style: headerStyle),
               content: FutureBuilder(
                   future: initializeSwitches(projectName_!),
                   builder: (context, snapshot) {
