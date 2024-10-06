@@ -1,5 +1,6 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/homeView.dart';
+import 'package:brainscreen/pages/home/widgets/fields_widgets/fieldWidgetSetup.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,26 +28,22 @@ class _FieldWidgetSelectorState extends State<FieldWidgetSelector> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Tipos de Botones'),
+          title: const Text('Configura tu Widget'),
         ),
         body: widget.bIsNumberField
-            ? showNumberFieldSetup()
-            : showTextFieldSetup());
+            ? showNumberFieldSetup(widget.sProjectName)
+            : showTextFieldSetup(widget.sProjectName));
   }
 
   // Muestra el widget de NumberField
 
-  Widget showNumberFieldSetup() {
-    return const Column(
-      children: [Text('NumberField')],
-    );
+  Widget showNumberFieldSetup(String? projectName) {
+    return Fieldwidgetsetup(projectName: projectName, isNumberField: true);
   }
 
   // Muestra el widget de TextField
 
-  Widget showTextFieldSetup() {
-    return const Column(
-      children: [Text('TextField')],
-    );
+  Widget showTextFieldSetup(String? projectName) {
+    return Fieldwidgetsetup(projectName: projectName, isNumberField: true);
   }
 }
