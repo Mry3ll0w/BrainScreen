@@ -104,8 +104,4 @@ class _ButtonSettingsListState extends State<ButtonSettingsList> {
       return const Icon(Icons.commit);
     }
   }
-
-  Widget _editorSelector(String btnType) {
-    return Container();
-  }
 }
