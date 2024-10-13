@@ -1,4 +1,5 @@
 import 'package:brainscreen/pages/models/button_model.dart';
+import 'package:brainscreen/pages/models/field_widget_model.dart';
 import 'package:brainscreen/pages/models/slider_model.dart';
 import 'package:brainscreen/pages/models/switch_button_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -594,7 +595,7 @@ class WidgetController {
     }
   }
 
-  /// Agrega un Switch al lienzo del proyecto especificado.
+  /// Agrega un FieldWidget al lienzo del proyecto especificado.
   ///
   /// Esta función escribe datos en la base de datos Firebase Realtime Database
   /// bajo el nodo "lienzo/$sProjectName". Los datos incluyen información básica
@@ -604,7 +605,8 @@ class WidgetController {
   ///        Debe ser una cadena válida y corresponder al nombre de un proyecto existente.
   /// @throws Exception Si ocurre un error al intentar escribir en la base de datos,
   ///        como problemas de permisos o conectividad.
-  static void addFieldWidgetToLienzo(String sProjectName) async {
+  static void addFieldWidgetToLienzo(
+      String sProjectName, FieldWidgetModel fieldWidget) async {
     //obtaining the list of buttons linked to that lienzo
     // 1st we get the db ref
     DatabaseReference refDB = FirebaseDatabase.instance
@@ -625,38 +627,36 @@ class WidgetController {
           setOfSwitches = {...valueFromSnapshot.toSet()};
 
           // Al tener un set evitamos elementos repetidos, ahora iteramos la lista
-          var setOfSwitchLabels = Set();
+          var setOfFieldWidgets = Set();
 
           // Obtenemos todos los labels y lo metemos en lista para agregar el nuevo
           for (var b in setOfSwitches) {
             String currentLabel = b['label'];
-            setOfSwitchLabels.add(currentLabel);
+            setOfFieldWidgets.add(currentLabel);
           }
           //Usamos la funcion generadora de labels
           String newLabel = randomLabelGenerator(6);
-          while (setOfSwitchLabels.contains(newLabel)) {
+          while (setOfFieldWidgets.contains(newLabel)) {
             newLabel = randomLabelGenerator(6);
           }
 
           //Una vez tenemos la nueva label creamos la instancia del switch vacio.
-          Map<String, dynamic> newSwitch = {
+          Map<String, dynamic> newFieldWidget = {
             "label": randomLabelGenerator(6),
-            "type": "1",
-            "labelText": "Switch",
-            "position": "0",
-            "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
-            "apiurl_post": "/test",
-            "payload": {"dato": "valor"},
-            "value": "true"
+            "labelText": fieldWidget.labelText,
+            "baseurl": fieldWidget.baseURL,
+            "apiurl_post": fieldWidget.apiURL_,
+            "payload": fieldWidget.payload,
+            "value": fieldWidget.value_
           };
 
-          setOfSwitches.add(newSwitch);
+          setOfSwitches.add(newFieldWidget);
 
           DatabaseReference ref =
               FirebaseDatabase.instance.ref("lienzo/$sProjectName");
 
           await ref.update({
-            "buttons": setOfSwitches.toList(),
+            "fieldWidgets": setOfSwitches.toList(),
           });
         }
         // Para un mapa, puedes hacer algo como esto:
@@ -670,16 +670,14 @@ class WidgetController {
 
         //Updating the button list
         await ref.set({
-          "buttons": [
+          "fieldWidgets": [
             {
               "label": randomLabelGenerator(6),
-              "type": "1",
-              "labelText": "Switch",
-              "position": "0",
-              "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
-              "apiurl_post": "/test",
-              "payload": {"dato": "valor"},
-              "value": "true"
+              "labelText": fieldWidget.labelText,
+              "baseurl": fieldWidget.baseURL,
+              "apiurl_post": fieldWidget.apiURL_,
+              "payload": fieldWidget.payload,
+              "value": fieldWidget.value_
             }
           ],
         });
@@ -691,16 +689,14 @@ class WidgetController {
 
       //Updating the button list
       await ref.set({
-        "buttons": [
+        "fieldWidgets": [
           {
             "label": randomLabelGenerator(6),
-            "type": "1",
-            "labelText": "Switch",
-            "position": "0",
-            "baseurl_post": dotenv.env['TESTING_SERVER_URL'],
-            "apiurl_post": "/test",
-            "payload": {"dato": "valor"},
-            "value": "true"
+            "labelText": fieldWidget.labelText,
+            "baseurl": fieldWidget.baseURL,
+            "apiurl_post": fieldWidget.apiURL_,
+            "payload": fieldWidget.payload,
+            "value": fieldWidget.value_
           }
         ]
       });

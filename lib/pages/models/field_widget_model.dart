@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FieldWidgetModel {
-  String label_, labelText_, baseURL_, apiURL_, widgetValue_;
+  String labelText_, baseURL_, apiURL_, value_;
   bool bIsNumberField_;
   dynamic payload_;
 
@@ -14,30 +14,28 @@ class FieldWidgetModel {
       required String widgetValue,
       required bool numberField,
       required dynamic payload})
-      : label_ = label,
-        labelText_ = labelText,
+      : labelText_ = labelText,
         baseURL_ = baseURL,
         apiURL_ = apiURL,
-        widgetValue_ = widgetValue,
+        value_ = widgetValue,
         bIsNumberField_ = numberField;
 
   // Now we generate all the getters and setters.
 
   // Getters
-  String get label => label_;
+
   String get labelText => labelText_;
   String get baseURL => baseURL_;
   String get apiURL => apiURL_;
-  String get widgetValue => widgetValue_;
+  String get widgetValue => value_;
   bool get isNumberField => bIsNumberField_;
   dynamic get payload => payload_;
 
   // Setters
-  set label(String value) => label_ = value;
   set labelText(String value) => labelText_ = value;
   set baseURL(String value) => baseURL_ = value;
   set apiURL(String value) => apiURL_ = value;
-  set widgetValue(String value) => widgetValue_ = value;
+  set widgetValue(String value) => value_ = value;
   set isNumberField(bool value) => bIsNumberField_ = value;
   set payload(dynamic value) => payload_ = value;
 }
