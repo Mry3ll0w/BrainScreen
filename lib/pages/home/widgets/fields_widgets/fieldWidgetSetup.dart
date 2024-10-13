@@ -1,3 +1,5 @@
+import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/models/field_widget_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +21,10 @@ class _FieldwidgetsetupState extends State<Fieldwidgetsetup> {
       sErrorText = 'Soy un mensaje de error',
       sPlaceHolder = 'Soy un placeHolder',
       sLabelText = 'Soy un labelText',
-      sHelperText = 'Mensaje de ayuda';
-  String? prevErrorText = null;
+      sHelperText = 'Mensaje de ayuda',
+      sBaseURL = 'http://192.168.1.160:3000',
+      sAPIURL = '/FieldWidget';
+  String? prevErrorText;
 
   bool bTestError = false;
   bool showErrorText = false;
@@ -205,7 +209,22 @@ class _FieldwidgetsetupState extends State<Fieldwidgetsetup> {
             padding: const EdgeInsets.only(top: 10),
             child: Center(
                 child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                try {
+                  WidgetController.addFieldWidgetToLienzo(
+                      widget.sProjectName,
+                      FieldWidgetModel(
+                          labelText: sLabelText,
+                          baseURL:
+                              'http://192.168.1.160:3000', // SE DEJA ASI YA QUE EL USUARIO NO TIENE PQ EDITARLO
+                          apiURL: '/FieldWidget',
+                          widgetValue: "0",
+                          numberField: bIsNumberField));
+                  // TODO Derivar a home
+                } catch (error) {
+                  // TODO MOSTRAR Texto de error
+                }
+              },
               child: const Text('Crear Widget'),
             )),
           ),

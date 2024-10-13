@@ -131,10 +131,11 @@ class _ProjectSettingsState extends State<ProjectSettings> {
                                                   ProjectController
                                                       .eraseProject(
                                                           widget.projectName);
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              const Home()));
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const Home()));
                                                 },
                                                 child: const Text('Sí'),
                                               ),

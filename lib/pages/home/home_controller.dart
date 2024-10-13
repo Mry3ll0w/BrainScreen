@@ -1,4 +1,3 @@
-import 'package:brainscreen/pages/controllers/general_functions.dart';
 import 'package:brainscreen/pages/controllers/project_controller.dart';
 import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/pages/home/widgets/lienzo.dart';

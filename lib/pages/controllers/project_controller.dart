@@ -3,12 +3,13 @@ import 'package:brainscreen/pages/models/project_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 
 class ProjectController {
   static final db = FirebaseFirestore.instance;
   static final _auth = FirebaseAuth.instance;
 
-  static void createProyect(Project p) {
+  static void createProyect(Project p) async {
     db.collection('projects').add({
       'name': p.name,
       'owner': _auth.currentUser!.uid,
@@ -16,6 +17,12 @@ class ProjectController {
       'alexaUserID': '',
       'deleted': false,
     });
+
+    // Agregamos a cada projecto su correspondiente setup de lienzos RT database
+    DatabaseReference ref = FirebaseDatabase.instance.ref("lienzo/${p.name}");
+
+    //Updating the button list
+    await ref.set({"buttons": [], "fieldWidgets": []});
   }
 
   static Future<List<Project>> getProjectsFromLoggedUser() async {
@@ -26,14 +33,12 @@ class ProjectController {
     QuerySnapshot queryMiembros = await db
         .collection('projects')
         .where('members', arrayContains: _auth.currentUser!.uid)
-        .where('deleted', isEqualTo: false)
         .get();
     proyectos.addAll(queryMiembros.docs);
     // Consulta para proyectos donde el usuario es propietario
     QuerySnapshot queryPropietarios = await db
         .collection('projects')
         .where('owner', isEqualTo: _auth.currentUser!.uid)
-        .where('deleted', isEqualTo: false)
         .get();
 
     //Agregamos los proyectos que no esten ya en la lista de proyectos usando su nombre de proyecto
@@ -42,13 +47,15 @@ class ProjectController {
         proyectos.add(doc);
       }
     }
-
+    debugPrint('Nombres de proyectos :');
     for (var doc in proyectos) {
+      debugPrint('${doc['name']}, ');
       projects.add(Project(
         doc['name'],
         doc['owner'],
       ));
     }
+
     return projects;
   }
 
@@ -182,7 +189,7 @@ class ProjectController {
         .get();
     for (var doc in query.docs) {
       // Agregamos el campo 'deleted' al documento y lo marcamos como true
-      db.collection('projects').doc(doc.id).update({'deleted': true});
+      db.collection('projects').doc(doc.id).delete();
     }
   }
 
@@ -211,5 +218,29 @@ class ProjectController {
     } else {
       return;
     }
+  }
+
+  static Future<int> getNumberOfProjectsOfLoggedUser() async {
+    List<QueryDocumentSnapshot> proyectos = [];
+    //Get the projects where the user is a member or the owner
+    // Consulta para proyectos donde el usuario es miembro
+    QuerySnapshot queryMiembros = await db
+        .collection('projects')
+        .where('members', arrayContains: _auth.currentUser!.uid)
+        .get();
+    proyectos.addAll(queryMiembros.docs);
+    // Consulta para proyectos donde el usuario es propietario
+    QuerySnapshot queryPropietarios = await db
+        .collection('projects')
+        .where('owner', isEqualTo: _auth.currentUser!.uid)
+        .get();
+
+    //Agregamos los proyectos que no esten ya en la lista de proyectos usando su nombre de proyecto
+    for (var doc in queryPropietarios.docs) {
+      if (!proyectos.any((element) => element['name'] == doc['name'])) {
+        proyectos.add(doc);
+      }
+    }
+    return proyectos.length;
   }
 }

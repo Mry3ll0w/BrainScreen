@@ -606,7 +606,9 @@ class WidgetController {
   /// @throws Exception Si ocurre un error al intentar escribir en la base de datos,
   ///        como problemas de permisos o conectividad.
   static void addFieldWidgetToLienzo(
-      String sProjectName, FieldWidgetModel fieldWidget) async {
+      // !FIX PETA EN EL CREATE CUANDO NO HAY ELEMENTOS YA QUE MACHACA AL RESTO, macahacan todos los buttons tambien
+      String sProjectName,
+      FieldWidgetModel fieldWidget) async {
     //obtaining the list of buttons linked to that lienzo
     // 1st we get the db ref
     DatabaseReference refDB = FirebaseDatabase.instance
@@ -645,9 +647,9 @@ class WidgetController {
             "label": randomLabelGenerator(6),
             "labelText": fieldWidget.labelText,
             "baseurl": fieldWidget.baseURL,
-            "apiurl_post": fieldWidget.apiURL_,
-            "payload": fieldWidget.payload,
-            "value": fieldWidget.value_
+            "apiurl": fieldWidget.apiURL_,
+            "isNumberField": fieldWidget.bIsNumberField_,
+            "value": fieldWidget.widgetValue
           };
 
           setOfSwitches.add(newFieldWidget);
@@ -675,9 +677,9 @@ class WidgetController {
               "label": randomLabelGenerator(6),
               "labelText": fieldWidget.labelText,
               "baseurl": fieldWidget.baseURL,
-              "apiurl_post": fieldWidget.apiURL_,
-              "payload": fieldWidget.payload,
-              "value": fieldWidget.value_
+              "apiurl": fieldWidget.apiURL_,
+              "isNumberField": fieldWidget.bIsNumberField_,
+              "value": fieldWidget.widgetValue
             }
           ],
         });
@@ -694,9 +696,9 @@ class WidgetController {
             "label": randomLabelGenerator(6),
             "labelText": fieldWidget.labelText,
             "baseurl": fieldWidget.baseURL,
-            "apiurl_post": fieldWidget.apiURL_,
-            "payload": fieldWidget.payload,
-            "value": fieldWidget.value_
+            "apiurl": fieldWidget.apiURL_,
+            "isNumberField": fieldWidget.bIsNumberField_,
+            "value": fieldWidget.widgetValue
           }
         ]
       });
