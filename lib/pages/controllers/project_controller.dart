@@ -15,14 +15,13 @@ class ProjectController {
       'owner': _auth.currentUser!.uid,
       'members': [p.ownerUID],
       'alexaUserID': '',
-      'deleted': false,
     });
 
     // Agregamos a cada projecto su correspondiente setup de lienzos RT database
     DatabaseReference ref = FirebaseDatabase.instance.ref("lienzo/${p.name}");
 
     //Updating the button list
-    await ref.set({"buttons": [], "fieldWidgets": []});
+    await ref.set({"fieldWidgets": [], "buttons": []});
   }
 
   static Future<List<Project>> getProjectsFromLoggedUser() async {

@@ -86,7 +86,7 @@ class WidgetController {
             FirebaseDatabase.instance.ref("lienzo/$sProjectName");
 
         //Updating the button list
-        await ref.set({
+        await ref.update({
           "buttons": [
             {
               "label": randomLabelGenerator(6),
@@ -107,7 +107,7 @@ class WidgetController {
           FirebaseDatabase.instance.ref("lienzo/$sProjectName");
 
       //Updating the button list
-      await ref.set({
+      await ref.update({
         "buttons": [
           {
             "label": randomLabelGenerator(6),
@@ -360,7 +360,7 @@ class WidgetController {
             FirebaseDatabase.instance.ref("lienzo/$sProjectName");
 
         //Updating the button list
-        await ref.set({
+        await ref.update({
           "buttons": [
             {
               "label": randomLabelGenerator(6),
@@ -381,7 +381,7 @@ class WidgetController {
           FirebaseDatabase.instance.ref("lienzo/$sProjectName");
 
       //Updating the button list
-      await ref.set({
+      await ref.update({
         "buttons": [
           {
             "label": randomLabelGenerator(6),
@@ -557,7 +557,7 @@ class WidgetController {
             FirebaseDatabase.instance.ref("lienzo/$sProjectName");
 
         //Updating the button list
-        await ref.set({
+        await ref.update({
           "buttons": [
             {
               "label": randomLabelGenerator(6),
@@ -578,7 +578,7 @@ class WidgetController {
           FirebaseDatabase.instance.ref("lienzo/$sProjectName");
 
       //Updating the button list
-      await ref.set({
+      await ref.update({
         "buttons": [
           {
             "label": randomLabelGenerator(6),
@@ -671,7 +671,7 @@ class WidgetController {
             FirebaseDatabase.instance.ref("lienzo/$sProjectName");
 
         //Updating the button list
-        await ref.set({
+        await ref.update({
           "fieldWidgets": [
             {
               "label": randomLabelGenerator(6),
@@ -690,7 +690,7 @@ class WidgetController {
           FirebaseDatabase.instance.ref("lienzo/$sProjectName");
 
       //Updating the button list
-      await ref.set({
+      await ref.update({
         "fieldWidgets": [
           {
             "label": randomLabelGenerator(6),
