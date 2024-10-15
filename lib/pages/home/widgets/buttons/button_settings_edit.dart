@@ -343,18 +343,16 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                             bool bErased =
                                 await WidgetController.eraseWidgetFromLienzo(
                                     widget._projectName,
-                                    newButton.label_,
+                                    widget.selectedButton!.label_,
                                     true); // TODO TEST que funcione
                             if (bErased) {
-                              /*
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Home.named(
-                                          title: widget._projectName,
-                                          projectToLoad: widget._projectName,
-                                        )));
-                            */
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Home.named(
+                                            title: widget._projectName,
+                                            projectToLoad: widget._projectName,
+                                          )));
                             }
                           },
                           icon: const Icon(

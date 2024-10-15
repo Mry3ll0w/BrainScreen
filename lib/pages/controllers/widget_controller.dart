@@ -712,7 +712,8 @@ class WidgetController {
     DatabaseReference ref;
 
     if (bIsButton) {
-      ref = FirebaseDatabase.instance.ref().child("lienzo/$projectName");
+      ref =
+          FirebaseDatabase.instance.ref().child("lienzo/$projectName/buttons");
     } else {
       ref = FirebaseDatabase.instance
           .ref()
@@ -724,7 +725,6 @@ class WidgetController {
       final snapshot = await ref.get();
       var valueFromSnapshot = snapshot.value;
       int iPosWidget = 0;
-      List<dynamic> elevatedButtonList = [];
       if (valueFromSnapshot != null) {
         // Pasamos a lista y procesamos
         if (valueFromSnapshot is List<dynamic>) {
@@ -741,18 +741,19 @@ class WidgetController {
         // Obtenemos la referencia al objeto y la borramos
         DatabaseReference refToErase = bIsButton
             ? FirebaseDatabase.instance
-                .ref("lienzo/$projectName/fieldWidgets/$iPosWidget")
+                .ref("lienzo/$projectName/buttons/$iPosWidget")
             : FirebaseDatabase.instance
-                .ref("lienzo/$projectName/buttons/$iPosWidget");
+                .ref("lienzo/$projectName/fieldWidgets/$iPosWidget");
+
+        debugPrint("lienzo/$projectName/fieldWidgets/$iPosWidget");
 
         // Borramos la referencia al objeto
         await refToErase.remove();
       }
+      return true;
     } catch (e) {
       debugPrint(e.toString());
       return false;
     }
-
-    return false;
   }
 }
