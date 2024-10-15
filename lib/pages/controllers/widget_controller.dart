@@ -5,8 +5,7 @@ import 'package:brainscreen/pages/models/switch_button_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:math';
-
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class WidgetController {
@@ -755,5 +754,30 @@ class WidgetController {
       debugPrint(e.toString());
       return false;
     }
+  }
+
+  static void genericErrorDialog(
+      String sProjectName, var key, var context, String sMsg) {
+    showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => Dialog(
+            child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(sMsg),
+                      ),
+                      const SizedBox(height: 15),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cerrar'),
+                      )
+                    ]))));
   }
 }

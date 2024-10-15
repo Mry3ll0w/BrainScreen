@@ -344,7 +344,7 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                 await WidgetController.eraseWidgetFromLienzo(
                                     widget._projectName,
                                     widget.selectedButton!.label_,
-                                    true); // TODO TEST que funcione
+                                    true);
                             if (bErased) {
                               Navigator.pushReplacement(
                                   context,
@@ -353,6 +353,13 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                             title: widget._projectName,
                                             projectToLoad: widget._projectName,
                                           )));
+                            } else {
+                              //Se ha generado algun tipo de error, mostramos dialog
+                              WidgetController.genericErrorDialog(
+                                  widget._projectName,
+                                  widget.key,
+                                  context,
+                                  'Se ha producido un error al borrar el widget, intentelo mas tarde.');
                             }
                           },
                           icon: const Icon(

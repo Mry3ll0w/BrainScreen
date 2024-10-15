@@ -251,6 +251,44 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
                         ),
                       ),
                       Padding(
+                        padding: const EdgeInsets.only(bottom: 15, top: 15),
+                        child: ElevatedButton.icon(
+                          onPressed: () async {
+                            //ELIMINAR WIDGET
+                            bool bErased =
+                                await WidgetController.eraseWidgetFromLienzo(
+                                    widget._projectName,
+                                    widget.selectedButton!.label,
+                                    true);
+                            if (bErased) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Home.named(
+                                            title: widget._projectName,
+                                            projectToLoad: widget._projectName,
+                                          )));
+                            } else {
+                              //Se ha generado algun tipo de error, mostramos dialog
+                              WidgetController.genericErrorDialog(
+                                  widget._projectName,
+                                  widget.key,
+                                  context,
+                                  'Se ha producido un error al borrar el widget, intentelo mas tarde.');
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                            size: 30,
+                          ),
+                          label: const Text(
+                            'Borrar slider',
+                            style: TextStyle(fontSize: 20, color: Colors.red),
+                          ),
+                        ),
+                      ),
+                      Padding(
                           padding: const EdgeInsets.all(10),
                           child: ElevatedButton.icon(
                             onPressed: () {
