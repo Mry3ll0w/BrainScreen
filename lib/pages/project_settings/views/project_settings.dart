@@ -207,7 +207,7 @@ class _ProjectSettingsState extends State<ProjectSettings> {
                                 },
                                 style: ButtonStyle(
                                     backgroundColor:
-                                        MaterialStateProperty.all<Color>(
+                                        WidgetStateProperty.all<Color>(
                                             BrainColors.backgroundButtonColor)),
                                 child: const Text('Agregar usuario'),
                               ),

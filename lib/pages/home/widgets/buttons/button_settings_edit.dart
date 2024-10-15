@@ -336,6 +336,39 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                         ),
                       ),
                       Padding(
+                        padding: const EdgeInsets.only(bottom: 15, top: 15),
+                        child: ElevatedButton.icon(
+                          onPressed: () async {
+                            //ELIMINAR WIDGET
+                            bool bErased =
+                                await WidgetController.eraseWidgetFromLienzo(
+                                    widget._projectName,
+                                    newButton.label_,
+                                    true); // TODO TEST que funcione
+                            if (bErased) {
+                              /*
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Home.named(
+                                          title: widget._projectName,
+                                          projectToLoad: widget._projectName,
+                                        )));
+                            */
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                            size: 30,
+                          ),
+                          label: const Text(
+                            'Borrar pulsador',
+                            style: TextStyle(fontSize: 20, color: Colors.red),
+                          ),
+                        ),
+                      ),
+                      Padding(
                           padding: const EdgeInsets.all(10),
                           child: ElevatedButton.icon(
                             onPressed: () {

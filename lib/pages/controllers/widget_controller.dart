@@ -606,9 +606,7 @@ class WidgetController {
   /// @throws Exception Si ocurre un error al intentar escribir en la base de datos,
   ///        como problemas de permisos o conectividad.
   static void addFieldWidgetToLienzo(
-      // !FIX PETA EN EL CREATE CUANDO NO HAY ELEMENTOS YA QUE MACHACA AL RESTO, macahacan todos los buttons tambien
-      String sProjectName,
-      FieldWidgetModel fieldWidget) async {
+      String sProjectName, FieldWidgetModel fieldWidget) async {
     //obtaining the list of buttons linked to that lienzo
     // 1st we get the db ref
     DatabaseReference refDB = FirebaseDatabase.instance
@@ -703,5 +701,58 @@ class WidgetController {
         ]
       });
     }
+  }
+
+  /// Se elimina del lienzo el widget con label
+  /// @param String projectName => Se proyecto del que se elimina el widget
+  /// @param String label => Identificador del widget
+  static Future<bool> eraseWidgetFromLienzo(
+      String projectName, String label, bool bIsButton) async {
+    //Buscamos donde esta segun el tipo de widget
+    DatabaseReference ref;
+
+    if (bIsButton) {
+      ref = FirebaseDatabase.instance.ref().child("lienzo/$projectName");
+    } else {
+      ref = FirebaseDatabase.instance
+          .ref()
+          .child("lienzo/$projectName/fieldWidgets");
+    }
+
+    try {
+      // to read once we use final
+      final snapshot = await ref.get();
+      var valueFromSnapshot = snapshot.value;
+      int iPosWidget = 0;
+      List<dynamic> elevatedButtonList = [];
+      if (valueFromSnapshot != null) {
+        // Pasamos a lista y procesamos
+        if (valueFromSnapshot is List<dynamic>) {
+          // Obtenemos todos los botones elevatedButtons
+          for (var b in valueFromSnapshot.toList()) {
+            //Buscamos el objecto a eliminar y salimos del bucle cuando lo pillemos
+            if (b['label'] == label) {
+              break;
+            }
+            iPosWidget++;
+          }
+        }
+
+        // Obtenemos la referencia al objeto y la borramos
+        DatabaseReference refToErase = bIsButton
+            ? FirebaseDatabase.instance
+                .ref("lienzo/$projectName/fieldWidgets/$iPosWidget")
+            : FirebaseDatabase.instance
+                .ref("lienzo/$projectName/buttons/$iPosWidget");
+
+        // Borramos la referencia al objeto
+        await refToErase.remove();
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+
+    return false;
   }
 }
