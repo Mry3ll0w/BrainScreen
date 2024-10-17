@@ -1,4 +1,6 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/pages/models/field_widget_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:flutter/material.dart';
@@ -214,25 +216,31 @@ class _FieldwidgetsetupState extends State<Fieldwidgetsetup> {
                 child: ElevatedButton(
               onPressed: () async {
                 try {
-                  WidgetController.addFieldWidgetToLienzo(
-                      widget.sProjectName,
-                      FieldWidgetModel(
-                          labelText: sLabelText,
-                          baseURL:
-                              'http://192.168.1.160:3000', // SE DEJA ASI YA QUE EL USUARIO NO TIENE PQ EDITARLO
-                          apiURL: '/FieldWidget',
-                          widgetValue: "0",
-                          numberField: bIsNumberField));
-                  // TODO Derivar a home
+                  if (!(bIsNumberField &&
+                      null == double.tryParse(sPlaceHolder))) {
+                    WidgetController.addFieldWidgetToLienzo(
+                        widget.sProjectName,
+                        FieldWidgetModel(
+                            labelText: sLabelText,
+                            baseURL:
+                                'http://192.168.1.160:3000', // SE DEJA ASI YA QUE EL USUARIO NO TIENE PQ EDITARLO
+                            apiURL: '/FieldWidget',
+                            widgetValue: "0",
+                            numberField: bIsNumberField));
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => const Home()));
+                  } else {
+                    throw Exception('Error de creado de elementos');
+                  }
                 } catch (error) {
-                  // TODO MOSTRAR Texto de error
+                  _creationError();
                 }
               },
               child: const Text('Crear Widget'),
             )),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 10, bottom: 30),
             child: Center(
                 child: ElevatedButton(
               onPressed: () {
@@ -246,22 +254,15 @@ class _FieldwidgetsetupState extends State<Fieldwidgetsetup> {
     );
   }
 
-  //Se encarga de actualizar el valor del campo del TextField ==> CAMBIAR A FUTURE BOOL
-  bool createTextField(String fieldToUpdate, String sLabelText) {
-    //TODO IMPLEMENTAR
-
-    //Comprobamos error de def value:
-    if (bIsNumberField) {
-      return null ==
-          double.tryParse(
-              sPlaceHolder); // Si no se puede parsear devuelve error
-    } else {
-      return true;
-    }
-  }
-
   // Muestra notificacion de fallo al crear el TextField;
-  //TODO IMPLEMENTAR
-
-  // Crear Ele
+  /// Error de conexiones de switch
+  void _creationError() {
+    AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: 1,
+            channelKey: 'error_channel',
+            title: 'Error al agregar el FieldWidget',
+            body:
+                'Se ha producido un error al crear el fieldWidget intente hacerlo mas tarde.'));
+  }
 }
