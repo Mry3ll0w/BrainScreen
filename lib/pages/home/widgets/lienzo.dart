@@ -81,16 +81,7 @@ class _LienzoState extends State<Lienzo> {
                 child: Row(
                   children: [
                     Icon(Icons.add),
-                    Text('Textfield'),
-                  ],
-                ),
-              ),
-              const PopupMenuItem<String>(
-                value: 'numberfield',
-                child: Row(
-                  children: [
-                    Icon(Icons.add),
-                    Text('Numberfields'),
+                    Text('FieldWidget'),
                   ],
                 ),
               ),

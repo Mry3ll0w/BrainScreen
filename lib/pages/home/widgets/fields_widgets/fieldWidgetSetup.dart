@@ -183,11 +183,14 @@ class _FieldwidgetsetupState extends State<Fieldwidgetsetup> {
                               sPlaceHolder = value;
                             })
                           },
-                      decoration: const InputDecoration(
-                        hintText: 'Valor mostrado de forma predeterminada',
-                        helperText:
-                            'Texto de error mostrado en caso de recibirse un error',
-                      )),
+                      decoration: InputDecoration(
+                          hintText: 'Valor mostrado de forma predeterminada',
+                          helperText:
+                              'Texto de error mostrado en caso de recibirse un error',
+                          errorText: (bIsNumberField &&
+                                  null == double.tryParse(sPlaceHolder))
+                              ? 'Si es un numberfield el valor debe ser numerado'
+                              : null)),
                 ),
               ])),
           Padding(
@@ -246,9 +249,19 @@ class _FieldwidgetsetupState extends State<Fieldwidgetsetup> {
   //Se encarga de actualizar el valor del campo del TextField ==> CAMBIAR A FUTURE BOOL
   bool createTextField(String fieldToUpdate, String sLabelText) {
     //TODO IMPLEMENTAR
-    return true;
+
+    //Comprobamos error de def value:
+    if (bIsNumberField) {
+      return null ==
+          double.tryParse(
+              sPlaceHolder); // Si no se puede parsear devuelve error
+    } else {
+      return true;
+    }
   }
 
   // Muestra notificacion de fallo al crear el TextField;
   //TODO IMPLEMENTAR
+
+  // Crear Ele
 }
