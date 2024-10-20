@@ -5,6 +5,7 @@ import 'package:brainscreen/pages/home/widgets/buttons/button%20listings/slider_
 import 'package:brainscreen/pages/home/widgets/buttons/button%20listings/switch_setting_list.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
+import 'package:brainscreen/pages/models/field_widget_model.dart';
 import 'package:brainscreen/pages/models/switch_button_model.dart';
 import 'package:brainscreen/pages/models/slider_model.dart';
 import 'package:flutter/material.dart';
@@ -413,29 +414,34 @@ class ElementGrid extends StatelessWidget //__
   Future<Widget> initializeTextFields(String sProjectName) async {
     // Pillamos los textFields
     List<dynamic> lTextFields =
-        await WidgetController.fetchAllFieldWidgetsRAW(sProjectName, true);
+        await WidgetController.fetchAllFieldWidgetsRAW(sProjectName, false);
 
-    debugPrint(lTextFields.toString());
-
-    List<SwitchButtonModel> switchList =
-        await WidgetController.fetchAllSwitchesFromProject(sProjectName);
-
-    return styledSwitchesModels(switchList);
+    return styledTextFieldsModels(lTextFields);
   }
 
-  Widget styledTextFieldsModels(List<SwitchButtonModel> switchList) {
+  Widget styledTextFieldsModels(List<dynamic> lFieldWidgets) {
     // Creamos una lista para almacenar las filas (Rows) que contendrán los botones
     List<Widget> rows = [];
 
     try {
       // Iteramos sobre la lista de botones
-      for (SwitchButtonModel s in switchList) {
+      int iPos = 0;
+      for (var fw in lFieldWidgets) {
         // Incrementamos de 2 en 2
         // Creamos una lista temporal para almacenar los botones de cada fila
         List<Widget> switchRow = [];
 
         // Agregamos hasta dos botones por fila
-        switchRow.add(s.buildSwitchWidget(super.key, projectName_!));
+        switchRow.add(FieldWidgetView(
+            fieldwidget: FieldWidgetModel(
+                apiURL: fw['apiurl'],
+                labelText: fw['labelText'],
+                label: fw['label'],
+                baseURL: fw['baseurl'],
+                widgetValue: fw['value'],
+                numberField: fw['isNumberField']),
+            sprojectName: projectName_!,
+            pos: iPos));
 
         // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
         rows.add(Row(
@@ -443,6 +449,7 @@ class ElementGrid extends StatelessWidget //__
               .spaceEvenly, // Distribuye los botones en el espacio disponible
           children: switchRow,
         ));
+        iPos++;
       }
     } catch (e) {
       rows = [const Text('Se ha producido un error en la lectura del widget')];

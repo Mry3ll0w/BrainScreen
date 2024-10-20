@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:brainscreen/styles/brain_colors.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class FieldWidgetModel {
@@ -41,53 +44,91 @@ class FieldWidgetModel {
 
 /// Vista del modelo
 class FieldWidgetView extends StatefulWidget {
-  FieldWidgetView({super.key, required FieldWidgetModel fieldwidget})
-      : fw = fieldwidget;
+  FieldWidgetView(
+      {super.key,
+      required FieldWidgetModel fieldwidget,
+      required String sprojectName,
+      required int pos})
+      : fw = fieldwidget,
+        projectName = sprojectName,
+        iPos = pos;
 
   FieldWidgetModel fw;
-
+  String projectName;
+  int iPos;
   @override
   State<FieldWidgetView> createState() => _FieldWidgetViewState();
 }
 
 class _FieldWidgetViewState extends State<FieldWidgetView> {
+  // Handler para cambios de valor en base de datos
+  late StreamSubscription _subscriptionFwDataChanges;
+
   @override
   void initState() {
     super.initState();
+
+    // Inicializamos event handler
+    setupvalueChangerListener(widget.projectName, widget.fw, widget.iPos);
   }
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-        enabled: false,
-        onChanged: (value) => {
-              setState(() {
-                widget.fw.widgetValue = value;
-              })
-            },
-        style: const TextStyle(fontStyle: FontStyle.italic),
-        decoration: InputDecoration(
-          suffixIcon: IconButton(
-            color: Colors.purple,
-            icon: const Icon(Icons.send),
-            onPressed: () => {
-              //TODO Implementar envio de datos
-            },
-          ),
-          fillColor: BrainColors.backgroundColor,
-          filled: true,
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
-                width: 2.0), // Color del borde cuando está habilitado
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-                color: BrainColors.mainBannerColor,
-                width: 2.0), // Color del borde cuando está enfocado
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-          ),
-          labelText: widget.fw.labelText_,
-        ));
+    return Expanded(
+      flex: 1,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 20.0),
+        child: TextField(
+            enabled: false,
+            onChanged: (value) => {
+                  setState(() {
+                    widget.fw.widgetValue = value;
+                  })
+                },
+            style: const TextStyle(fontStyle: FontStyle.italic),
+            decoration: InputDecoration(
+              suffixIcon: IconButton(
+                color: Colors.purple,
+                icon: const Icon(Icons.send),
+                onPressed: () => {},
+              ),
+              fillColor: BrainColors.backgroundColor,
+              filled: true,
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                    width: 2.0), // Color del borde cuando está habilitado
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: BrainColors.mainBannerColor,
+                    width: 2.0), // Color del borde cuando está enfocado
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+              ),
+              labelText: widget.fw.labelText_,
+            )),
+      ),
+    );
+  }
+
+  //Data Update onChange
+  void setupvalueChangerListener(
+      String projectName, FieldWidgetModel fw, int iPos) {
+    // Pillamos El fieldWidget a controlar
+    final databaseReference = FirebaseDatabase.instance
+        .ref('/lienzo/$projectName/fieldWidgets/$iPos');
+
+    _subscriptionFwDataChanges =
+        databaseReference.onValue.listen((DatabaseEvent event) {
+      final snapshot = event.snapshot;
+
+      setState(() {
+        // Actualizar los datos del widget con los nuevos valores recibidos
+        // Por ejemplo:
+        // _data = snapshot.value ?? {};
+
+        // TODO PASAR LOS VALORES DEL LISTENER A DOC y de alli actuaizar los campos del widget.fw
+      });
+    });
   }
 }
