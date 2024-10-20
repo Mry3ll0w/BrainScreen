@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -121,14 +122,19 @@ class _FieldWidgetViewState extends State<FieldWidgetView> {
     _subscriptionFwDataChanges =
         databaseReference.onValue.listen((DatabaseEvent event) {
       final snapshot = event.snapshot;
+      debugPrint(snapshot.value.toString());
+      try {
+        dynamic data = snapshot.value;
+        setState(() {
+          widget.fw.widgetValue = data['value'].toString();
+          widget.fw.labelText = data['labelText'].toString();
+        });
+        // ...
+      } catch (e) {
+        debugPrint('Error con data \n $e');
+      }
 
-      setState(() {
-        // Actualizar los datos del widget con los nuevos valores recibidos
-        // Por ejemplo:
-        // _data = snapshot.value ?? {};
-
-        // TODO PASAR LOS VALORES DEL LISTENER A DOC y de alli actuaizar los campos del widget.fw
-      });
+      // Pasamos a lista dinamica
     });
   }
 }
