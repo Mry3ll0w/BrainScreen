@@ -411,6 +411,12 @@ class ElementGrid extends StatelessWidget //__
   // ! Seccion de inicializacion de Textfields
   //??TODO IMPLEMENTAR BACKEND
   Future<Widget> initializeTextFields(String sProjectName) async {
+    // Pillamos los textFields
+    List<dynamic> lTextFields =
+        await WidgetController.fetchAllFieldWidgetsRAW(sProjectName, true);
+
+    debugPrint(lTextFields.toString());
+
     List<SwitchButtonModel> switchList =
         await WidgetController.fetchAllSwitchesFromProject(sProjectName);
 

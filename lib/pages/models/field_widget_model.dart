@@ -1,17 +1,20 @@
+import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:flutter/material.dart';
 
 class FieldWidgetModel {
   String labelText_, baseURL_, apiURL_, widgetValue_;
+  String? label;
   bool bIsNumberField_;
 
   // Constructor predeterminado, inicializamos los elementos minimos de los widgets
-  FieldWidgetModel({
-    required String labelText,
-    required String baseURL,
-    required String apiURL,
-    required String widgetValue,
-    required bool numberField,
-  })  : labelText_ = labelText,
+  FieldWidgetModel(
+      {required String labelText,
+      required String baseURL,
+      required String apiURL,
+      required String widgetValue,
+      required bool numberField,
+      String? label})
+      : labelText_ = labelText,
         baseURL_ = baseURL,
         apiURL_ = apiURL,
         widgetValue_ = widgetValue,
@@ -36,8 +39,12 @@ class FieldWidgetModel {
   set isNumberField(bool value) => bIsNumberField_ = value;
 }
 
+/// Vista del modelo
 class FieldWidgetView extends StatefulWidget {
-  const FieldWidgetView({super.key});
+  FieldWidgetView({super.key, required FieldWidgetModel fieldwidget})
+      : fw = fieldwidget;
+
+  FieldWidgetModel fw;
 
   @override
   State<FieldWidgetView> createState() => _FieldWidgetViewState();
@@ -45,7 +52,42 @@ class FieldWidgetView extends StatefulWidget {
 
 class _FieldWidgetViewState extends State<FieldWidgetView> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return TextField(
+        enabled: false,
+        onChanged: (value) => {
+              setState(() {
+                widget.fw.widgetValue = value;
+              })
+            },
+        style: const TextStyle(fontStyle: FontStyle.italic),
+        decoration: InputDecoration(
+          suffixIcon: IconButton(
+            color: Colors.purple,
+            icon: const Icon(Icons.send),
+            onPressed: () => {
+              //TODO Implementar envio de datos
+            },
+          ),
+          fillColor: BrainColors.backgroundColor,
+          filled: true,
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+                width: 2.0), // Color del borde cuando está habilitado
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+                color: BrainColors.mainBannerColor,
+                width: 2.0), // Color del borde cuando está enfocado
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+          ),
+          labelText: widget.fw.labelText_,
+        ));
   }
 }

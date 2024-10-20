@@ -780,4 +780,39 @@ class WidgetController {
                       )
                     ]))));
   }
+
+  // TODO Fetch all FieldWidgets as RAW
+  static Future<List<dynamic>> fetchAllFieldWidgetsRAW(
+      String projectName, bool bIsNumberField) async {
+    try {
+      DatabaseReference refDB = FirebaseDatabase.instance
+          .ref()
+          .child('lienzo/$projectName/fieldWidgets');
+      // to read once we use final
+      final snapshot = await refDB.get();
+      var valueFromSnapshot = snapshot.value;
+      List<dynamic> fieldWidgets = [];
+      if (valueFromSnapshot != null) {
+        // Suponiendo que valueFromSnapshot es una lista o un mapa que quieres convertir a un Set
+        // Para una lista, puedes hacer algo como esto:
+
+        if (valueFromSnapshot is List<dynamic>) {
+          // Obtenemos todos los botones elevatedButtons
+          for (var b in valueFromSnapshot.toList()) {
+            // Flag para indicar cargar solo NumberFields o solo TextField
+            // Si solo quiero numberFields lo pongo a true por lo que solo cojo los q son numberfields
+            if (bIsNumberField == b['isNumberField']) {
+              fieldWidgets.add(b);
+            }
+          }
+        }
+        //devolvemos la lista con todos los fieldWidgets filtrados
+        return fieldWidgets;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    return [];
+  }
 }

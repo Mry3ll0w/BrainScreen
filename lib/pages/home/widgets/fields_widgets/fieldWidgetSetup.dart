@@ -140,48 +140,6 @@ class _FieldwidgetsetupState extends State<Fieldwidgetsetup> {
                   child: TextField(
                       onChanged: (value) => {
                             setState(() {
-                              sHelperText = value;
-                            })
-                          },
-                      decoration: InputDecoration(
-                        hintText: 'Texto de Ayuda',
-                        errorText: sHelperText.isEmpty
-                            ? 'El texto de ayuda no puede estar vacio'
-                            : null,
-                        helperText:
-                            'Texto de ayuda colocado en la zona inferior',
-                      )),
-                )
-              ])),
-          Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: Column(children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
-                  child: TextField(
-                      onChanged: (value) => {
-                            setState(() {
-                              sErrorText = value;
-                            })
-                          },
-                      decoration: InputDecoration(
-                        hintText: 'Texto de error',
-                        errorText: sHelperText.isEmpty
-                            ? 'El texto de error no puede estar vacio'
-                            : null,
-                        helperText:
-                            'Texto de error mostrado en caso de recibirse un error',
-                      )),
-                )
-              ])),
-          Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Column(children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
-                  child: TextField(
-                      onChanged: (value) => {
-                            setState(() {
                               sPlaceHolder = value;
                             })
                           },
