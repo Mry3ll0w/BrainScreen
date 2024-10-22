@@ -80,7 +80,7 @@ class _FieldWidgetViewState extends State<FieldWidgetView> {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 20.0),
         child: TextField(
-            enabled: false,
+            enabled: true,
             onChanged: (value) => {
                   setState(() {
                     widget.fw.widgetValue = value;
@@ -88,6 +88,10 @@ class _FieldWidgetViewState extends State<FieldWidgetView> {
                 },
             style: const TextStyle(fontStyle: FontStyle.italic),
             decoration: InputDecoration(
+              errorText: widget.fw.bIsNumberField_ &&
+                      double.tryParse(widget.fw.widgetValue) == null
+                  ? 'El valor debe ser numerado'
+                  : null,
               suffixIcon: IconButton(
                 color: Colors.purple,
                 icon: const Icon(Icons.send),
