@@ -853,14 +853,11 @@ class WidgetController {
 
   /// Update fieldWidget by sProjectName, fieldWidget y pos, si se producen errores se devuelve false.
   static Future<bool> updateFieldWidgetByModelAndProjectName(
-      FieldWidgetModel fw, String label, String sProjectName) async {
+      FieldWidgetModel fw, int index, String sProjectName) async {
     try {
-      int iGlobalIndex = await WidgetController.getFieldWidgetPositionByLabel(
-          sProjectName, label);
-
       DatabaseReference refDB = FirebaseDatabase.instance
           .ref()
-          .child('lienzo/$sProjectName/fieldWidgets/$iGlobalIndex');
+          .child('lienzo/$sProjectName/fieldWidgets/$index');
 
       // Updateamos lo recibido
       await refDB.update({

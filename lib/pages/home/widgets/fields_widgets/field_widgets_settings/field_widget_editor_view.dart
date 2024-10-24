@@ -152,7 +152,8 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
               child: Column(children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
-                  child: TextField(
+                  child: TextFormField(
+                      initialValue: fw.widgetValue,
                       onChanged: (value) => {
                             setState(() {
                               fw.widgetValue = value;
@@ -190,18 +191,20 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
               onPressed: () async {
                 try {
                   if (!(fw.bIsNumberField_ &&
-                      null == double.tryParse(sPlaceHolder))) {
-                    //TODO: Crear funcion de edicion de widget con widget Controller y editar el resto de parametros, enviar model a widgetController
+                      null == double.tryParse(fw.widgetValue))) {
+                    WidgetController.updateFieldWidgetByModelAndProjectName(
+                        fw, widget.iIndex, widget.sProjectName);
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => const Home()));
                   } else {
                     throw Exception('Error de creado de elementos');
                   }
                 } catch (error) {
-                  _creationError();
+                  debugPrint(error.toString());
+                  //_creationError();
                 }
               },
-              child: const Text('Crear Widget'),
+              child: const Text('Editar Widget'),
             )),
           ),
           Padding(
@@ -249,7 +252,7 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
         dynamic data = snapshot.value;
         setState(() {
           // Actualizar los campos
-          fw.apiURL = data['apiUrl'].toString();
+          fw.apiURL = data['apiurl'];
           fw.bIsNumberField_ = data['isNumberField'];
           fw.baseURL = data['baseurl'];
           fw.label = data['label'];
