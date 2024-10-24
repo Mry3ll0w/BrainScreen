@@ -139,7 +139,7 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
                             })
                           },
                       decoration: InputDecoration(
-                        hintText: 'LabelText',
+                        hintText: fw.labelText,
                         errorText: fw.labelText.isEmpty
                             ? 'El label text no puede estar vacio'
                             : null,
@@ -155,15 +155,15 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
                   child: TextField(
                       onChanged: (value) => {
                             setState(() {
-                              sPlaceHolder = value;
+                              fw.widgetValue = value;
                             })
                           },
                       decoration: InputDecoration(
-                          hintText: 'Valor mostrado de forma predeterminada',
+                          hintText: 'Valor actual: ${fw.widgetValue}',
                           helperText:
                               'Texto de error mostrado en caso de recibirse un error',
                           errorText: (fw.bIsNumberField_ &&
-                                  null == double.tryParse(sPlaceHolder))
+                                  null == double.tryParse(fw.widgetValue))
                               ? 'Si es un numberfield el valor debe ser numerado'
                               : null)),
                 ),
@@ -191,15 +191,7 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
                 try {
                   if (!(fw.bIsNumberField_ &&
                       null == double.tryParse(sPlaceHolder))) {
-                    WidgetController.addFieldWidgetToLienzo(
-                        widget.sProjectName,
-                        FieldWidgetModel(
-                            labelText: sLabelText,
-                            baseURL:
-                                'http://192.168.1.160:3000', // SE DEJA ASI YA QUE EL USUARIO NO TIENE PQ EDITARLO
-                            apiURL: '/FieldWidget',
-                            widgetValue: "0",
-                            numberField: fw.bIsNumberField_));
+                    //TODO: Crear funcion de edicion de widget con widget Controller y editar el resto de parametros, enviar model a widgetController
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => const Home()));
                   } else {
