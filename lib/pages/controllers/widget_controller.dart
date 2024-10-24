@@ -850,4 +850,31 @@ class WidgetController {
     }
     return iPos;
   }
+
+  /// Update fieldWidget by sProjectName, fieldWidget y pos, si se producen errores se devuelve false.
+  static Future<bool> updateFieldWidgetByModelAndProjectName(
+      FieldWidgetModel fw, String label, String sProjectName) async {
+    try {
+      int iGlobalIndex = await WidgetController.getFieldWidgetPositionByLabel(
+          sProjectName, label);
+
+      DatabaseReference refDB = FirebaseDatabase.instance
+          .ref()
+          .child('lienzo/$sProjectName/fieldWidgets/$iGlobalIndex');
+
+      // Updateamos lo recibido
+      await refDB.update({
+        "label": randomLabelGenerator(6),
+        "labelText": fw.labelText,
+        "baseurl": fw.baseURL,
+        "apiurl": fw.apiURL_,
+        "isNumberField": fw.bIsNumberField_,
+        "value": fw.widgetValue
+      });
+      return true;
+    } catch (e) {
+      debugPrint('SHCE');
+      return false;
+    }
+  }
 }
