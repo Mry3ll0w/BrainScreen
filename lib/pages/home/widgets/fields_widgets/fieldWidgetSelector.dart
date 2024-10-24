@@ -41,6 +41,6 @@ class _FieldWidgetSelectorState extends State<FieldWidgetSelector> {
   // Muestra el widget de TextField
 
   Widget showTextFieldSetup(String? projectName) {
-    return Fieldwidgetsetup(projectName: projectName, isNumberField: true);
+    return Fieldwidgetsetup(projectName: projectName, isNumberField: false);
   }
 }

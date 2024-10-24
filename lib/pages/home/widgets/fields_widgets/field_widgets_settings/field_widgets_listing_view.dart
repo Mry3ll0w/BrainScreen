@@ -76,13 +76,16 @@ class FieldWidgetsListingView extends StatelessWidget {
                     ? const Icon(Icons.twenty_four_mp)
                     : const Icon(Icons.translate),
                 title: Text(lFieldWidgets[index]['labelText']),
-                onTap: () {
+                onTap: () async {
+                  int iGlobalIndex =
+                      await WidgetController.getFieldWidgetPositionByLabel(
+                          sProjectName, lFieldWidgets[index]['label']);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => FieldWidgetEditorView(
                                 projectName: sProjectName,
-                                index: index,
+                                index: iGlobalIndex,
                               )));
                 },
               );

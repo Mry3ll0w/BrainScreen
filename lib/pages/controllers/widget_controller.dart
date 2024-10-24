@@ -815,4 +815,39 @@ class WidgetController {
 
     return [];
   }
+
+  // Funcion para devolver el indice de cada uno de los fieldWidgets dado un projecto y un label
+  static Future<int> getFieldWidgetPositionByLabel(
+      String sProjectName, String label) async {
+    int iPos = 0;
+    try {
+      DatabaseReference refDB = FirebaseDatabase.instance
+          .ref()
+          .child('lienzo/$sProjectName/fieldWidgets');
+      // to read once we use final
+      final snapshot = await refDB.get();
+      var valueFromSnapshot = snapshot.value;
+
+      if (valueFromSnapshot != null) {
+        // Suponiendo que valueFromSnapshot es una lista o un mapa que quieres convertir a un Set
+        // Para una lista, puedes hacer algo como esto:
+
+        if (valueFromSnapshot is List<dynamic>) {
+          // Obtenemos todos los botones elevatedButtons
+          for (var b in valueFromSnapshot.toList()) {
+            // Flag para indicar cargar solo NumberFields o solo TextField
+            // Si solo quiero numberFields lo pongo a true por lo que solo cojo los q son numberfields
+            if (label == b['label']) {
+              break;
+            }
+            iPos++;
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return -1; // Para errores
+    }
+    return iPos;
+  }
 }

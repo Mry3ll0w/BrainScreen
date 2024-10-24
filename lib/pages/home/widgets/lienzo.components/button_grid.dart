@@ -423,16 +423,17 @@ class ElementGrid extends StatelessWidget //__
     List<dynamic> lTextFields =
         await WidgetController.fetchAllFieldWidgetsRAW(sProjectName, false);
 
-    return styledTextFieldsModels(lTextFields);
+    return styledTextFieldsModels(lTextFields, sProjectName);
   }
 
-  Widget styledTextFieldsModels(List<dynamic> lFieldWidgets) {
+  Future<Widget> styledTextFieldsModels(
+      List<dynamic> lFieldWidgets, String projectName) async {
     // Creamos una lista para almacenar las filas (Rows) que contendrán los botones
     List<Widget> rows = [];
 
     try {
       // Iteramos sobre la lista de botones
-      int iPos = 0;
+
       for (var fw in lFieldWidgets) {
         // Incrementamos de 2 en 2
         // Creamos una lista temporal para almacenar los botones de cada fila
@@ -448,7 +449,8 @@ class ElementGrid extends StatelessWidget //__
                 widgetValue: fw['value'],
                 numberField: fw['isNumberField']),
             sprojectName: projectName_!,
-            pos: iPos));
+            pos: await WidgetController.getFieldWidgetPositionByLabel(
+                projectName, fw['label'])));
 
         // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
         rows.add(Row(
@@ -456,7 +458,6 @@ class ElementGrid extends StatelessWidget //__
               .spaceEvenly, // Distribuye los botones en el espacio disponible
           children: switchRow,
         ));
-        iPos++;
       }
     } catch (e) {
       rows = [const Text('Se ha producido un error en la lectura del widget')];
@@ -486,6 +487,6 @@ class ElementGrid extends StatelessWidget //__
     List<dynamic> lNumberFields =
         await WidgetController.fetchAllFieldWidgetsRAW(sProjectName, true);
 
-    return styledTextFieldsModels(lNumberFields);
+    return styledTextFieldsModels(lNumberFields, sProjectName);
   }
 }
