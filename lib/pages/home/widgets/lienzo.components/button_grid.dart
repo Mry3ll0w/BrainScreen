@@ -4,7 +4,7 @@ import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button%20listings/slider_setting_list.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button%20listings/switch_setting_list.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
-import 'package:brainscreen/pages/home/widgets/fields_widgets/field_widgets_listing/field_widgets_listing_view.dart';
+import 'package:brainscreen/pages/home/widgets/fields_widgets/field_widgets_settings/field_widgets_listing_view.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
 import 'package:brainscreen/pages/models/field_widget_model.dart';
 import 'package:brainscreen/pages/models/switch_button_model.dart';

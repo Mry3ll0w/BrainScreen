@@ -1,4 +1,5 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/home/widgets/fields_widgets/field_widgets_settings/field_widget_editor_view.dart';
 import 'package:flutter/material.dart';
 
 class FieldWidgetsListingView extends StatelessWidget {
@@ -39,13 +40,13 @@ class FieldWidgetsListingView extends StatelessWidget {
               ? const Text('Lista de Numberfields')
               : const Text('Lista de TextField'),
         ),
-        body: _buildListTiles(lFieldWidgets));
+        body: _buildListTiles(lFieldWidgets, projectName));
   }
 
-  Widget _buildListTiles(List<dynamic> lNumberFields) {
+  Widget _buildListTiles(List<dynamic> lFieldWidgets, String sProjectName) {
     List<Widget> lTiles = [];
 
-    for (var fw in lNumberFields) {
+    for (var fw in lFieldWidgets) {
       // Preparamos La lista de Filas
       lTiles.add(ListTile(
         leading: const Row(
@@ -74,15 +75,15 @@ class FieldWidgetsListingView extends StatelessWidget {
                 leading: isNumberField
                     ? const Icon(Icons.twenty_four_mp)
                     : const Icon(Icons.translate),
-                title: Text(lNumberFields[index]['labelText']),
+                title: Text(lFieldWidgets[index]['labelText']),
                 onTap: () {
-                  //   Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //           builder: (context) => SliderSettingsEdit(
-                  //               key: widget.key,
-                  //               btn: lNumberFields[index],
-                  //               sProjectName: widget._projectName)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FieldWidgetEditorView(
+                                projectName: sProjectName,
+                                index: index,
+                              )));
                 },
               );
             }));
