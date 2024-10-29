@@ -1,4 +1,9 @@
 import 'dart:async';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:awesome_notifications/awesome_notifications_empty.dart';
+import 'package:brainscreen/pages/controllers/general_functions.dart';
+import 'package:brainscreen/pages/controllers/http_controller.dart';
+import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +98,11 @@ class _FieldWidgetViewState extends State<FieldWidgetView> {
               suffixIcon: IconButton(
                 color: Colors.purple,
                 icon: const Icon(Icons.send),
-                onPressed: () => {},
+                onPressed: () async {
+                  // Send the notification
+                  await fieldWidgetUpdateValue(
+                      widget.fw.widgetValue, widget.projectName, widget.iPos);
+                },
               ),
               fillColor: BrainColors.backgroundColor,
               filled: true,
@@ -135,8 +144,63 @@ class _FieldWidgetViewState extends State<FieldWidgetView> {
       } catch (e) {
         debugPrint('Error con data \n $e');
       }
-
-      // Pasamos a lista dinamica
     });
+  }
+
+  //PostCall for the Widget
+
+  Future<void> fieldWidgetUpdateValue(
+      dynamic newValue, String projectName, int index) async {
+    //
+    try {
+      // Updateamos el valor en BBDD
+      DatabaseReference ref =
+          FirebaseDatabase.instance.ref("lienzo/$projectName/buttons/$index");
+      await ref.update({'value': newValue.toString()});
+
+      // POST despues de actualizar el valor
+      await HttpRequestsController.put(
+              widget.fw.baseURL,
+              widget.fw.apiURL_,
+              {"fwUpdated": index.toString()},
+              GeneralFunctions.getLoggedUserUID(),
+              '')
+          .timeout(const Duration(seconds: 2));
+    } on TimeoutException {
+      _petitionErrorNotification(500, widget.fw.labelText, true);
+    } catch (e) {
+      debugPrint('ERROR en POST: $e');
+      _petitionErrorNotification(500, widget.fw.labelText, false);
+    }
+  }
+
+  /// Error de conexiones de switch
+  void _petitionErrorNotification(
+      int errorCode, String buttonLabel, bool isTimeException) {
+    if (!isTimeException && errorCode == 500) {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del Interruptor',
+              body:
+                  'Error al pulsar el interruptor con el label $buttonLabel se ha producido un error desconocido. '));
+    } else if (isTimeException) {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del Interruptor',
+              body:
+                  'Al pulsar el interruptor con el label $buttonLabel se ha tardado demasiado tiempo de respuesta, consulta el estado del servidor '));
+    } else {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 1,
+              channelKey: 'error_channel',
+              title: 'Error durante la peticion del Interruptor',
+              body:
+                  'Al pulsar el interruptor con el label $buttonLabel se ha recibido el codigo HTTP: $errorCode '));
+    }
   }
 }

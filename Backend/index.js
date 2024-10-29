@@ -218,6 +218,33 @@ nodeServer.post('/testSlider', async (req, res) => {
   }
 });
 
+// Seccion de pruebas del FieldWidget
+nodeServer.put('/testFieldWidget', async (req, res) => {
+  console.log('se recive')
+  const {firebaseuid, amazonuid}= req.headers;
+  try {
+    if (firebaseuid === undefined || amazonuid === undefined) {
+      res.status(403).send({res: 'test is error due to unauthorized'});
+    } else {
+      console.log(req.body)
+      const projectController = new ProjectController(DB);
+      // Check if user has access
+      const bUserAllowed = await projectController.
+          userAllowedForServerRequests(amazonuid, firebaseuid);
+      
+      if (!bUserAllowed) {
+        res.status(403).send({res: 'test is error, user not allowed'});
+      }else{
+        // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
+        res.status(200).send();
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+
 //FUNCIONES DE ALEXA-----------------------------------------------------------
 
 /// Funcion para devolver el valor de un botón a alexa
@@ -251,6 +278,8 @@ nodeServer.get('/buttonValue/:amazonuid/:projectName/:buttonLabel', async (req, 
     console.log(e);
   }
 });
+
+
 
 nodeServer.listen(port, () => {
   console.log(`Servidor Backend en el puerto ${port}`);

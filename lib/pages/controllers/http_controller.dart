@@ -60,13 +60,13 @@ class HttpRequestsController {
   static Future<dynamic> post_with_response(String serverUrl, String api,
       dynamic object, String firebaseUID, String amazonUID) async {
     var url = Uri.parse(serverUrl + api);
+
     var payload = convert.json.encode(object);
     var headers = {
       'Content-Type': 'application/json',
       'firebaseUID': firebaseUID,
       'amazonUID': amazonUID,
     };
-
     var response = await client_.post(url, body: payload, headers: headers);
 
     // Decode the JSON string to a Map<dynamic, dynamic>
