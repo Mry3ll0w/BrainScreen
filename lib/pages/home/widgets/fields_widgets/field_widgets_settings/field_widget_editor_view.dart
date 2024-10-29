@@ -48,6 +48,8 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
   late StreamSubscription _subscriptionFwDataChanges;
   @override
   void initState() {
+    //Inicializamos el fw
+    initializeFieldWidgetValues_(widget.sProjectName, widget.iIndex, fw);
     super.initState();
     //Listener de cambios
     setupvalueChangerListener(widget.sProjectName, fw, widget.iIndex);
@@ -153,14 +155,15 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
                 Padding(
                   padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
                   child: TextFormField(
-                      initialValue: fw.widgetValue,
+                      initialValue: fw.widgetValue.toString(),
                       onChanged: (value) => {
                             setState(() {
                               fw.widgetValue = value;
                             })
                           },
                       decoration: InputDecoration(
-                          hintText: 'Valor actual: ${fw.widgetValue}',
+                          hintText:
+                              fw.widgetValue, // TODO FIX ERROR NO CARGA VALOR
                           helperText:
                               'Texto de error mostrado en caso de recibirse un error',
                           errorText: (fw.bIsNumberField_ &&
@@ -257,6 +260,7 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
           fw.baseURL = data['baseurl'];
           fw.label = data['label'];
           fw.labelText_ = data['labelText'];
+          fw.widgetValue = data['value'];
         });
         // ...
       } catch (e) {
@@ -265,5 +269,28 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
 
       // Pasamos a lista dinamica
     });
+  }
+
+  Future<void> initializeFieldWidgetValues_(
+      String projectName, int index, FieldWidgetModel fw) async {
+    final databaseReference = FirebaseDatabase.instance
+        .ref('/lienzo/$projectName/fieldWidgets/$index');
+    final snapshot = await databaseReference.get();
+
+    try {
+      dynamic data = snapshot.value;
+      setState(() {
+        // Actualizar los campos
+        fw.apiURL = data['apiurl'];
+        fw.bIsNumberField_ = data['isNumberField'];
+        fw.baseURL = data['baseurl'];
+        fw.label = data['label'];
+        fw.labelText_ = data['labelText'];
+        fw.widgetValue = data['value'];
+      });
+      // ...
+    } catch (e) {
+      debugPrint('Error con data \n $e');
+    }
   }
 }
