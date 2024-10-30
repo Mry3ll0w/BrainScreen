@@ -1,5 +1,6 @@
 import 'package:brainscreen/pages/home/home_controller.dart';
 import 'package:brainscreen/pages/home/widgets/buttons/button_selector.dart';
+import 'package:brainscreen/pages/home/widgets/charts/chart_setup.dart';
 import 'package:brainscreen/pages/home/widgets/fields_widgets/fieldWidgetSelector.dart';
 import 'package:brainscreen/pages/home/widgets/lienzo.components/button_grid.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
@@ -171,6 +172,25 @@ class _LienzoState extends State<Lienzo> {
         );
         break;
       case 'graph':
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog.fullscreen(
+              child: Container(
+                color: BrainColors.backgroundColor,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ChartSetup(
+                        sProjectName: widget.sProjectName,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
         break;
     }
   }
