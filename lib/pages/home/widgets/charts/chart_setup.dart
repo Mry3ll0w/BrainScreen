@@ -26,14 +26,30 @@ class _ChartSetupState extends State<ChartSetup> {
           child: ListView(
             children: [
               SizedBox(
-                width: 400,
-                height: 200,
-                child: LineChart(LineChartData(lineBarsData: [
-                  LineChartBarData(
-                    color: Colors.red,
-                    spots: initializeData(),
-                  ),
-                ])),
+                width: 200,
+                height: 300,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 30.0),
+                  child: LineChart(LineChartData(
+                      backgroundColor: const Color.fromARGB(255, 132, 131, 123)
+                          .withOpacity(0.7),
+                      titlesData: const FlTitlesData(
+                          show: true,
+                          bottomTitles:
+                              AxisTitles(axisNameWidget: Text('Titulo eje x')),
+                          leftTitles:
+                              AxisTitles(axisNameWidget: Text('Titulo eje y'))),
+                      lineBarsData: [
+                        LineChartBarData(
+                            color: Color.fromARGB(255, 7, 7, 7),
+                            spots: initializeData(),
+                            isCurved: true,
+                            belowBarData: BarAreaData(
+                                color: const Color.fromARGB(255, 25, 145, 244)
+                                    .withOpacity(0.6),
+                                show: true)),
+                      ])),
+                ),
               )
             ],
           ),
@@ -45,9 +61,6 @@ class _ChartSetupState extends State<ChartSetup> {
     List<FlSpot> lPoints = [];
     Random random = Random();
 
-    // Generar dos números aleatorios dobles
-    double num1 = random.nextDouble();
-    double num2 = random.nextDouble();
     double xPoint = 0.0;
     for (int i = 0; i < 50; i++) {
       lPoints.add(FlSpot(xPoint, random.nextDouble()));
