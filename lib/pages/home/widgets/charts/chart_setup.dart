@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:brainscreen/pages/home/widgets/charts/chart_example.dart';
+import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_json_view/flutter_json_view.dart';
 
 class ChartSetup extends StatefulWidget {
   const ChartSetup({super.key, required String? sProjectName})
@@ -50,7 +52,15 @@ class _ChartSetupState extends State<ChartSetup> {
                                 show: true)),
                       ])),
                 ),
-              )
+              ),
+              ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                tileColor: BrainColors.backgroundColor,
+                title: const Text('Uso'),
+                subtitle: indicacionesUso_(),
+              ),
             ],
           ),
         ));
@@ -68,5 +78,25 @@ class _ChartSetupState extends State<ChartSetup> {
     }
 
     return lPoints;
+  }
+
+  // Funcion para cargar el Json View
+  Widget indicacionesUso_() {
+    return Column(children: [
+      Text(
+          'Lo que estas viendo a continuacion se trata de una muestra, inicialmente se deberan subir datos siguiendo la siguiente estructura:\n',
+          style: TextStyle(
+            fontSize: 15 *
+                MediaQuery.of(context).size.width /
+                360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+          )),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: JsonView.string(
+          '{"x":"[1,2,3,4,5,...]", "y":"[0.56, 0.46,54.2,...]"}',
+          theme: const JsonViewTheme(viewType: JsonViewType.base),
+        ),
+      )
+    ]);
   }
 }
