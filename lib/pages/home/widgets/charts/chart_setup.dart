@@ -17,6 +17,11 @@ class ChartSetup extends StatefulWidget {
 }
 
 class _ChartSetupState extends State<ChartSetup> {
+  double dXMax = 50, dXMin = 0, dYMax = 0, dYMin = 0;
+
+  //Variables de customizacion
+  String sXAxisText = 'Texto Eje X', sYAxisText = 'Texto Eje Y';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,17 +38,19 @@ class _ChartSetupState extends State<ChartSetup> {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 30.0),
                   child: LineChart(LineChartData(
+                      maxY: dYMax,
+                      minY: dYMin,
                       backgroundColor: const Color.fromARGB(255, 132, 131, 123)
                           .withOpacity(0.7),
-                      titlesData: const FlTitlesData(
+                      titlesData: FlTitlesData(
                           show: true,
                           bottomTitles:
-                              AxisTitles(axisNameWidget: Text('Titulo eje x')),
+                              AxisTitles(axisNameWidget: Text(sXAxisText)),
                           leftTitles:
-                              AxisTitles(axisNameWidget: Text('Titulo eje y'))),
+                              AxisTitles(axisNameWidget: Text(sYAxisText))),
                       lineBarsData: [
                         LineChartBarData(
-                            color: Color.fromARGB(255, 7, 7, 7),
+                            color: const Color.fromARGB(255, 7, 7, 7),
                             spots: initializeData(),
                             isCurved: true,
                             belowBarData: BarAreaData(
@@ -58,9 +65,65 @@ class _ChartSetupState extends State<ChartSetup> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 tileColor: BrainColors.backgroundColor,
-                title: const Text('Uso'),
+                title: const Text(
+                  'Aclaraciones de los grafismos',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
                 subtitle: indicacionesUso_(),
               ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                    onChanged: (value) => {
+                          setState(() {
+                            sXAxisText = value;
+                          })
+                        },
+                    decoration: InputDecoration(
+                      hintText: 'Etiqueta del eje X',
+                      errorText: sXAxisText.isEmpty
+                          ? 'La etiqueta de coordenadas no puede estar vacia'
+                          : null,
+                      helperText: 'Eje de Coordenadas (X)',
+                    )),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                    onChanged: (value) => {
+                          setState(() {
+                            sYAxisText = value;
+                          })
+                        },
+                    decoration: InputDecoration(
+                      hintText: 'Etiqueta del eje Y',
+                      errorText: sXAxisText.isEmpty
+                          ? 'La etiqueta de ordenadas no puede estar vacia'
+                          : null,
+                      helperText: 'Eje de Coordenadas (Y)',
+                    )),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(top: 10.0, bottom: 50, left: 30, right: 30),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Guardar y enviar',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      Icon(
+                        Icons.save,
+                        size: 40,
+                      )
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
         ));
@@ -69,13 +132,21 @@ class _ChartSetupState extends State<ChartSetup> {
   // Load Chart Tiles Example
   List<FlSpot> initializeData() {
     List<FlSpot> lPoints = [];
+    List<double> dlYpoints = [];
     Random random = Random();
 
     double xPoint = 0.0;
     for (int i = 0; i < 50; i++) {
-      lPoints.add(FlSpot(xPoint, random.nextDouble()));
+      double dGeneratedY = random.nextDouble();
+      dlYpoints.add(dGeneratedY);
+      lPoints.add(FlSpot(xPoint, dGeneratedY));
       xPoint += 0.5;
     }
+    // de menor a mayor
+    dlYpoints.sort();
+
+    dYMax = dlYpoints.last;
+    dYMin = dlYpoints.first;
 
     return lPoints;
   }
@@ -84,7 +155,7 @@ class _ChartSetupState extends State<ChartSetup> {
   Widget indicacionesUso_() {
     return Column(children: [
       Text(
-          'Lo que estas viendo a continuacion se trata de una muestra, inicialmente se deberan subir datos siguiendo la siguiente estructura:\n',
+          'Lo que estas viendo a continuacion se trata de una muestra.\nInicialmente se deberan subir datos a la BBDD siguiendo la siguiente estructura:\n',
           style: TextStyle(
             fontSize: 15 *
                 MediaQuery.of(context).size.width /
@@ -96,7 +167,7 @@ class _ChartSetupState extends State<ChartSetup> {
           '{"x":"[1,2,3,4,5,...]", "y":"[0.56, 0.46,54.2,...]"}',
           theme: const JsonViewTheme(viewType: JsonViewType.base),
         ),
-      )
+      ),
     ]);
   }
 }
