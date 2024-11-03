@@ -1,4 +1,5 @@
 import 'package:brainscreen/pages/models/button_model.dart';
+import 'package:brainscreen/pages/models/chart_model.dart';
 import 'package:brainscreen/pages/models/field_widget_model.dart';
 import 'package:brainscreen/pages/models/slider_model.dart';
 import 'package:brainscreen/pages/models/switch_button_model.dart';
@@ -597,11 +598,12 @@ class WidgetController {
   /// Agrega un FieldWidget al lienzo del proyecto especificado.
   ///
   /// Esta función escribe datos en la base de datos Firebase Realtime Database
-  /// bajo el nodo "lienzo/$sProjectName". Los datos incluyen información básica
-  /// como nombre, edad y dirección.
+  /// bajo el nodo "lienzo/$sProjectName/fieldWidgets".
   ///
   /// @param sProjectName El nombre del proyecto al cual se agregará el botón elevado.
   ///        Debe ser una cadena válida y corresponder al nombre de un proyecto existente.
+  /// @param FieldWidgetModel fieldwidget, se recibe un modelo preconstruido del widget a agregar al lienzo.
+  ///
   /// @throws Exception Si ocurre un error al intentar escribir en la base de datos,
   ///        como problemas de permisos o conectividad.
   static void addFieldWidgetToLienzo(
@@ -874,4 +876,112 @@ class WidgetController {
       return false;
     }
   }
+
+  /// Agrega al lienzo la seccion de graphs
+  /// asi como sus elementos
+  /// Agrega un FieldWidget al lienzo del proyecto especificado.
+  ///
+  /// Esta función escribe datos en la base de datos Firebase Realtime Database
+  /// bajo el nodo "lienzo/$sProjectName/fieldWidgets".
+  ///
+  /// @param sProjectName El nombre del proyecto al cual se agregará el botón elevado.
+  ///        Debe ser una cadena válida y corresponder al nombre de un proyecto existente.
+  /// @param GraphWidgetModel graph, se recibe un modelo preconstruido del widget a agregar al lienzo.
+  ///
+  /// @throws Exception Si ocurre un error al intentar escribir en la base de datos,
+  ///        como problemas de permisos o conectividad.
+  static void addGraphToLienzo(String sProjectName, ChartModel chart) async {
+    //obtaining the list of buttons linked to that lienzo
+    // 1st we get the db ref
+    DatabaseReference refDB =
+        FirebaseDatabase.instance.ref().child('lienzo/$sProjectName/charts');
+
+    // to read once we use final
+    final snapshot = await refDB.get();
+    Set<dynamic>? setOfChartsLabels;
+    if (snapshot.exists) {
+      // Ahora pasamos el valor a set
+      var valueFromSnapshot = snapshot.value;
+      if (valueFromSnapshot != null) {
+        // Suponiendo que valueFromSnapshot es una lista o un mapa que quieres convertir a un Set
+        // Para una lista, puedes hacer algo como esto:
+
+        if (valueFromSnapshot is List<dynamic>) {
+          setOfChartsLabels = {...valueFromSnapshot.toSet()};
+
+          // Al tener un set evitamos elementos repetidos, ahora iteramos la lista
+          var setOfCharts = Set();
+
+          // Obtenemos todos los labels y lo metemos en lista para agregar el nuevo
+          for (var b in setOfChartsLabels) {
+            setOfCharts.add(b);
+          }
+          //Usamos la funcion generadora de labels
+          String newLabel = randomLabelGenerator(6);
+          while (setOfCharts.contains(newLabel)) {
+            newLabel = randomLabelGenerator(6);
+          }
+
+          //Una vez tenemos la nueva label creamos la instancia del switch vacio.
+          Map<String, dynamic> newFieldWidget = {
+            "label": randomLabelGenerator(6),
+            "labelText": chart.labelText,
+            "xAxisTitle": chart.sXAxisText,
+            "yAxisTitle": chart.sXAxisText,
+            "data": chart.data
+          };
+
+          setOfCharts.add(newFieldWidget);
+
+          DatabaseReference ref =
+              FirebaseDatabase.instance.ref("lienzo/$sProjectName");
+
+          await ref.update({
+            "charts": setOfCharts.toList(),
+          });
+        }
+        // Para un mapa, puedes hacer algo como esto:
+        // if (valueFromSnapshot is Map<dynamic, dynamic>) {
+        //   setOfCharts = {...valueFromSnapshot.keys.toSet()};
+        // }
+      } else {
+        // Si no es una lista, implica que no existen botones por lo que lo agregamos directamente
+        DatabaseReference ref =
+            FirebaseDatabase.instance.ref("lienzo/$sProjectName");
+
+        //Updating the button list
+        await ref.update({
+          "charts": [
+            {
+              "label": randomLabelGenerator(6),
+              "labelText": chart.labelText,
+              "xAxisTitle": chart.sXAxisText,
+              "yAxisTitle": chart.sXAxisText,
+              "data": chart.data
+            }
+          ],
+        });
+      }
+    } else {
+      // Si no es una lista, implica que no existen botones por lo que lo agregamos directamente
+      DatabaseReference ref =
+          FirebaseDatabase.instance.ref("lienzo/$sProjectName");
+
+      //Updating the button list
+      await ref.update({
+        "charts": [
+          {
+            "label": randomLabelGenerator(6),
+            "labelText": chart.labelText,
+            "xAxisTitle": chart.sXAxisText,
+            "yAxisTitle": chart.sXAxisText,
+            "data": chart.data
+          }
+        ],
+      });
+    }
+  }
+
+  //TODO Agregar funcion fetch de Charts
+  //TODO Agregar funcion borrar de Charts
 }

@@ -1,6 +1,7 @@
 import 'dart:math';
 
-import 'package:brainscreen/pages/home/widgets/charts/chart_example.dart';
+import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/models/chart_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,9 @@ class ChartSetup extends StatefulWidget {
 }
 
 class _ChartSetupState extends State<ChartSetup> {
-  double dXMax = 50, dXMin = 0, dYMax = 0, dYMin = 0;
-
   //Variables de customizacion
   String sXAxisText = 'Texto Eje X', sYAxisText = 'Texto Eje Y';
+  String sLabelText = 'Grafismo';
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +38,6 @@ class _ChartSetupState extends State<ChartSetup> {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 30.0),
                   child: LineChart(LineChartData(
-                      maxY: dYMax,
-                      minY: dYMin,
                       backgroundColor: const Color.fromARGB(255, 132, 131, 123)
                           .withOpacity(0.7),
                       titlesData: FlTitlesData(
@@ -104,10 +102,36 @@ class _ChartSetupState extends State<ChartSetup> {
                     )),
               ),
               Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                    onChanged: (value) => {
+                          setState(() {
+                            sLabelText = value;
+                          })
+                        },
+                    decoration: InputDecoration(
+                      hintText: 'Titulo del Grafismo',
+                      errorText: sLabelText.isEmpty
+                          ? 'El titulo del grafismo no puede estar vacio'
+                          : null,
+                      helperText: 'Titulo del grafismo, ej: Grafo',
+                    )),
+              ),
+              Padding(
                 padding:
                     EdgeInsets.only(top: 10.0, bottom: 50, left: 30, right: 30),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    try {
+                      //Agregamos a la lista de charts del lienzo.
+                      WidgetController.addGraphToLienzo(
+                          widget.projectName ?? "",
+                          ChartModel(
+                              'testLabelo', 'testLtext', 'testX', 'testY', {}));
+                    } catch (e) {
+                      debugPrint(e.toString());
+                    }
+                  },
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -144,9 +168,6 @@ class _ChartSetupState extends State<ChartSetup> {
     }
     // de menor a mayor
     dlYpoints.sort();
-
-    dYMax = dlYpoints.last;
-    dYMin = dlYpoints.first;
 
     return lPoints;
   }
