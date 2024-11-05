@@ -1,6 +1,5 @@
 import 'package:brainscreen/pages/controllers/project_controller.dart';
 import 'package:brainscreen/pages/project_settings/controllers/project_settings_controller.dart';
-import 'package:brainscreen/pages/project_settings/views/project_settings.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';

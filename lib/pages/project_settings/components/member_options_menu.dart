@@ -60,7 +60,7 @@ class _MemberOptionsMenuState extends State<MemberOptionsMenu> {
             const PopupMenuItem(
               enabled: false,
               child: Row(children: [
-                const Text('Dueño del proyecto'),
+                Text('Dueño del proyecto'),
               ]),
             ),
           ];

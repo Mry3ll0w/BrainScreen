@@ -37,7 +37,7 @@ class _CustomSliderState extends State<CustomSlider> {
 
   @override
   Widget build(BuildContext context) {
-    final screen_size = MediaQuery.of(context).size;
+    final screenSize = MediaQuery.of(context).size;
     return GestureDetector(
       onLongPress: () {
         if (widget.onLongPressed != null) {
@@ -49,8 +49,8 @@ class _CustomSliderState extends State<CustomSlider> {
           SliderTheme(
             data: SliderThemeData(
               thumbShape: RoundSliderThumbShape(
-                  enabledThumbRadius: screen_size.width < 400 ? 8 : 12),
-              trackHeight: screen_size.width < 400 ? 6 : 8,
+                  enabledThumbRadius: screenSize.width < 400 ? 8 : 12),
+              trackHeight: screenSize.width < 400 ? 6 : 8,
             ),
             child: Slider(
               value: _currentSliderValue,

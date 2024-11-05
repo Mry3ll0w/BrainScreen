@@ -302,7 +302,7 @@ class ElementGrid extends StatelessWidget //__
     if (rows.isEmpty) {
       // Creamos el contenedor que tendrá todas las filas con los botones estilados
       return Container(
-        child: Column(
+        child: const Column(
           children: [Text('No hay elementos, agrega uno')],
         ),
       );

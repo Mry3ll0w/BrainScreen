@@ -2,7 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class ChartExample extends StatelessWidget {
-  const ChartExample({required this.isShowingMainData});
+  const ChartExample({super.key, required this.isShowingMainData});
 
   final bool isShowingMainData;
 

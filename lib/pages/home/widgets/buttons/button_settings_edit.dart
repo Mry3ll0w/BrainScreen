@@ -486,7 +486,7 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
       String sProjectName, String field, dynamic newfieldValue, var key) async {
     //Si esta vacio pasamos de hacer nada
     debugPrint(
-        'sProjectName: ${sProjectName} Field: ${field}, newFieldValue: ${newfieldValue}');
+        'sProjectName: $sProjectName Field: $field, newFieldValue: $newfieldValue');
     if (newfieldValue.isNotEmpty) {
       // Primero buscamos en el lienzo que toque
       var lSwitches =
@@ -531,7 +531,7 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           'Recuerda agregar en el servicio la respuesta al switch de la siguinte forma:',
                           style: TextStyle(

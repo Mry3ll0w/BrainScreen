@@ -21,7 +21,7 @@ class ButtonSelector extends StatefulWidget {
 
 class _ButtonSelectorState extends State<ButtonSelector> {
   bool bSwitch = true;
-  double _currentSliderValue = 20;
+  final double _currentSliderValue = 20;
   @override
   Widget build(BuildContext context) {
     //Screen Size
@@ -99,7 +99,7 @@ class _ButtonSelectorState extends State<ButtonSelector> {
                     BorderRadius.circular(15), // Redondea las esquinas
               ),
               elevation: 4, // Altura de la sombra
-              margin: EdgeInsets.all(20), // Margen alrededor del Card
+              margin: const EdgeInsets.all(20), // Margen alrededor del Card
               child: Container(
                 color: BrainColors.backgroundColor,
                 child: getElevatedButtonInfo(),

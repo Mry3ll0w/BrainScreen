@@ -35,7 +35,8 @@ class _ProfileState extends State<Profile> {
                   _auth.signOut();
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => WelcomeHome()),
+                    MaterialPageRoute(
+                        builder: (context) => const WelcomeHome()),
                   );
                 },
                 icon: const Icon(Icons.logout_rounded)),

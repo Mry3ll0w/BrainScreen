@@ -9,6 +9,6 @@ class NotificationController {
   static Future<void> onActionReceivedMethod(
       ReceivedNotification receivedNotification) async {
     navigatorKey.currentState
-        ?.pushReplacement(MaterialPageRoute(builder: (_) => Home()));
+        ?.pushReplacement(MaterialPageRoute(builder: (_) => const Home()));
   }
 }

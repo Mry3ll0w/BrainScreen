@@ -42,7 +42,7 @@ class WidgetController {
           setOfButtons = {...valueFromSnapshot.toSet()};
 
           // Al tener un set evitamos elementos repetidos, ahora iteramos la lista
-          var setOfButtonLabels = Set();
+          var setOfButtonLabels = <dynamic>{};
 
           // Obtenemos todos los labels y lo metemos en lista para agregar el nuevo
           for (var b in setOfButtons) {
@@ -316,7 +316,7 @@ class WidgetController {
           setOfSwitches = {...valueFromSnapshot.toSet()};
 
           // Al tener un set evitamos elementos repetidos, ahora iteramos la lista
-          var setOfSwitchLabels = Set();
+          var setOfSwitchLabels = <dynamic>{};
 
           // Obtenemos todos los labels y lo metemos en lista para agregar el nuevo
           for (var b in setOfSwitches) {
@@ -628,7 +628,7 @@ class WidgetController {
           setOfSwitches = {...valueFromSnapshot.toSet()};
 
           // Al tener un set evitamos elementos repetidos, ahora iteramos la lista
-          var setOfFieldWidgets = Set();
+          var setOfFieldWidgets = <dynamic>{};
 
           // Obtenemos todos los labels y lo metemos en lista para agregar el nuevo
           for (var b in setOfSwitches) {
@@ -910,7 +910,7 @@ class WidgetController {
           setOfChartsLabels = {...valueFromSnapshot.toSet()};
 
           // Al tener un set evitamos elementos repetidos, ahora iteramos la lista
-          var setOfCharts = Set();
+          var setOfCharts = <dynamic>{};
 
           // Obtenemos todos los labels y lo metemos en lista para agregar el nuevo
           for (var b in setOfChartsLabels) {

@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:awesome_notifications/awesome_notifications_empty.dart';
 import 'package:brainscreen/pages/controllers/general_functions.dart';
 import 'package:brainscreen/pages/controllers/http_controller.dart';
-import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';

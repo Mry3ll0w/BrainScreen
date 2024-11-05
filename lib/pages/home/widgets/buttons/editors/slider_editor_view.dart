@@ -29,7 +29,7 @@ class SliderSettingsEdit extends StatefulWidget {
 }
 
 class _SliderSettingsEditState extends State<SliderSettingsEdit> {
-  Future<List<CustomSliderModel>> _lElevatedButtons = Future.value([]);
+  final Future<List<CustomSliderModel>> _lElevatedButtons = Future.value([]);
 
   String? sBaseURLError;
   String? sLabelErrorText;
@@ -369,7 +369,7 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
       // Primero buscamos en el lienzo que toque
 
       //Debemos controlar si se trata de un switch/slider u boton;
-      var lElevatedButtons;
+      List lElevatedButtons;
 
       //Slider
       lElevatedButtons =
@@ -412,7 +412,7 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           'Recuerda agregar en el servicio la respuesta al switch de la siguinte forma:',
                           style: TextStyle(

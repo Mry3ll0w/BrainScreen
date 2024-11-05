@@ -32,6 +32,18 @@ class _ChartSetupState extends State<ChartSetup> {
           padding: const EdgeInsets.all(10.0),
           child: ListView(
             children: [
+              Padding(
+                padding:
+                    EdgeInsets.only(top: 20, bottom: 10, left: 10, right: 10),
+                child: Column(
+                  children: [
+                    Text(
+                      sLabelText,
+                      style: const TextStyle(fontSize: 20),
+                    )
+                  ],
+                ),
+              ),
               SizedBox(
                 width: 200,
                 height: 300,
@@ -71,7 +83,8 @@ class _ChartSetupState extends State<ChartSetup> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
+                child: TextFormField(
+                    initialValue: sXAxisText,
                     onChanged: (value) => {
                           setState(() {
                             sXAxisText = value;
@@ -87,7 +100,8 @@ class _ChartSetupState extends State<ChartSetup> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
+                child: TextFormField(
+                    initialValue: sXAxisText,
                     onChanged: (value) => {
                           setState(() {
                             sYAxisText = value;
@@ -95,7 +109,7 @@ class _ChartSetupState extends State<ChartSetup> {
                         },
                     decoration: InputDecoration(
                       hintText: 'Etiqueta del eje Y',
-                      errorText: sXAxisText.isEmpty
+                      errorText: sYAxisText.isEmpty
                           ? 'La etiqueta de ordenadas no puede estar vacia'
                           : null,
                       helperText: 'Eje de Coordenadas (Y)',
@@ -103,7 +117,8 @@ class _ChartSetupState extends State<ChartSetup> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
+                child: TextFormField(
+                    initialValue: sLabelText,
                     onChanged: (value) => {
                           setState(() {
                             sLabelText = value;
@@ -118,16 +133,26 @@ class _ChartSetupState extends State<ChartSetup> {
                     )),
               ),
               Padding(
-                padding:
-                    EdgeInsets.only(top: 10.0, bottom: 50, left: 30, right: 30),
+                padding: const EdgeInsets.only(
+                    top: 10.0, bottom: 50, left: 30, right: 30),
                 child: ElevatedButton(
                   onPressed: () {
                     try {
-                      //Agregamos a la lista de charts del lienzo.
-                      WidgetController.addGraphToLienzo(
-                          widget.projectName ?? "",
-                          ChartModel(
-                              'testLabelo', 'testLtext', 'testX', 'testY', {}));
+                      if (sLabelText.isEmpty ||
+                          sXAxisText.isEmpty ||
+                          sYAxisText.isEmpty) {
+                        WidgetController.genericErrorDialog(
+                            widget.projectName ?? "",
+                            widget.key,
+                            context,
+                            "Corrige los errores antes de subir el elemento");
+                      } else {
+                        //Agregamos a la lista de charts del lienzo.
+                        WidgetController.addGraphToLienzo(
+                            widget.projectName ?? "",
+                            ChartModel(
+                                '', sLabelText, sXAxisText, sYAxisText, {}));
+                      }
                     } catch (e) {
                       debugPrint(e.toString());
                     }
