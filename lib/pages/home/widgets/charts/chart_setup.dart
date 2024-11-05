@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/pages/models/chart_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -33,8 +34,8 @@ class _ChartSetupState extends State<ChartSetup> {
           child: ListView(
             children: [
               Padding(
-                padding:
-                    EdgeInsets.only(top: 20, bottom: 10, left: 10, right: 10),
+                padding: const EdgeInsets.only(
+                    top: 20, bottom: 10, left: 10, right: 10),
                 child: Column(
                   children: [
                     Text(
@@ -152,6 +153,14 @@ class _ChartSetupState extends State<ChartSetup> {
                             widget.projectName ?? "",
                             ChartModel(
                                 '', sLabelText, sXAxisText, sYAxisText, {}));
+                        // Despues de agregar nos volvemos al home
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Home.named(
+                                      title: widget.projectName,
+                                      projectToLoad: widget.projectName,
+                                    )));
                       }
                     } catch (e) {
                       debugPrint(e.toString());
@@ -185,7 +194,7 @@ class _ChartSetupState extends State<ChartSetup> {
     Random random = Random();
 
     double xPoint = 0.0;
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 12; i++) {
       double dGeneratedY = random.nextDouble();
       dlYpoints.add(dGeneratedY);
       lPoints.add(FlSpot(xPoint, dGeneratedY));

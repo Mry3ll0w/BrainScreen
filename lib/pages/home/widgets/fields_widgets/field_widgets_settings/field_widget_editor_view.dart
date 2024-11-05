@@ -162,8 +162,7 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
                             })
                           },
                       decoration: InputDecoration(
-                          hintText:
-                              fw.widgetValue, // TODO FIX ERROR NO CARGA VALOR
+                          hintText: fw.widgetValue,
                           helperText:
                               'Texto de error mostrado en caso de recibirse un error',
                           errorText: (fw.bIsNumberField_ &&
