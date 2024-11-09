@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/pages/models/chart_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -19,19 +21,14 @@ class ChartSettingsView extends StatefulWidget {
 }
 
 class _ChartSetupState extends State<ChartSettingsView> {
-  //Variables de customizacion
-  String sXAxisText = 'Texto Eje X', sYAxisText = 'Texto Eje Y';
-  String sLabelText = 'Grafismo';
-
   ChartModel chart = ChartModel(
       '', 'labelText', 'sXAxisText', 'sYAxisText_', <double, double>{});
-
+  late StreamSubscription _subscriptionFwDataChanges;
   @override
   void initState() {
-    //Inicializamos el fw
-    initializeChartModelValues(widget.projectName ?? "", widget.index, chart);
     super.initState();
-    //Listener de cambios
+    initializeChartModelValues(widget.projectName ?? "", widget.index, chart);
+    setupvalueChangerListener(widget.projectName ?? "", chart, widget.index);
   }
 
   @override
@@ -50,7 +47,7 @@ class _ChartSetupState extends State<ChartSettingsView> {
                 child: Column(
                   children: [
                     Text(
-                      sLabelText,
+                      chart.labelText,
                       style: const TextStyle(fontSize: 20),
                     )
                   ],
@@ -66,10 +63,10 @@ class _ChartSetupState extends State<ChartSettingsView> {
                           .withOpacity(0.7),
                       titlesData: FlTitlesData(
                           show: true,
-                          bottomTitles:
-                              AxisTitles(axisNameWidget: Text(sXAxisText)),
-                          leftTitles:
-                              AxisTitles(axisNameWidget: Text(sYAxisText))),
+                          bottomTitles: AxisTitles(
+                              axisNameWidget: Text(chart.sXAxisText)),
+                          leftTitles: AxisTitles(
+                              axisNameWidget: Text(chart.sYAxisText))),
                       lineBarsData: [
                         LineChartBarData(
                             color: const Color.fromARGB(255, 7, 7, 7),
@@ -135,6 +132,42 @@ class _ChartSetupState extends State<ChartSettingsView> {
               ),
               Padding(
                 padding: const EdgeInsets.only(
+                    top: 10.0, bottom: 10, left: 30, right: 30),
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    //ELIMINAR WIDGET
+                    bool bErased = await WidgetController.eraseChartFromLienzo(
+                        widget.projectName ?? "", widget.index);
+                    if (bErased) {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Home.named(
+                                    title: widget.projectName,
+                                    projectToLoad: widget.projectName,
+                                  )));
+                    } else {
+                      //Se ha generado algun tipo de error, mostramos dialog
+                      WidgetController.genericErrorDialog(
+                          widget.projectName ?? "",
+                          widget.key,
+                          context,
+                          'Se ha producido un error al borrar el widget, intentelo mas tarde.');
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                    size: 30,
+                  ),
+                  label: const Text(
+                    'Borrar Grafismo',
+                    style: TextStyle(fontSize: 20, color: Colors.red),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
                     top: 10.0, bottom: 50, left: 30, right: 30),
                 child: ElevatedButton(
                   onPressed: () {
@@ -148,16 +181,15 @@ class _ChartSetupState extends State<ChartSettingsView> {
                             context,
                             "Corrige los errores antes de subir el elemento");
                       } else {
-                        //TODO IMPLEMENT Metodo de widgetController
                         WidgetController.updateChartByModelAndProjectName(
                             chart, widget.index, widget.projectName ?? "");
-                        // Navigator.pushReplacement(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => Home.named(
-                        //               title: widget.projectName,
-                        //               projectToLoad: widget.projectName,
-                        //             )));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Home.named(
+                                      title: widget.projectName,
+                                      projectToLoad: widget.projectName,
+                                    )));
                       }
                     } catch (e) {
                       debugPrint(e.toString());
@@ -187,18 +219,9 @@ class _ChartSetupState extends State<ChartSettingsView> {
   // Load Chart Tiles Example
   List<FlSpot> initializeData() {
     List<FlSpot> lPoints = [];
-    List<double> dlYpoints = [];
-    Random random = Random();
-
-    double xPoint = 0.0;
-    for (int i = 0; i < 12; i++) {
-      double dGeneratedY = random.nextDouble();
-      dlYpoints.add(dGeneratedY);
-      lPoints.add(FlSpot(xPoint, dGeneratedY));
-      xPoint += 0.5;
-    }
-    // de menor a mayor
-    dlYpoints.sort();
+    chart.data.forEach((x, y) {
+      lPoints.add(FlSpot(x, y));
+    });
 
     return lPoints;
   }
@@ -243,5 +266,31 @@ class _ChartSetupState extends State<ChartSettingsView> {
     } catch (e) {
       debugPrint('Error con data \n $e');
     }
+  }
+
+  //Data Update onChange
+  void setupvalueChangerListener(String projectName, ChartModel ch, int iPos) {
+    // Pillamos El fieldWidget a controlar
+    final databaseReference =
+        FirebaseDatabase.instance.ref('/lienzo/$projectName/charts/$iPos');
+
+    _subscriptionFwDataChanges =
+        databaseReference.onValue.listen((DatabaseEvent event) {
+      final snapshot = event.snapshot;
+      debugPrint(snapshot.value.toString());
+      try {
+        dynamic data = snapshot.value;
+        setState(() {
+          chart.data = data['data'] ?? <double, double>{};
+          chart.labelText = data['labelText'].toString();
+          chart.label = data['label'];
+          chart.sXAxisText = data['xAxisTitle'];
+          chart.sYAxisText = data['yAxisTitle'];
+        });
+        // ...
+      } catch (e) {
+        debugPrint('Error con data \n $e');
+      }
+    });
   }
 }

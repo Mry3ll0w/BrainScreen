@@ -1072,14 +1072,12 @@ class WidgetController {
     return -1;
   }
 
-  //TODO Adapt to Chart
-
   static Future<bool> updateChartByModelAndProjectName(
       ChartModel ch, int index, String sProjectName) async {
     try {
       DatabaseReference refDB = FirebaseDatabase.instance
           .ref()
-          .child('lienzo/$sProjectName/fieldWidgets/$index');
+          .child('lienzo/$sProjectName/charts/$index');
 
       // Updateamos lo recibido
       await refDB.update({
@@ -1097,11 +1095,17 @@ class WidgetController {
     }
   }
 
-  Future<void> eraseChart(String projectName, int indexOfChart) async {
-    DatabaseReference refToErase = FirebaseDatabase.instance
-        .ref('lienzo/$projectName/charts/$indexOfChart');
+  static Future<bool> eraseChartFromLienzo(
+      String projectName, int indexOfChart) async {
+    try {
+      DatabaseReference refToErase = FirebaseDatabase.instance
+          .ref('lienzo/$projectName/charts/$indexOfChart');
 
-    // Borramos la referencia al objeto
-    await refToErase.remove();
+      // Borramos la referencia al objeto
+      await refToErase.remove();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
