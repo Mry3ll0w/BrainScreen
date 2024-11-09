@@ -980,7 +980,6 @@ class WidgetController {
     }
   }
 
-  //TODO Agregar funcion fetch de Charts
   static Future<List<dynamic>> fetchAllChartsRAW(String projectName) async {
     try {
       DatabaseReference refDB =
@@ -1042,7 +1041,7 @@ class WidgetController {
   }
 
   //TODO Funcion Indice chart
-  static Future<int> fetchChartIndex(String projectName, String sLabel) async {
+  static Future<int> getChartIndex(String projectName, String sLabel) async {
     try {
       DatabaseReference refDB =
           FirebaseDatabase.instance.ref().child('lienzo/$projectName/charts');
@@ -1073,7 +1072,31 @@ class WidgetController {
     return -1;
   }
 
-  //TODO Agregar funcion borrar de Charts
+  //TODO Adapt to Chart
+
+  static Future<bool> updateChartByModelAndProjectName(
+      ChartModel ch, int index, String sProjectName) async {
+    try {
+      DatabaseReference refDB = FirebaseDatabase.instance
+          .ref()
+          .child('lienzo/$sProjectName/fieldWidgets/$index');
+
+      // Updateamos lo recibido
+      await refDB.update({
+        "label": randomLabelGenerator(6),
+        "labelText": ch.labelText,
+        "xAxisTitle": ch.sXAxisText,
+        "yAxisTitle": ch.sYAxisText,
+        "data": ch.data
+      });
+
+      return true;
+    } catch (e) {
+      debugPrint('SHCE');
+      return false;
+    }
+  }
+
   Future<void> eraseChart(String projectName, int indexOfChart) async {
     DatabaseReference refToErase = FirebaseDatabase.instance
         .ref('lienzo/$projectName/charts/$indexOfChart');

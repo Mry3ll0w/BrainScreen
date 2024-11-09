@@ -1,4 +1,5 @@
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
+import 'package:brainscreen/pages/home/widgets/charts/chart_settings/chart_settings_view.dart';
 import 'package:flutter/material.dart';
 
 class ChartSelector extends StatelessWidget {
@@ -56,16 +57,15 @@ class ChartSelector extends StatelessWidget {
                 leading: const Icon(Icons.auto_graph),
                 title: Text(lCharts[index]['labelText']),
                 onTap: () async {
-                  int iGlobalIndex =
-                      await WidgetController.getFieldWidgetPositionByLabel(
-                          sProjectName, lCharts[index]['label']);
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => FieldWidgetEditorView(
-                  //               projectName: sProjectName,
-                  //               index: iGlobalIndex,
-                  //             )));
+                  int iGlobalIndex = await WidgetController.getChartIndex(
+                      sProjectName, lCharts[index]['label']);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChartSettingsView(
+                                sProjectName: sProjectName,
+                                index: iGlobalIndex,
+                              )));
                 },
               );
             }));
