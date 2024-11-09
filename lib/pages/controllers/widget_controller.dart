@@ -875,6 +875,20 @@ class WidgetController {
     }
   }
 
+  static Future<bool> eraseFieldWidgetFromLienzo(
+      String projectName, int index) async {
+    try {
+      DatabaseReference refToErase = FirebaseDatabase.instance
+          .ref('lienzo/$projectName/fieldWidgets/$index');
+
+      // Borramos la referencia al objeto
+      await refToErase.remove();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /// Agrega al lienzo la seccion de graphs
   /// asi como sus elementos
   /// Agrega un FieldWidget al lienzo del proyecto especificado.

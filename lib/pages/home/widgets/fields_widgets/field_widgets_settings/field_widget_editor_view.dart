@@ -187,6 +187,42 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
                         })
               ])),
           Padding(
+            padding: const EdgeInsets.only(bottom: 15, top: 15),
+            child: ElevatedButton.icon(
+              onPressed: () async {
+                //ELIMINAR WIDGET
+                bool bErased =
+                    await WidgetController.eraseFieldWidgetFromLienzo(
+                        widget.sProjectName, widget.iIndex);
+                if (bErased) {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Home.named(
+                                title: widget.sProjectName,
+                                projectToLoad: widget.sProjectName,
+                              )));
+                } else {
+                  //Se ha generado algun tipo de error, mostramos dialog
+                  WidgetController.genericErrorDialog(
+                      widget.sProjectName,
+                      widget.key,
+                      context,
+                      'Se ha producido un error al borrar el widget, intentelo mas tarde.');
+                }
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+                size: 30,
+              ),
+              label: const Text(
+                'Borrar FieldWidget',
+                style: TextStyle(fontSize: 20, color: Colors.red),
+              ),
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Center(
                 child: ElevatedButton(
