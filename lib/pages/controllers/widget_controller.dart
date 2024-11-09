@@ -880,7 +880,7 @@ class WidgetController {
   /// Agrega un FieldWidget al lienzo del proyecto especificado.
   ///
   /// Esta función escribe datos en la base de datos Firebase Realtime Database
-  /// bajo el nodo "lienzo/$sProjectName/fieldWidgets".
+  /// bajo el nodo "lienzo/$sProjectName/charts".
   ///
   /// @param sProjectName El nombre del proyecto al cual se agregará el botón elevado.
   ///        Debe ser una cadena válida y corresponder al nombre de un proyecto existente.
@@ -888,7 +888,7 @@ class WidgetController {
   ///
   /// @throws Exception Si ocurre un error al intentar escribir en la base de datos,
   ///        como problemas de permisos o conectividad.
-  static void addGraphToLienzo(String sProjectName, ChartModel chart) async {
+  static void addChartToLienzo(String sProjectName, ChartModel chart) async {
     //obtaining the list of buttons linked to that lienzo
     // 1st we get the db ref
     DatabaseReference refDB =

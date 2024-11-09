@@ -16,7 +16,7 @@ class ChartModel {
       : label_ = label,
         labelText_ = labelText,
         sXAxisText_ = sXAxisText,
-        data_ = data,
+        data_ = data == Null ? <double, double>{} : data,
         sYAxisText_ = sXAxisText;
 
   //Getters and Setter
@@ -74,8 +74,8 @@ class _ChartModelViewState extends State<ChartModelView> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: ListView(
+      padding: const EdgeInsets.only(top: 10.0, bottom: 10, left: 5, right: 5),
+      child: Column(
         children: [
           Padding(
             padding:
@@ -90,7 +90,7 @@ class _ChartModelViewState extends State<ChartModelView> {
             ),
           ),
           SizedBox(
-            width: 200,
+            width: 300,
             height: 300,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 30.0),

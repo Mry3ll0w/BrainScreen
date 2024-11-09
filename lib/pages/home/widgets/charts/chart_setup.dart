@@ -149,7 +149,7 @@ class _ChartSetupState extends State<ChartSetup> {
                             "Corrige los errores antes de subir el elemento");
                       } else {
                         //Agregamos a la lista de charts del lienzo.
-                        WidgetController.addGraphToLienzo(
+                        WidgetController.addChartToLienzo(
                             widget.projectName ?? "",
                             ChartModel(
                                 '', sLabelText, sXAxisText, sYAxisText, {}));

@@ -510,21 +510,25 @@ class ElementGrid extends StatelessWidget //__
       for (var ch in lCharts) {
         // Incrementamos de 2 en 2
         // Creamos una lista temporal para almacenar los botones de cada fila
-        List<Widget> switchRow = [];
+        List<Widget> chartRow = [];
 
         // Agregamos hasta dos botones por fila
-        switchRow.add(ChartModelView(
-            c: ChartModel(ch['label'], ch['labelText'], ch[' '], sYAxisText_, data),)));
+        chartRow.add(ChartModelView(
+          c: ChartModel(ch['label'], ch['labelText'], ch['xAxisTitle'],
+              ch['xAxisTitle'], ch['data'] ?? <double, double>{}),
+          projectName: projectName,
+        ));
 
         // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
         rows.add(Row(
           mainAxisAlignment: MainAxisAlignment
               .spaceEvenly, // Distribuye los botones en el espacio disponible
-          children: switchRow,
+          children: chartRow,
         ));
       }
     } catch (e) {
-      rows = [const Text('Se ha producido un error en la lectura del widget')];
+      rows = [Text('Error: \n ${e.toString()}')];
+      debugPrint('Error: \n ${e.toString()}');
     }
 
     if (rows.isEmpty) {

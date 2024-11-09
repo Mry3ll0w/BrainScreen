@@ -110,7 +110,7 @@ class _WelcomeHomeState extends State<WelcomeHome>
 
       _auth.signInWithProvider(googleAuthProvider);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 }
