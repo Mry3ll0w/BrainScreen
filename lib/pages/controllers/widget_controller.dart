@@ -746,8 +746,6 @@ class WidgetController {
             : FirebaseDatabase.instance
                 .ref("lienzo/$projectName/fieldWidgets/$iPosWidget");
 
-        debugPrint("lienzo/$projectName/fieldWidgets/$iPosWidget");
-
         // Borramos la referencia al objeto
         await refToErase.remove();
       }
@@ -783,7 +781,7 @@ class WidgetController {
                     ]))));
   }
 
-  // TODO Fetch all FieldWidgets as RAW
+  // Fetch all FieldWidgets as RAW
   static Future<List<dynamic>> fetchAllFieldWidgetsRAW(
       String projectName, bool bIsNumberField) async {
     try {
@@ -983,5 +981,104 @@ class WidgetController {
   }
 
   //TODO Agregar funcion fetch de Charts
+  static Future<List<dynamic>> fetchAllChartsRAW(String projectName) async {
+    try {
+      DatabaseReference refDB =
+          FirebaseDatabase.instance.ref().child('lienzo/$projectName/charts');
+      // to read once we use final
+      final snapshot = await refDB.get();
+      var valueFromSnapshot = snapshot.value;
+      List<dynamic> charts = [];
+      if (valueFromSnapshot != null) {
+        // Suponiendo que valueFromSnapshot es una lista o un mapa que quieres convertir a un Set
+        // Para una lista, puedes hacer algo como esto:
+
+        if (valueFromSnapshot is List<dynamic>) {
+          // Obtenemos todos los botones elevatedButtons
+          for (var b in valueFromSnapshot.toList()) {
+            // Flag para indicar cargar solo NumberFields o solo TextField
+            // Si solo quiero numberFields lo pongo a true por lo que solo cojo los q son numberfields
+            charts.add(b);
+          }
+        }
+        //devolvemos la lista con todos los charts filtrados
+        return charts;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    return [];
+  }
+
+  static Future<List<ChartModel>> fetchAllChartsModels(
+      String projectName) async {
+    try {
+      DatabaseReference refDB =
+          FirebaseDatabase.instance.ref().child('lienzo/$projectName/charts');
+      // to read once we use final
+      final snapshot = await refDB.get();
+      var valueFromSnapshot = snapshot.value;
+      List<ChartModel> charts = [];
+      if (valueFromSnapshot != null) {
+        // Suponiendo que valueFromSnapshot es una lista o un mapa que quieres convertir a un Set
+        // Para una lista, puedes hacer algo como esto:
+
+        if (valueFromSnapshot is List<dynamic>) {
+          // Obtenemos todos los botones elevatedButtons
+          for (var b in valueFromSnapshot.toList()) {
+            charts.add(ChartModel(b['label'], b['labelText'], b['xAxisTitle'],
+                b['yAxisTitle'], b['data']));
+          }
+        }
+        //devolvemos la lista con todos los charts filtrados
+        return charts;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    return [];
+  }
+
+  //TODO Funcion Indice chart
+  static Future<int> fetchChartIndex(String projectName, String sLabel) async {
+    try {
+      DatabaseReference refDB =
+          FirebaseDatabase.instance.ref().child('lienzo/$projectName/charts');
+      // to read once we use final
+      final snapshot = await refDB.get();
+      var valueFromSnapshot = snapshot.value;
+      int iPos = 0;
+      if (valueFromSnapshot != null) {
+        // Suponiendo que valueFromSnapshot es una lista o un mapa que quieres convertir a un Set
+        // Para una lista, puedes hacer algo como esto:
+
+        if (valueFromSnapshot is List<dynamic>) {
+          // Obtenemos todos los botones elevatedButtons
+          for (var b in valueFromSnapshot.toList()) {
+            if (b['label'] == sLabel) {
+              break;
+            }
+            iPos++;
+          }
+        }
+        //devolvemos la lista con todos los charts filtrados
+        return iPos;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    return -1;
+  }
+
   //TODO Agregar funcion borrar de Charts
+  Future<void> eraseChart(String projectName, int indexOfChart) async {
+    DatabaseReference refToErase = FirebaseDatabase.instance
+        .ref('lienzo/$projectName/charts/$indexOfChart');
+
+    // Borramos la referencia al objeto
+    await refToErase.remove();
+  }
 }

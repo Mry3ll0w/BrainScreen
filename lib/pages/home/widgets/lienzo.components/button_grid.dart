@@ -6,6 +6,7 @@ import 'package:brainscreen/pages/home/widgets/buttons/button%20listings/switch_
 import 'package:brainscreen/pages/home/widgets/buttons/buttons_settings.dart';
 import 'package:brainscreen/pages/home/widgets/fields_widgets/field_widgets_settings/field_widgets_listing_view.dart';
 import 'package:brainscreen/pages/models/button_model.dart';
+import 'package:brainscreen/pages/models/chart_model.dart';
 import 'package:brainscreen/pages/models/field_widget_model.dart';
 import 'package:brainscreen/pages/models/switch_button_model.dart';
 import 'package:brainscreen/pages/models/slider_model.dart';
@@ -232,9 +233,9 @@ class ElementGrid extends StatelessWidget //__
                               key: key, sProjectName: projectName_!)));
                 },
               ),
-              header: const Text('BigData', style: headerStyle),
+              header: const Text('Grafismo', style: headerStyle),
               content: FutureBuilder(
-                  future: initializeSwitches(projectName_!),
+                  future: initializeCharts(projectName_!),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return snapshot.data as Widget;
@@ -480,12 +481,66 @@ class ElementGrid extends StatelessWidget //__
     }
   }
 
-  // ! Seccion de inicializacion de Numberfields
+  // Seccion de inicializacion de Numberfields
   Future<Widget> initializeNumberFields(String sProjectName) async {
     // Pillamos los textFields
     List<dynamic> lNumberFields =
         await WidgetController.fetchAllFieldWidgetsRAW(sProjectName, true);
 
     return styledTextFieldsModels(lNumberFields, sProjectName);
+  }
+
+  // Seccion de inicializacion de Graficas
+  Future<Widget> initializeCharts(String sProjectName) async {
+    // Pillamos los textFields
+    List<dynamic> lCharts =
+        await WidgetController.fetchAllChartsRAW(sProjectName);
+
+    return styledChartsModels(lCharts, sProjectName);
+  }
+
+  Future<Widget> styledChartsModels(
+      List<dynamic> lCharts, String projectName) async {
+    // Creamos una lista para almacenar las filas (Rows) que contendrán los botones
+    List<Widget> rows = [];
+
+    try {
+      // Iteramos sobre la lista de botones
+
+      for (var ch in lCharts) {
+        // Incrementamos de 2 en 2
+        // Creamos una lista temporal para almacenar los botones de cada fila
+        List<Widget> switchRow = [];
+
+        // Agregamos hasta dos botones por fila
+        switchRow.add(ChartModelView(
+            c: ChartModel(ch['label'], ch['labelText'], ch[' '], sYAxisText_, data),)));
+
+        // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
+        rows.add(Row(
+          mainAxisAlignment: MainAxisAlignment
+              .spaceEvenly, // Distribuye los botones en el espacio disponible
+          children: switchRow,
+        ));
+      }
+    } catch (e) {
+      rows = [const Text('Se ha producido un error en la lectura del widget')];
+    }
+
+    if (rows.isEmpty) {
+      // Creamos el contenedor que tendrá todas las filas con los botones estilados
+      return Container(
+        child: const Column(
+          children: [Text('No hay elementos, agrega uno')],
+        ),
+      );
+    } else {
+      // Creamos el contenedor que tendrá todas las filas con los botones estilados
+      return Container(
+        child: Column(
+          children: rows,
+        ),
+      );
+    }
   }
 }
