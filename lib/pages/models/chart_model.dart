@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:core';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -8,16 +9,31 @@ import 'package:flutter/material.dart';
 class ChartModel {
   //Elementos que debe tener como minimo
   String label_, labelText_, sXAxisText_, sYAxisText_;
-
-  Map<double, double> data_;
+  Map<double, double> parsedMap;
+  dynamic data_;
 
   ChartModel(String label, String labelText, String sXAxisText,
-      String sYAxisText_, Map<double, double> data)
+      String sYAxisText_, Map data)
       : label_ = label,
         labelText_ = labelText,
         sXAxisText_ = sXAxisText,
-        data_ = data == Null ? <double, double>{} : data,
-        sYAxisText_ = sXAxisText;
+        data_ = <double, double>{},
+        parsedMap = <double, double>{},
+        sYAxisText_ = sYAxisText_ {
+    // Parsing data
+    List<double> xv = [], yv = [];
+    data['x'].forEach((e) {
+      xv.add(e.toDouble()); // Ensure conversion to double
+    });
+    data['y'].forEach((e) {
+      yv.add(e.toDouble()); // Ensure conversion to double
+    });
+    for (int i = 0; i < xv.length; i++) {
+      parsedMap[xv[i]] = yv[i];
+    }
+
+    debugPrint(parsedMap.toString());
+  }
 
   //Getters and Setter
   // Getters y setters
@@ -106,7 +122,7 @@ class _ChartModelViewState extends State<ChartModelView> {
                   lineBarsData: [
                     LineChartBarData(
                         color: const Color.fromARGB(255, 7, 7, 7),
-                        spots: initializeData(widget.chart.data),
+                        spots: initializeData(widget.chart.parsedMap),
                         isCurved: true,
                         belowBarData: BarAreaData(
                             color: const Color.fromARGB(255, 25, 145, 244)
