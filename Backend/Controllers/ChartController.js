@@ -55,25 +55,16 @@ class ChartController {
     }
 
 
-    static async updateChartValue(projectName, index, datamap) {
+    static async updateChartValue(projectName, index, xValues, yValues) {
     let resValue = null;
     
     try {
         const database = getDatabase();
         const urlPath = '/lienzo/' + projectName + '/charts/' + index;
-        
-        // Sanitize keys in datamap
-        const sanitizedData = Object.fromEntries(
-            Object.entries(datamap).map(([key, value]) => {
-                let sanitizedKey = key.replace(/[^a-zA-Z0-9]/g, '_');
-                if (sanitizedKey === '') sanitizedKey = 'value';
-                return [sanitizedKey, value];
-            })
-        );
-        
+        const data = {x: xValues, y: yValues}
         // Write the new data
         const updates = {
-            [`${urlPath}/data`]: datamap
+            [`${urlPath}/data`]: data
         };
 
         await update(ref(database), updates);

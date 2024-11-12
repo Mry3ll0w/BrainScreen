@@ -512,7 +512,7 @@ class ElementGrid extends StatelessWidget //__
         // Incrementamos de 2 en 2
         // Creamos una lista temporal para almacenar los botones de cada fila
         List<Widget> chartRow = [];
-
+        debugPrint(ch.toString());
         // Agregamos hasta dos botones por fila
         chartRow.add(ChartModelView(
           c: ChartModel(ch['label'], ch['labelText'], ch['xAxisTitle'],

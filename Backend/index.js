@@ -306,21 +306,10 @@ nodeServer.put('/charts/:lienzo/:index', async (req, res) => {
       }else{
         
         const { x, y } = req.body;
-        const aXElements = [...x]; // Spread operator to create a copy
-        const aYElements = [...y]; // Spread operator to create a copy
-        
-        // Create the map-like object
-        const datamap = {};
-        for (let i = 0; i < aXElements.length; i++) {
-          datamap[aXElements[i]] = aYElements[i];
-        }
-        
-        console.log(datamap)
-
         //Llamamos al update de elementos del chart
-        await ChartController.updateChartValue(lienzo, index, datamap)
+        await ChartController.updateChartValue(lienzo, index, x, y)
 
-        res.status(200).send("acceso otorgado");
+        res.status(200).send("Grafica actualizada");
       }
     }
   } catch (e) {
