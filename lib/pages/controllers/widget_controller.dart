@@ -940,7 +940,10 @@ class WidgetController {
             "labelText": chart.labelText,
             "xAxisTitle": chart.sXAxisText,
             "yAxisTitle": chart.sXAxisText,
-            "data": chart.data
+            "data": {
+              "x": [0],
+              "y": [0]
+            }
           };
 
           setOfCharts.add(newFieldWidget);

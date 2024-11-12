@@ -22,14 +22,18 @@ class ChartModel {
         sYAxisText_ = sYAxisText_ {
     // Parsing data
     List<double> xv = [], yv = [];
-    data['x'].forEach((e) {
-      xv.add(e.toDouble()); // Ensure conversion to double
-    });
-    data['y'].forEach((e) {
-      yv.add(e.toDouble()); // Ensure conversion to double
-    });
-    for (int i = 0; i < xv.length; i++) {
-      parsedMap[xv[i]] = yv[i];
+    if (data['x'] == null) {
+      parsedMap = {}; // ! FIX ERROR DE MAP
+    } else {
+      data['x'].forEach((e) {
+        xv.add(e.toDouble()); // Ensure conversion to double
+      });
+      data['y'].forEach((e) {
+        yv.add(e.toDouble()); // Ensure conversion to double
+      });
+      for (int i = 0; i < xv.length; i++) {
+        parsedMap[xv[i]] = yv[i];
+      }
     }
 
     debugPrint(parsedMap.toString());
@@ -167,11 +171,8 @@ class _ChartModelViewState extends State<ChartModelView> {
       try {
         dynamic data = snapshot.value;
         setState(() {
-          widget.chart.data = parseToMap(data['data']);
-          widget.chart.label = data['label'];
-          widget.chart.labelText = data['labelText'];
-          widget.chart.sXAxisText = data['xAxisTitle'];
-          widget.chart.sYAxisText = data['yAxisTitle'];
+          widget.chart = ChartModel(data['label'], data['labelText'],
+              data['labelText'], data['xAxisTitle'], data['yAxisTitle']);
         });
 
         // ...
@@ -182,11 +183,4 @@ class _ChartModelViewState extends State<ChartModelView> {
   }
 
   //TODO Implement
-  Map<double, double> parseToMap(dynamic data) {
-    Map<double, double> mpValues = {1.0: 1, 2.0: 2, 3: 3.0};
-
-    //Trata
-
-    return mpValues;
-  }
 }
