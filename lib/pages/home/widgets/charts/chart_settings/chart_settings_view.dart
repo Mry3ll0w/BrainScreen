@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'dart:math';
-
+import 'package:brainscreen/pages/controllers/project_controller.dart';
 import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/pages/models/chart_model.dart';
+import 'package:brainscreen/styles/brain_colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -31,11 +32,12 @@ class _ChartSetupState extends State<ChartSettingsView> {
     setupvalueChangerListener(widget.projectName ?? "", chart, widget.index);
   }
 
+  static final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Edita tu Grafismo'),
+          title: const Text('Edita tu Diagrama'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -123,12 +125,23 @@ class _ChartSetupState extends State<ChartSettingsView> {
                           })
                         },
                     decoration: InputDecoration(
-                      hintText: 'Titulo del Grafismo',
+                      hintText: 'Titulo del Diagrama',
                       errorText: chart.labelText.isEmpty
-                          ? 'El titulo del grafismo no puede estar vacio'
+                          ? 'El titulo del diagrama no puede estar vacio'
                           : null,
-                      helperText: 'Titulo del grafismo, ej: Grafo',
+                      helperText: 'Titulo del diagrama, ej: Grafo',
                     )),
+              ),
+              ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                tileColor: BrainColors.backgroundColor,
+                title: const Text(
+                  'Como agregar datos al diagrama',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                subtitle: indicacionesUso_(),
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -161,7 +174,7 @@ class _ChartSetupState extends State<ChartSettingsView> {
                     size: 30,
                   ),
                   label: const Text(
-                    'Borrar Grafismo',
+                    'Borrar Diagrama',
                     style: TextStyle(fontSize: 20, color: Colors.red),
                   ),
                 ),
@@ -199,7 +212,7 @@ class _ChartSetupState extends State<ChartSettingsView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Guardar Grafismo',
+                        'Guardar Diagrama',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
@@ -230,7 +243,7 @@ class _ChartSetupState extends State<ChartSettingsView> {
   Widget indicacionesUso_() {
     return Column(children: [
       Text(
-          'Lo que estas viendo a continuacion se trata de una muestra.\nInicialmente se deberan subir datos a la BBDD siguiendo la siguiente estructura:\n',
+          'Para agregar datos debes realizar una peticion PUT siguiendo el siguiente esquema:\n',
           style: TextStyle(
             fontSize: 15 *
                 MediaQuery.of(context).size.width /
@@ -238,11 +251,55 @@ class _ChartSetupState extends State<ChartSettingsView> {
           )),
       Padding(
         padding: const EdgeInsets.all(8),
-        child: JsonView.string(
-          '{"x":"[1,2,3,4,5,...]", "y":"[0.56, 0.46,54.2,...]"}',
-          theme: const JsonViewTheme(viewType: JsonViewType.base),
+        child: Column(
+          children: [
+            Text('Petition',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"URL":"http://3.210.108.248:3000/charts/${widget.projectName}/${widget.index}"}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
         ),
       ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Params',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"firebaseuid":"${_auth.currentUser!.uid}", "amazonuid":""}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Body',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"x":"[1,2,3,4,5,...]", "y":"[0.56, 0.46,54.2,...]"}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      )
     ]);
   }
 

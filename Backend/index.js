@@ -267,7 +267,7 @@ nodeServer.get('/buttonValue/:amazonuid/:projectName/:buttonLabel', async (req, 
       }else{
         // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
         console.table({btnLabel: buttonLabel, projectname: projectName})
-        // TODO IMPLEMENTAR FUNCION OBTENER VALOR DEL BOTON
+        
         var switchValue = await ButtonController.getButtonValue(projectName, buttonLabel,DB);
         console.log('recibo '+ switchValue)
 
@@ -279,6 +279,36 @@ nodeServer.get('/buttonValue/:amazonuid/:projectName/:buttonLabel', async (req, 
   }
 });
 
+
+// Modelo Interactivo completo
+
+// ? CHARTS 
+nodeServer.put('/charts/:lienzo/:index', async (req, res) => {
+  
+  const {lienzo, index} = req.params;
+  const {firebaseuid, amazonuid}= req.headers;
+  try {
+    if (firebaseuid === undefined || amazonuid === undefined) {
+      res.status(403).send({res: 'test is error due to unauthorized'});
+    } else {
+      
+      const projectController = new ProjectController(DB);
+      // Check if user has access
+      const bUserAllowed = await projectController.
+          userAllowedForServerRequests(amazonuid, firebaseuid);
+      
+      if (!bUserAllowed) {
+        res.status(403).send({res: 'test is error, user not allowed'});
+      }else{
+        // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
+        console.log(req.body)
+        res.status(200).send("acceso otorgado");
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
 
 
 nodeServer.listen(port, () => {

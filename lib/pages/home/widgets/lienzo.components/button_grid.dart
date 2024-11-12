@@ -234,7 +234,7 @@ class ElementGrid extends StatelessWidget //__
                               key: key, sprojectName: projectName_!)));
                 },
               ),
-              header: const Text('Grafismo', style: headerStyle),
+              header: const Text('Diagramas', style: headerStyle),
               content: FutureBuilder(
                   future: initializeCharts(projectName_!),
                   builder: (context, snapshot) {

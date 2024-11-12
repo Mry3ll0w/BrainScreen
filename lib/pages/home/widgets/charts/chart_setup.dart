@@ -21,13 +21,13 @@ class ChartSetup extends StatefulWidget {
 class _ChartSetupState extends State<ChartSetup> {
   //Variables de customizacion
   String sXAxisText = 'Texto Eje X', sYAxisText = 'Texto Eje Y';
-  String sLabelText = 'Grafismo';
+  String sLabelText = 'Diagrama';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Configura tu Grafismo'),
+          title: const Text('Configura tu Diagrama'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -126,11 +126,11 @@ class _ChartSetupState extends State<ChartSetup> {
                           })
                         },
                     decoration: InputDecoration(
-                      hintText: 'Titulo del Grafismo',
+                      hintText: 'Titulo del Diagrama',
                       errorText: sLabelText.isEmpty
-                          ? 'El titulo del grafismo no puede estar vacio'
+                          ? 'El titulo del diagrama no puede estar vacio'
                           : null,
-                      helperText: 'Titulo del grafismo, ej: Grafo',
+                      helperText: 'Titulo del diagrama, ej: Grafo',
                     )),
               ),
               Padding(
