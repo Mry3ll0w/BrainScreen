@@ -1,7 +1,5 @@
 /* eslint-disable max-len */
-const {collection, getDocs, updateDoc, doc} = require('firebase/firestore');
-const { initializeApp } =require ("firebase/app");
-const { getDatabase,ref,get,onValue,child } = require("firebase/database");
+const { getDatabase,ref,get,onValue,child,update,push } = require("firebase/database");
 const { database } = require('firebase-admin');
 
 const firebaseConfig = {
@@ -57,28 +55,37 @@ class ChartController {
     }
 
 
-    //Funcion para Agregar Datos al chart
     static async updateChartValue(projectName, index, datamap) {
-        let resValue = null;
+    let resValue = null;
     
-        try {
-            const database = getDatabase();
-            const urlPath = '/lienzo/' + projectName + '/charts/'+index;
-            
-            const snapshot = await get(ref(database, urlPath));
-            
-            if (snapshot.exists()) {
-                // Al existir la referencia simplement la actualizamos
-                datamap.forEach((x,y) => {
-                    
-                });
-            }
-        } catch (error) {
-            console.error(error);
-        }
+    try {
+        const database = getDatabase();
+        const urlPath = '/lienzo/' + projectName + '/charts/' + index;
+        
 
-        return resValue;
+        // Flatten datamap into a single level object
+        const flattenedData = Object.entries(datamap).reduce((acc, [key, value]) => {
+            acc[key] = value;
+            return acc;
+        }, {});
+
+
+        // Write the new data and post's data
+        const updates = {
+            [`${urlPath}/data`]: flattenedData
+        };
+
+        await update(ref(database), updates);
+
+        
+
+    } catch (error) {
+        console.error(error);
     }
+
+    return resValue;
+}
+
 
 
 }

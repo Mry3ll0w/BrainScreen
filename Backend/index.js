@@ -26,6 +26,7 @@ const {getFirestore, collection, getDocs} = require('firebase/firestore');
 const DB = getFirestore(firebaseApp);
 const ProjectController = require('./Controllers/ProjectController');
 const ButtonController = require('./Controllers/ButtonController');
+const ChartController = require('./Controllers/ChartController');
 // Express Server initialization
 const express = require('express');
 
@@ -301,7 +302,10 @@ nodeServer.put('/charts/:lienzo/:index', async (req, res) => {
         res.status(403).send({res: 'test is error, user not allowed'});
       }else{
         // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
-        console.log(req.body)
+        console.log(req.params)
+        //Llamamos al update de elementos del chart
+        await ChartController.updateChartValue(lienzo, index, {1 : 10.3, 2: 5.2, 3: 12.3 })
+
         res.status(200).send("acceso otorgado");
       }
     }
