@@ -1,0 +1,24 @@
+{
+  "body": {
+    "y": [
+        991,
+        265.77,
+        4.5,
+        561
+    ],
+    "x": [
+        1,
+        2,
+        3,
+        4
+    ]
+},
+  "headers": {
+    "firebaseuid": "qRuIeTQxzBMTanJiqIJDvPoga8p1",
+    "amazonuid": "146",
+    "content-type": "application/json"
+  },
+  "method": "PUT",
+  "title": "Chart example",
+  "url": "localhost:3000/charts/jsjsjs/0"
+}

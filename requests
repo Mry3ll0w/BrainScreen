@@ -1,9 +1,26 @@
-GET http://localhost:3000/buttonValue/amzn1.ask.account.AMA4DUVCMGVZQ7NUYRKXEFIFU6IISFRK6WLMGROUFI3AVYQF2SPMN4SP3GEHYMUF72T5AD37G7TDL6TR6FH37IYNO5UNH5UM2GF4QGZECCX3DAYJRIOTS7RNM4FUNGSLLH3RBOMQ27ISPA3GDYC6WTOH62SCFRNIS2N4J5QW433ZVUUVFQ4EMWIQGJMARR3EPYKA5DHWZ5E7WLETRUOPULB4YTPPNK7W7BYGLH4GFRSA/rename/${strButtonLabel}
+GET http: //localhost:3000/buttonValue/amzn1.ask.account.AMA4DUVCMGVZQ7NUYRKXEFIFU6IISFRK6WLMGROUFI3AVYQF2SPMN4SP3GEHYMUF72T5AD37G7TDL6TR6FH37IYNO5UNH5UM2GF4QGZECCX3DAYJRIOTS7RNM4FUNGSLLH3RBOMQ27ISPA3GDYC6WTOH62SCFRNIS2N4J5QW433ZVUUVFQ4EMWIQGJMARR3EPYKA5DHWZ5E7WLETRUOPULB4YTPPNK7W7BYGLH4GFRSA/rename/${strButtonLabel}
 
 ##CHART REQUEST
-PUT https://example.com/api/login HTTP/1.1
-Content-Type: application/json
-{
-  "amazonuid": "testuser",
-  "firebaseuid": "testpassword"
-}
+PUT https: //example.com/api/login HTTP/1.1
+"body": {
+  "y": [
+    991,
+    265.77,
+    4.5,
+    561
+  ],
+  "x": [
+    1,
+    2,
+    3,
+    4
+  ]
+},
+"headers": {
+  "firebaseuid": "qRuIeTQxzBMTanJiqIJDvPoga8p1",
+  "amazonuid": "146",
+  "content-type": "application/json"
+},
+"method": "PUT",
+"title": "Chart example",
+"url": "localhost:3000/charts/jsjsjs/0"

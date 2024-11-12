@@ -286,9 +286,12 @@ nodeServer.get('/buttonValue/:amazonuid/:projectName/:buttonLabel', async (req, 
 // ? CHARTS 
 nodeServer.put('/charts/:lienzo/:index', async (req, res) => {
   
-  const {lienzo, index} = req.params;
-  const {firebaseuid, amazonuid}= req.headers;
+  
   try {
+    
+    const {lienzo, index} = req.params;
+    const {firebaseuid, amazonuid}= req.headers;
+    
     if (firebaseuid === undefined || amazonuid === undefined) {
       res.status(403).send({res: 'test is error due to unauthorized'});
     } else {
@@ -301,10 +304,21 @@ nodeServer.put('/charts/:lienzo/:index', async (req, res) => {
       if (!bUserAllowed) {
         res.status(403).send({res: 'test is error, user not allowed'});
       }else{
-        // Para las pruebas supongamos que se envia {dato: TRUE/FALSE}
-        console.log(req.params)
+        
+        const { x, y } = req.body;
+        const aXElements = [...x]; // Spread operator to create a copy
+        const aYElements = [...y]; // Spread operator to create a copy
+        
+        // Create the map-like object
+        const datamap = {};
+        for (let i = 0; i < aXElements.length; i++) {
+          datamap[aXElements[i]] = aYElements[i];
+        }
+        
+        console.log(datamap)
+
         //Llamamos al update de elementos del chart
-        await ChartController.updateChartValue(lienzo, index, {1 : 10.3, 2: 5.2, 3: 12.3 })
+        await ChartController.updateChartValue(lienzo, index, datamap)
 
         res.status(200).send("acceso otorgado");
       }

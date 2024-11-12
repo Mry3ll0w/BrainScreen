@@ -62,22 +62,21 @@ class ChartController {
         const database = getDatabase();
         const urlPath = '/lienzo/' + projectName + '/charts/' + index;
         
-
-        // Flatten datamap into a single level object
-        const flattenedData = Object.entries(datamap).reduce((acc, [key, value]) => {
-            acc[key] = value;
-            return acc;
-        }, {});
-
-
-        // Write the new data and post's data
+        // Sanitize keys in datamap
+        const sanitizedData = Object.fromEntries(
+            Object.entries(datamap).map(([key, value]) => {
+                let sanitizedKey = key.replace(/[^a-zA-Z0-9]/g, '_');
+                if (sanitizedKey === '') sanitizedKey = 'value';
+                return [sanitizedKey, value];
+            })
+        );
+        
+        // Write the new data
         const updates = {
-            [`${urlPath}/data`]: flattenedData
+            [`${urlPath}/data`]: datamap
         };
 
         await update(ref(database), updates);
-
-        
 
     } catch (error) {
         console.error(error);
@@ -85,6 +84,7 @@ class ChartController {
 
     return resValue;
 }
+
 
 
 
