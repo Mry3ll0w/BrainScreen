@@ -152,18 +152,10 @@ class _FieldWidgetViewState extends State<FieldWidgetView> {
     //
     try {
       // Updateamos el valor en BBDD
-      DatabaseReference ref =
-          FirebaseDatabase.instance.ref("lienzo/$projectName/buttons/$index");
-      await ref.update({'value': newValue.toString()});
-
-      // POST despues de actualizar el valor, test only
-      await HttpRequestsController.put(
-              widget.fw.baseURL,
-              widget.fw.apiURL_,
-              {"fwUpdated": index.toString()},
-              GeneralFunctions.getLoggedUserUID(),
-              '')
-          .timeout(const Duration(seconds: 2));
+      DatabaseReference ref = FirebaseDatabase.instance
+          .ref("lienzo/$projectName/fieldWidgets/$index");
+      await ref.update({'value': newValue.toString()}).timeout(
+          const Duration(seconds: 2));
     } on TimeoutException {
       _petitionErrorNotification(500, widget.fw.labelText, true);
     } catch (e) {

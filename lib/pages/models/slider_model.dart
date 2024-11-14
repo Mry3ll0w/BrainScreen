@@ -154,18 +154,7 @@ class _CustomSliderState extends State<CustomSlider> {
   /// Gestiona las actualizaciones junto con el servidor
   Future<String?> _handleValueChange() async {
     try {
-      // POST
-      dynamic res = await HttpRequestsController.post_with_response(
-              widget.sl!._baseURL_POST,
-              widget.sl!._apiURL_POST,
-              {'res': widget.sl!.value.toString()},
-              GeneralFunctions.getLoggedUserUID(),
-              '')
-          .timeout(const Duration(seconds: 2));
-
-      //Pillamos el resultado de la peticion
-      debugPrint(res.toString());
-      String newState = res['response']['res'].toString();
+      String newState = widget.sl!.value.toString();
       //Actualizamos el valor de ese modelo.
       await _SliderValueUpdate(widget.sProjectName, 'value', newState);
 

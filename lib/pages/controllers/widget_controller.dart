@@ -595,6 +595,22 @@ class WidgetController {
     }
   }
 
+  static Future<int> fetchSliderIndexByLabel(
+      String sProjectName, String label) async {
+    // Primero buscamos en el lienzo que toque
+    var lElevatedButtons =
+        await WidgetController.fetchAllSlidersRAW(sProjectName);
+
+    int iPosBtn = 0;
+    for (var rawButton in lElevatedButtons) {
+      if (label == rawButton['label']) {
+        break;
+      }
+      iPosBtn++;
+    }
+    return iPosBtn;
+  }
+
   /// Agrega un FieldWidget al lienzo del proyecto especificado.
   ///
   /// Esta función escribe datos en la base de datos Firebase Realtime Database
