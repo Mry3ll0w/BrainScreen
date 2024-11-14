@@ -632,8 +632,10 @@ class WidgetController {
 
           // Obtenemos todos los labels y lo metemos en lista para agregar el nuevo
           for (var b in setOfSwitches) {
-            String currentLabel = b['label'];
-            setOfFieldWidgets.add(currentLabel);
+            if (b != null) {
+              String currentLabel = b['label'];
+              setOfFieldWidgets.add(currentLabel);
+            }
           }
           //Usamos la funcion generadora de labels
           String newLabel = randomLabelGenerator(6);
