@@ -230,23 +230,18 @@ class _ButtonSettingsEditState extends State<ButtonSettingsEdit> {
                                       bRes = await _buttonFieldUpdate(
                                           widget._projectName,
                                           'apiurl',
-                                          newButton.baseURL_,
+                                          newButton.apiURL_,
                                           widget.key,
                                           widget.selectedButton!.type_);
                                     } else if (widget.selectedButton!.type_ ==
                                         '1') {
-                                      // TODO FIX UPDATE SWITCH API VALUE
-                                      debugPrint(
-                                          'Estoy en el switch FIELD UPDATE');
                                       bRes = await _buttonFieldUpdate(
                                           widget._projectName,
                                           'apiurl_post',
                                           widget.selectedButton!.apiURL_,
                                           widget.key,
                                           widget.selectedButton!.type_);
-                                    } else {
-                                      //TODO AGREGAR SLIDER CUANDO ESTE LISTO
-                                    }
+                                    } else {}
                                     if (bRes) {
                                       setState(() {
                                         widget.selectedButton!.apiURL_ =
