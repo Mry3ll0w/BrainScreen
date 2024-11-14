@@ -234,6 +234,23 @@ class WidgetController {
     return [];
   }
 
+  static dynamic fetchAllButtonsRAW(String projectName) async {
+    try {
+      DatabaseReference refDB =
+          FirebaseDatabase.instance.ref().child('lienzo/$projectName/buttons');
+      // to read once we use final
+      final snapshot = await refDB.get();
+      var valueFromSnapshot = snapshot.value;
+
+      //devolvemos la lista con todos los elevatedButtons
+      return valueFromSnapshot;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    return [];
+  }
+
   static Future<List<dynamic>> fetchAllSlidersRAW(String projectName) async {
     try {
       DatabaseReference refDB =
@@ -607,7 +624,23 @@ class WidgetController {
       String sProjectName, String label) async {
     // Primero buscamos en el lienzo que toque
     var lElevatedButtons =
-        await WidgetController.fetchAllSlidersRAW(sProjectName);
+        await WidgetController.fetchAllButtonsRAW(sProjectName);
+
+    int iPosBtn = 0;
+    for (var rawButton in lElevatedButtons) {
+      if (label == rawButton['label']) {
+        break;
+      }
+      iPosBtn++;
+    }
+    return iPosBtn;
+  }
+
+  static Future<int> fetchSwitchIndexByLabel(
+      String sProjectName, String label) async {
+    // Primero buscamos en el lienzo que toque
+    var lElevatedButtons =
+        await WidgetController.fetchAllButtonsRAW(sProjectName);
 
     int iPosBtn = 0;
     for (var rawButton in lElevatedButtons) {

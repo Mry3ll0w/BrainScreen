@@ -317,11 +317,11 @@ class _ChartSetupState extends State<ChartSettingsView> {
         c.label = data['label'];
         c.labelText_ = data['labelText'];
         c.sXAxisText = data['xAxisTitle'];
-        c.sYAxisText_ = data['yAxisTitle'];
+        c.sYAxisText_ = data['data'];
       });
       // ...
     } catch (e) {
-      debugPrint('Error con data \n $e');
+      debugPrint('Error con data chart sett \n $e');
     }
   }
 

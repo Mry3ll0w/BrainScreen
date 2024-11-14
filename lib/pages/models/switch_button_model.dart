@@ -102,7 +102,7 @@ class _SwitchWidgetBlockState extends State<SwitchWidgetBlock>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
-    WidgetController.fetchSliderIndexByLabel(
+    WidgetController.fetchSwitchIndexByLabel(
             widget._projectName, widget.sw.label)
         .then((v) {
       setupvalueChangerListener(widget._projectName, v);
@@ -241,14 +241,14 @@ class _SwitchWidgetBlockState extends State<SwitchWidgetBlock>
       debugPrint(snapshot.value.toString());
       try {
         dynamic data = snapshot.value;
-
+        debugPrint('Valor Recibido settings sw: ${data['value'].toString()}');
         setState(() {
           widget.sw.value = bool.parse(data['value'].toString());
         });
 
         // ...
       } catch (e) {
-        debugPrint('Error con data \n $e');
+        debugPrint('Error con data sw \n $e');
       }
     });
   }

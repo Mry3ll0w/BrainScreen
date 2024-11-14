@@ -172,12 +172,12 @@ class _ChartModelViewState extends State<ChartModelView> {
         dynamic data = snapshot.value;
         setState(() {
           widget.chart = ChartModel(data['label'], data['labelText'],
-              data['labelText'], data['xAxisTitle'], data['yAxisTitle']);
+              data['labelText'], data['xAxisTitle'], data['data']);
         });
 
         // ...
       } catch (e) {
-        debugPrint('Error con data \n $e');
+        debugPrint('Error con data de chart \n $e');
       }
     });
   }
