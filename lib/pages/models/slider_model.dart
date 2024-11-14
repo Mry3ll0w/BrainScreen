@@ -34,13 +34,13 @@ class _CustomSliderState extends State<CustomSlider> {
     //Si no es null implica
     if (widget.sl != null) {
       _currentSliderValue = widget.sl!.value;
-    }
 
-    WidgetController.fetchSliderIndexByLabel(
-            widget.sProjectName, widget.sl!._label)
-        .then((value) {
-      setupvalueChangerListener(widget.sProjectName, value);
-    });
+      WidgetController.fetchSliderIndexByLabel(
+              widget.sProjectName, widget.sl!._label)
+          .then((value) {
+        setupvalueChangerListener(widget.sProjectName, value);
+      });
+    }
   }
 
   @override

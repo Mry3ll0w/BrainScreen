@@ -97,11 +97,16 @@ class SwitchWidgetBlock extends StatefulWidget {
 class _SwitchWidgetBlockState extends State<SwitchWidgetBlock>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-
+  late StreamSubscription _subscriptionFwDataChanges;
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
+    WidgetController.fetchSliderIndexByLabel(
+            widget._projectName, widget.sw.label)
+        .then((v) {
+      setupvalueChangerListener(widget._projectName, v);
+    });
   }
 
   @override
@@ -141,20 +146,14 @@ class _SwitchWidgetBlockState extends State<SwitchWidgetBlock>
   Future<bool?> _handleValueChange() async {
     try {
       // POST
-      dynamic res = await HttpRequestsController.post_with_response(
-              widget.sw._baseURL_POST,
-              widget.sw._apiURL_POST,
-              widget.sw.payload,
-              GeneralFunctions.getLoggedUserUID(),
-              '')
-          .timeout(const Duration(seconds: 2));
 
       //Pillamos el resultado de la peticion
       //! RECUERDA AL USUARIO QUE TIENE QUE HACER LAS PETICIONES CON RES:
-      bool newState = bool.parse(res['response']['res'].toString());
+      bool newState = widget.sw.value;
       //Actualizamos el valor de ese modelo.
       await _SwitchValueUpdate(
-          widget._projectName, 'value', newState.toString());
+              widget._projectName, 'value', newState.toString())
+          .timeout(const Duration(seconds: 2));
 
       return newState;
     } on TimeoutException {
@@ -228,5 +227,29 @@ class _SwitchWidgetBlockState extends State<SwitchWidgetBlock>
     } else {
       return false;
     }
+  }
+
+  //Data Update onChange
+  void setupvalueChangerListener(String projectName, int iPos) {
+    // Pillamos El fieldWidget a controlar
+    final databaseReference =
+        FirebaseDatabase.instance.ref('/lienzo/$projectName/buttons/$iPos');
+
+    _subscriptionFwDataChanges =
+        databaseReference.onValue.listen((DatabaseEvent event) {
+      final snapshot = event.snapshot;
+      debugPrint(snapshot.value.toString());
+      try {
+        dynamic data = snapshot.value;
+
+        setState(() {
+          widget.sw.value = bool.parse(data['value'].toString());
+        });
+
+        // ...
+      } catch (e) {
+        debugPrint('Error con data \n $e');
+      }
+    });
   }
 }

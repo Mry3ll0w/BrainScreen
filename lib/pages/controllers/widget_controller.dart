@@ -46,8 +46,10 @@ class WidgetController {
 
           // Obtenemos todos los labels y lo metemos en lista para agregar el nuevo
           for (var b in setOfButtons) {
-            String currentLabel = b['label'];
-            setOfButtonLabels.add(currentLabel);
+            if (b != null) {
+              String currentLabel = b['label'];
+              setOfButtonLabels.add(currentLabel);
+            }
           }
           //Usamos la funcion generadora de labels
           String newLabel = randomLabelGenerator(6);
@@ -320,8 +322,10 @@ class WidgetController {
 
           // Obtenemos todos los labels y lo metemos en lista para agregar el nuevo
           for (var b in setOfSwitches) {
-            String currentLabel = b['label'];
-            setOfSwitchLabels.add(currentLabel);
+            if (b != null) {
+              String currentLabel = b['label'];
+              setOfSwitchLabels.add(currentLabel);
+            }
           }
           //Usamos la funcion generadora de labels
           String newLabel = randomLabelGenerator(6);
@@ -417,16 +421,18 @@ class WidgetController {
 
           // Iteramos la lista de switches
           for (var s in setOfSwitches) {
-            if (s['type'] == '1') {
-              lSwitches.add(SwitchButtonModel(
-                  type: s['type'],
-                  position: s['position'],
-                  label: s['label'],
-                  labelText: s['labelText'],
-                  baseurlPost: s['baseurl_post'],
-                  apiurlPost: s['apiurl_post'],
-                  payload: s['payload'],
-                  bvalue: bool.parse(s['value'])));
+            if (s != null) {
+              if (s['type'] == '1') {
+                lSwitches.add(SwitchButtonModel(
+                    type: s['type'],
+                    position: s['position'],
+                    label: s['label'],
+                    labelText: s['labelText'],
+                    baseurlPost: s['baseurl_post'],
+                    apiurlPost: s['apiurl_post'],
+                    payload: s['payload'],
+                    bvalue: bool.parse(s['value'])));
+              }
             }
           }
 
@@ -517,8 +523,10 @@ class WidgetController {
 
           // Obtenemos todos los labels y lo metemos en lista para agregar el nuevo
           for (var b in setOfSliders) {
-            String currentLabel = b['label'];
-            setOfSliderLabels.add(currentLabel);
+            if (b != null) {
+              String currentLabel = b['label'];
+              setOfSliderLabels.add(currentLabel);
+            }
           }
           //Usamos la funcion generadora de labels
           String newLabel = randomLabelGenerator(6);
