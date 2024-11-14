@@ -188,8 +188,10 @@ class WidgetController {
           // Obtenemos todos los botones elevatedButtons
           for (var b in valueFromSnapshot.toList()) {
             //ElevatedButton
-            if (b['type'] == '0') {
-              elevatedButtonList.add(b);
+            if (b != null) {
+              if (b['type'] == '0') {
+                elevatedButtonList.add(b);
+              }
             }
           }
         }
@@ -628,7 +630,7 @@ class WidgetController {
 
     int iPosBtn = 0;
     for (var rawButton in lElevatedButtons) {
-      if (label == rawButton['label']) {
+      if (rawButton != null && label == rawButton['label']) {
         break;
       }
       iPosBtn++;
@@ -644,7 +646,7 @@ class WidgetController {
 
     int iPosBtn = 0;
     for (var rawButton in lElevatedButtons) {
-      if (label == rawButton['label']) {
+      if (rawButton != null && label == rawButton['label']) {
         break;
       }
       iPosBtn++;

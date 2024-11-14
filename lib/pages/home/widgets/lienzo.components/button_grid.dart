@@ -276,18 +276,20 @@ class ElementGrid extends StatelessWidget //__
         // Agregamos hasta dos botones por fila
         for (int j = i; j < i + 2 && j < buttonList.length; j++) {
           // Creamos el Modelo del boton
-          var b = ElevatedButtonModel(
-              label: buttonList[j]['label'],
-              labelText: buttonList[j]['labelText'],
-              type: buttonList[j]['type'],
-              petition: buttonList[j]['petition'],
-              baseURL: buttonList[j]['baseurl'],
-              apiURL: buttonList[j]['apiurl'],
-              payload: buttonList[j]['payload']);
-          // Aquí puedes personalizar el estilo del botón según tus necesidades
-          buttonRow.add(b.buildElevatedButtonWidget(projectName_!,
-                  b.labelText_) // Suponiendo que buttonList contiene Strings
-              );
+          if (buttonList[j] != null) {
+            var b = ElevatedButtonModel(
+                label: buttonList[j]['label'],
+                labelText: buttonList[j]['labelText'],
+                type: buttonList[j]['type'],
+                petition: buttonList[j]['petition'],
+                baseURL: buttonList[j]['baseurl'],
+                apiURL: buttonList[j]['apiurl'],
+                payload: buttonList[j]['payload']);
+            // Aquí puedes personalizar el estilo del botón según tus necesidades
+            buttonRow.add(b.buildElevatedButtonWidget(projectName_!,
+                    b.labelText_) // Suponiendo que buttonList contiene Strings
+                );
+          }
         }
 
         // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
@@ -335,16 +337,17 @@ class ElementGrid extends StatelessWidget //__
         // Incrementamos de 2 en 2
         // Creamos una lista temporal para almacenar los botones de cada fila
         List<Widget> switchRow = [];
+        if (s != null) {
+          // Agregamos hasta dos botones por fila
+          switchRow.add(s.buildSwitchWidget(super.key, projectName_!));
 
-        // Agregamos hasta dos botones por fila
-        switchRow.add(s.buildSwitchWidget(super.key, projectName_!));
-
-        // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
-        rows.add(Row(
-          mainAxisAlignment: MainAxisAlignment
-              .spaceEvenly, // Distribuye los botones en el espacio disponible
-          children: switchRow,
-        ));
+          // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
+          rows.add(Row(
+            mainAxisAlignment: MainAxisAlignment
+                .spaceEvenly, // Distribuye los botones en el espacio disponible
+            children: switchRow,
+          ));
+        }
       }
     } catch (e) {
       rows = [const Text('Se ha producido un error en la lectura del widget')];
@@ -386,16 +389,17 @@ class ElementGrid extends StatelessWidget //__
         // Incrementamos de 2 en 2
         // Creamos una lista temporal para almacenar los botones de cada fila
         List<Widget> switchRow = [];
+        if (sl != null) {
+          // Agregamos hasta dos botones por fila
+          switchRow.add(sl.buildSliderWidget(super.key, projectName_!));
 
-        // Agregamos hasta dos botones por fila
-        switchRow.add(sl.buildSliderWidget(super.key, projectName_!));
-
-        // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
-        rows.add(Row(
-          mainAxisAlignment: MainAxisAlignment
-              .spaceEvenly, // Distribuye los botones en el espacio disponible
-          children: switchRow,
-        ));
+          // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
+          rows.add(Row(
+            mainAxisAlignment: MainAxisAlignment
+                .spaceEvenly, // Distribuye los botones en el espacio disponible
+            children: switchRow,
+          ));
+        }
       }
     } catch (e) {
       rows = [const Text('Se ha producido un error en la lectura del widget')];
@@ -440,26 +444,27 @@ class ElementGrid extends StatelessWidget //__
         // Incrementamos de 2 en 2
         // Creamos una lista temporal para almacenar los botones de cada fila
         List<Widget> switchRow = [];
+        if (fw != null) {
+          // Agregamos hasta dos botones por fila
+          switchRow.add(FieldWidgetView(
+              fieldwidget: FieldWidgetModel(
+                  apiURL: fw['apiurl'],
+                  labelText: fw['labelText'],
+                  label: fw['label'],
+                  baseURL: fw['baseurl'],
+                  widgetValue: fw['value'],
+                  numberField: fw['isNumberField']),
+              sprojectName: projectName_!,
+              pos: await WidgetController.getFieldWidgetPositionByLabel(
+                  projectName, fw['label'])));
 
-        // Agregamos hasta dos botones por fila
-        switchRow.add(FieldWidgetView(
-            fieldwidget: FieldWidgetModel(
-                apiURL: fw['apiurl'],
-                labelText: fw['labelText'],
-                label: fw['label'],
-                baseURL: fw['baseurl'],
-                widgetValue: fw['value'],
-                numberField: fw['isNumberField']),
-            sprojectName: projectName_!,
-            pos: await WidgetController.getFieldWidgetPositionByLabel(
-                projectName, fw['label'])));
-
-        // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
-        rows.add(Row(
-          mainAxisAlignment: MainAxisAlignment
-              .spaceEvenly, // Distribuye los botones en el espacio disponible
-          children: switchRow,
-        ));
+          // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
+          rows.add(Row(
+            mainAxisAlignment: MainAxisAlignment
+                .spaceEvenly, // Distribuye los botones en el espacio disponible
+            children: switchRow,
+          ));
+        }
       }
     } catch (e) {
       rows = [const Text('Se ha producido un error en la lectura del widget')];
