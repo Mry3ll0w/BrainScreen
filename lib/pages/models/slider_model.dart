@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:brainscreen/pages/controllers/general_functions.dart';
@@ -25,7 +27,7 @@ class CustomSlider extends StatefulWidget {
 
 class _CustomSliderState extends State<CustomSlider> {
   double _currentSliderValue = 20;
-
+  late StreamSubscription _subscriptionFwDataChanges;
   @override
   void initState() {
     super.initState();
@@ -33,6 +35,12 @@ class _CustomSliderState extends State<CustomSlider> {
     if (widget.sl != null) {
       _currentSliderValue = widget.sl!.value;
     }
+
+    WidgetController.fetchSliderIndexByLabel(
+            widget.sProjectName, widget.sl!._label)
+        .then((value) {
+      setupvalueChangerListener(widget.sProjectName, value);
+    });
   }
 
   @override
@@ -167,6 +175,28 @@ class _CustomSliderState extends State<CustomSlider> {
       _petitionErrorNotification(500, strLabelText, false);
       return null;
     }
+  }
+
+  //Data Update onChange
+  void setupvalueChangerListener(String projectName, int iPos) {
+    // Pillamos El fieldWidget a controlar
+    final databaseReference =
+        FirebaseDatabase.instance.ref('/lienzo/$projectName/buttons/$iPos');
+
+    _subscriptionFwDataChanges =
+        databaseReference.onValue.listen((DatabaseEvent event) {
+      final snapshot = event.snapshot;
+      debugPrint(snapshot.value.toString());
+      try {
+        dynamic data = snapshot.value;
+
+        setState(() {});
+        _currentSliderValue = double.parse(data['value']);
+        // ...
+      } catch (e) {
+        debugPrint('Error con data \n $e');
+      }
+    });
   }
 }
 
