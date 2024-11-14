@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -143,7 +144,11 @@ class _ChartModelViewState extends State<ChartModelView> {
   @override
   void initState() {
     // Init del listener de cambios
-    setupvalueChangerListener(widget.sProjectName, widget.chart, 0);
+    WidgetController.fetchChartIndexByLabel(
+            widget.sProjectName, widget.chart.label)
+        .then((v) {
+      setupvalueChangerListener(widget.sProjectName, widget.chart, v);
+    });
 
     super.initState();
   }
