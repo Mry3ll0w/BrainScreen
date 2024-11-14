@@ -514,18 +514,20 @@ class ElementGrid extends StatelessWidget //__
         List<Widget> chartRow = [];
 
         // Agregamos hasta dos botones por fila
-        chartRow.add(ChartModelView(
-          c: ChartModel(ch['label'], ch['labelText'], ch['xAxisTitle'],
-              ch['xAxisTitle'], ch['data']),
-          projectName: projectName,
-        ));
+        if (ch != null) {
+          chartRow.add(ChartModelView(
+            c: ChartModel(ch['label'], ch['labelText'], ch['xAxisTitle'],
+                ch['xAxisTitle'], ch['data']),
+            projectName: projectName,
+          ));
 
-        // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
-        rows.add(Row(
-          mainAxisAlignment: MainAxisAlignment
-              .spaceEvenly, // Distribuye los botones en el espacio disponible
-          children: chartRow,
-        ));
+          // Creamos una Row con los botones de esta iteración y la agregamos a la lista de filas
+          rows.add(Row(
+            mainAxisAlignment: MainAxisAlignment
+                .spaceEvenly, // Distribuye los botones en el espacio disponible
+            children: chartRow,
+          ));
+        }
       }
     } catch (e) {
       rows = [Text('Error: \n ${e.toString()}')];

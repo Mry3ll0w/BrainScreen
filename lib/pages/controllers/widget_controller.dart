@@ -660,7 +660,7 @@ class WidgetController {
 
     int iPosBtn = 0;
     for (var rawButton in lElevatedButtons) {
-      if (label == rawButton['label']) {
+      if (rawButton != null && label == rawButton['label']) {
         break;
       }
       iPosBtn++;
