@@ -58,9 +58,9 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
 
     //Comprobamos si se trata de un Switch, para en caso de serlo desplegar un dialog.
     // Retrasar la verificación del tipo de botón para asegurar que el widget esté completamente inicializado
-    Future.delayed(Duration.zero, () {
-      _showSwitchRequirements(widget.key); //Mostramos el pop up
-    });
+    // Future.delayed(Duration.zero, () {
+    //   _showSwitchRequirements(widget.key); //Mostramos el pop up
+    // });
   }
 
   @override
@@ -143,112 +143,6 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
                             sLabelErrorText = null;
                           }
                         },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 15, top: 15),
-                        child: TextField(
-                          decoration: InputDecoration(
-                              filled: true,
-                              errorText: sBaseURLError,
-                              helperText:
-                                  'Ruta base del servidor al que realizar la peticion',
-                              suffixIcon: IconButton(
-                                icon: const Icon(Icons.save),
-                                onPressed: () async {
-                                  if (sBaseURLError == null) {
-                                    bool bRes = true;
-                                    bRes = await _buttonFieldUpdate(
-                                        widget._projectName,
-                                        'baseurl_post',
-                                        newButton.baseURLPOST,
-                                        widget.key,
-                                        widget.selectedButton!.type);
-                                    if (bRes) {
-                                      setState(() {
-                                        widget.selectedButton!.baseURLPOST =
-                                            newButton.baseURLPOST;
-                                      });
-                                    }
-                                  }
-                                },
-                              ),
-                              label: Text(widget.selectedButton!.baseURLPOST)),
-                          onChanged: (value) {
-                            setState(() {
-                              newButton.baseURLPOST = value;
-                            });
-                            if (!value.contains('http://')) {
-                              sBaseURLError =
-                                  'Tiene que agregar http:// a la URL del servidor.';
-                            } else {
-                              sBaseURLError = null;
-                            }
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 15, top: 15),
-                        child: TextField(
-                          decoration: InputDecoration(
-                              filled: true,
-                              errorText: sAPIErrorText,
-                              helperText:
-                                  'API del servidor que quieras consumir',
-                              suffixIcon: IconButton(
-                                icon: const Icon(Icons.save),
-                                onPressed: () async {
-                                  if (sAPIErrorText == null) {
-                                    bool bRes = true;
-                                    bRes = await _buttonFieldUpdate(
-                                        widget._projectName,
-                                        'apiurl_post',
-                                        widget.selectedButton!.apiURLPOST,
-                                        widget.key,
-                                        widget.selectedButton!.type);
-                                    if (bRes) {
-                                      setState(() {
-                                        widget.selectedButton!.apiURLPOST =
-                                            newButton.apiURLPOST;
-                                      });
-                                    }
-                                  }
-                                },
-                              ),
-                              label: Text(widget.selectedButton!.apiURLPOST)),
-                          onChanged: (value) {
-                            setState(() {
-                              newButton.apiURLPOST = value;
-                            });
-                            if (!value.contains('/') && value.isEmpty) {
-                              sAPIErrorText =
-                                  'No puede estar vacia y ademas tiene que contener /';
-                            } else {
-                              sAPIErrorText = null;
-                            }
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 15, top: 15),
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => JsonEditorView(
-                                        sProjectName: widget._projectName,
-                                        payload: widget.selectedButton?.payload,
-                                        label: widget.selectedButton!.label)));
-                          },
-                          icon: const Icon(
-                            Icons.javascript,
-                            size: 40,
-                          ),
-                          label: const Text(
-                            'Editar Payload',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 15, top: 15),
