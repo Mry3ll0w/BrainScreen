@@ -288,7 +288,7 @@ nodeServer.put('/charts/:lienzo/:index', async (req, res) => {
   
   
   try {
-    console.log(req.params);
+   
     const {lienzo, index} = req.params;
     const {firebaseuid, amazonuid}= req.headers;
     

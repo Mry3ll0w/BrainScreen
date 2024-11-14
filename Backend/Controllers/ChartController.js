@@ -24,29 +24,25 @@ class ChartController {
     /**
     Función encargada de obtener el valor de un botón.
      */
-    static async getButtonValue(projectName, buttonLabel, DB) {
+    static async getChartData(url) {
         let resValue = null;
     
         try {
             const database = getDatabase();
-            const urlPath = '/lienzo/' + projectName + '/buttons';
+            
         
-            const snapshot = await get(ref(database, urlPath));
-        
-            if (snapshot.exists()) {
-                for (const key in snapshot.val()) {
-                    if (snapshot.val()[key].labelText.toLowerCase() === buttonLabel.toLowerCase()) {
-                        var button = snapshot.val()[key];
-                    
-                        if(button.type === '1'){
-                            resValue = button.value;
-                            break;
-                        }else{
-                            resValue = 'elevated'; // Si es elevated no sirve para obtener el valor
-                        }
-                    }
-                }
-            }
+            const snapshot = await get(ref(database, url));
+            
+            return snapshot.val();
+            // if (snapshot.exists()) {
+            //     for (const key in snapshot.val()) {
+            //         if (snapshot.val()[key].labelText.toLowerCase() === buttonLabel.toLowerCase()) {
+            //             var chart = snapshot.val()[key];
+            //             return chart.data;
+                        
+            //         }
+            //     }
+            // }
         } catch (error) {
             console.error(error);
         }
@@ -57,16 +53,24 @@ class ChartController {
 
     static async updateChartValue(projectName, index, xValues, yValues) {
     let resValue = null;
-    
+    //const chpoints = await this.getChartData(urlPath);
     try {
         const database = getDatabase();
-        const urlPath = '/lienzo/' + projectName + '/charts/' + index;
-        const data = {x: xValues, y: yValues}
+        const urlPath = '/lienzo/' + projectName + '/charts/' + index + '/data';
+        const {x,y} = await this.getChartData(urlPath);
+        
+        
+        const newData = {
+            x: (x || []).concat(xValues),
+            y: (y || []).concat(yValues)
+        };
+        console.log(newData, {valoresX: xValues, valoresY: yValues})
+        
         // Write the new data
         const updates = {
-            [`${urlPath}/data`]: data
+            [`${urlPath}/x`]: newData.x,
+            [`${urlPath}/y`]: newData.y,
         };
-
         await update(ref(database), updates);
 
     } catch (error) {
