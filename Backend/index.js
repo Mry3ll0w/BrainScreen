@@ -289,7 +289,6 @@ nodeServer.put('/charts/:lienzo/:index', async (req, res) => {
   
   
   try {
-   
     const {lienzo, index} = req.params;
     const {firebaseuid, amazonuid}= req.headers;
     
@@ -340,7 +339,7 @@ nodeServer.get('/switches/:lienzo/:index', async (req, res) => {
       }else{
         const urlPath = '/lienzo/' + lienzo + '/buttons/' + index + '/value';
         var swValue = await SwitchController.getSwitchValue(urlPath)
-        
+
         res.status(200).send({switchState: swValue});
       }
     }
@@ -348,6 +347,44 @@ nodeServer.get('/switches/:lienzo/:index', async (req, res) => {
     console.log(e);
   }
 });
+
+nodeServer.patch('/switches/:lienzo/:index', async (req, res) => {
+  
+  try {
+    const {lienzo, index} = req.params;
+    const {firebaseuid, amazonuid}= req.headers;
+    const {newValue} = req.body;
+    
+    if (firebaseuid === undefined || amazonuid === undefined) {
+      res.status(403).send({res: 'test is error due to unauthorized'});
+    } else {
+      
+      const projectController = new ProjectController(DB);
+      // Check if user has access
+      const bUserAllowed = await projectController.
+          userAllowedForServerRequests(amazonuid, firebaseuid);
+      
+      if (!bUserAllowed) {
+        res.status(403).send({res: 'test is error, user not allowed'});
+      }else{
+        const urlPath = '/lienzo/' + lienzo + '/buttons/' + index;
+        var updateValue = await SwitchController.updateSwitchValue(urlPath, newValue)
+        if(updateValue)
+          res.status(200).send('Switch actualizado');
+        else
+          res.status(500).send('Error en la actualizacion del switch')
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+//? Sliders
+
+
+//? FieldWidgets & Numberfields
+
 
 
 

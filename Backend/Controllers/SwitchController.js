@@ -51,30 +51,20 @@ class SwitchController {
     }
 
 
-    static async updateSwitchValue(projectName, index, xValues, yValues) {
-    let resValue = null;
+    static async updateSwitchValue(urlPath, newValue) {
+    let resValue = true;
     //const chpoints = await this.getChartData(urlPath);
     try {
         const database = getDatabase();
-        const urlPath = '/lienzo/' + projectName + '/charts/' + index + '/data';
-        const {x,y} = await this.getChartData(urlPath);
-        
-        
-        const newData = {
-            x: (x || []).concat(xValues),
-            y: (y || []).concat(yValues)
-        };
-        console.log(newData, {valoresX: xValues, valoresY: yValues})
-        
         // Write the new data
         const updates = {
-            [`${urlPath}/x`]: newData.x,
-            [`${urlPath}/y`]: newData.y,
+            [`${urlPath}/value`]: newValue,
         };
         await update(ref(database), updates);
 
     } catch (error) {
         console.error(error);
+        return false;
     }
 
     return resValue;
