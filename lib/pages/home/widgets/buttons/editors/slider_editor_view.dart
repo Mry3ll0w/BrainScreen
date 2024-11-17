@@ -31,11 +31,13 @@ class SliderSettingsEdit extends StatefulWidget {
 class _SliderSettingsEditState extends State<SliderSettingsEdit> {
   final Future<List<CustomSliderModel>> _lElevatedButtons = Future.value([]);
 
+  static final _auth = FirebaseAuth.instance;
   String? sBaseURLError;
   String? sLabelErrorText;
   String? sAPIErrorText;
   String? sPayloadErrorText;
   String? sPositionErrorText;
+  int iPos = 0;
 
   final List<String> _lsPetitionType = ['POST', 'PUT'];
 
@@ -53,9 +55,12 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
     super.initState();
 
     newButton = widget.selectedButton!;
-
-    print('Label SLIDER RECIBIDO: ${newButton.label}');
-
+    // Parse elementos API Switch/Slider a APIURL
+    WidgetController.fetchSliderIndexByLabel(
+            widget._projectName, widget.selectedButton!.label)
+        .then((v) {
+      iPos = v;
+    });
     //Comprobamos si se trata de un Switch, para en caso de serlo desplegar un dialog.
     // Retrasar la verificación del tipo de botón para asegurar que el widget esté completamente inicializado
     // Future.delayed(Duration.zero, () {
@@ -112,7 +117,7 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
                             filled: true,
                             errorText: sLabelErrorText,
                             helperText:
-                                'Texto que quieres que tenga el pulsador.',
+                                'Texto que quieres que tenga el slider.',
                             suffixIcon: IconButton(
                               icon: const Icon(Icons.save),
                               onPressed: () async {
@@ -143,6 +148,18 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
                             sLabelErrorText = null;
                           }
                         },
+                      ),
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        tileColor: BrainColors.backgroundColor,
+                        title: const Text(
+                          'Como consumimos los datos al slider',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: indicacionesUso_(),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 15, top: 15),
@@ -292,45 +309,110 @@ class _SliderSettingsEditState extends State<SliderSettingsEdit> {
     }
   }
 
-  /// Funcion para mostrar como hacer que el switch pueda ser integrado de forma correcta
-  /// con el servicio de turno.
-  /// Muestra un mensaje de error usando dialog si se produce alguno
-  void _showSwitchRequirements(var key) {
-    showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => Dialog(
-            child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          'Recuerda agregar en el servicio la respuesta al switch de la siguinte forma:',
-                          style: TextStyle(
-                              fontSize:
-                                  20 * MediaQuery.of(context).size.width / 360),
-                        ),
-                      ),
-                      Container(
-                        height: 300,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: JsonView.string(
-                          '{"res": "true"}',
-                          theme:
-                              const JsonViewTheme(viewType: JsonViewType.base),
-                        ),
-                      ),
-                      const SizedBox(height: 15),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Cerrar'),
-                      )
-                    ]))));
+  Widget indicacionesUso_() {
+    return Column(children: [
+      Text(
+          'Para leer datos debes realizar una peticion GET siguiendo el siguiente esquema:\n',
+          style: TextStyle(
+            fontSize: 15 *
+                MediaQuery.of(context).size.width /
+                360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+          )),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Petition',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"URL":"http://3.210.108.248:3000/sliders/${widget._projectName}/$iPos"}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Params',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"firebaseuid":"${_auth.currentUser!.uid}", "amazonuid":""}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 20.0, bottom: 5),
+        child: Text(
+            'Para agregar usa una peticion PUT siguiendo el siguiente esquema:\n',
+            style: TextStyle(
+              fontSize: 20 *
+                  MediaQuery.of(context).size.width /
+                  360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+            )),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Petition',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"URL":"http://3.210.108.248:3000/charts/${widget._projectName}/$iPos"}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Params',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"firebaseuid":"${_auth.currentUser!.uid}", "amazonuid":""}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Body',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"value":"10"}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      )
+    ]);
   }
 }

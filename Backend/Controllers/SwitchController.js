@@ -24,7 +24,7 @@ class SwitchController {
     /**
     Función encargada de obtener el valor de un botón.
      */
-    static async getChartData(url) {
+    static async getSwitchValue(url) {
         let resValue = null;
     
         try {
@@ -32,7 +32,7 @@ class SwitchController {
             
         
             const snapshot = await get(ref(database, url));
-            
+            console.log(snapshot.val(), url)
             return snapshot.val();
             // if (snapshot.exists()) {
             //     for (const key in snapshot.val()) {
@@ -51,7 +51,7 @@ class SwitchController {
     }
 
 
-    static async updateChartValue(projectName, index, xValues, yValues) {
+    static async updateSwitchValue(projectName, index, xValues, yValues) {
     let resValue = null;
     //const chpoints = await this.getChartData(urlPath);
     try {

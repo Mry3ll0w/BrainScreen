@@ -33,7 +33,7 @@ class ChartController {
         
             const snapshot = await get(ref(database, url));
             
-            return snapshot.val();
+            return snapshot.val();//!FIX
             // if (snapshot.exists()) {
             //     for (const key in snapshot.val()) {
             //         if (snapshot.val()[key].labelText.toLowerCase() === buttonLabel.toLowerCase()) {

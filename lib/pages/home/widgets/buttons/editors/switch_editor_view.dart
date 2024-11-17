@@ -30,7 +30,7 @@ class SwitchSettingsEdit extends StatefulWidget {
 
 class _SwitchSettingsEditState extends State<SwitchSettingsEdit> {
   Future<List<SwitchButtonModel>> _lElevatedButtons = Future.value([]);
-
+  static final _auth = FirebaseAuth.instance;
   String? sBaseURLError;
   String? sLabelErrorText;
   String? sAPIErrorText;
@@ -38,7 +38,7 @@ class _SwitchSettingsEditState extends State<SwitchSettingsEdit> {
   String? sPositionErrorText;
 
   final List<String> _lsPetitionType = ['POST', 'PUT'];
-
+  int iPos = 0;
   SwitchButtonModel newButton = SwitchButtonModel(
       label: '',
       labelText: '',
@@ -55,13 +55,15 @@ class _SwitchSettingsEditState extends State<SwitchSettingsEdit> {
     _lElevatedButtons =
         WidgetController.fetchAllSwitchesFromProject(widget._projectName);
     // Parse elementos API Switch/Slider a APIURL
-
+    WidgetController.fetchSwitchIndexByLabel(
+            widget._projectName, widget.selectedButton!.label)
+        .then((v) {
+      iPos = v;
+    });
     //Comprobamos los campos a cambiar si es un switch u slider:
     if (widget.selectedButton != null && widget.selectedButton!.type == '1' ||
         widget.selectedButton!.type == '2') {
       newButton = widget.selectedButton!;
-
-      debugPrint(widget.selectedButton!.label);
 
       //Ajustamos el campo fieldurl
     }
@@ -150,6 +152,18 @@ class _SwitchSettingsEditState extends State<SwitchSettingsEdit> {
                           }
                         },
                       ),
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        tileColor: BrainColors.backgroundColor,
+                        title: const Text(
+                          'Como consumimos los datos al pulsador',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: indicacionesUso_(),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 15, top: 15),
                         child: ElevatedButton.icon(
@@ -215,6 +229,113 @@ class _SwitchSettingsEditState extends State<SwitchSettingsEdit> {
         }
       },
     );
+  }
+
+  Widget indicacionesUso_() {
+    return Column(children: [
+      Text(
+          'Para leer datos debes realizar una peticion GET siguiendo el siguiente esquema:\n',
+          style: TextStyle(
+            fontSize: 15 *
+                MediaQuery.of(context).size.width /
+                360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+          )),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Petition',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"URL":"http://3.210.108.248:3000/switches/${widget._projectName}/$iPos"}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Params',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"firebaseuid":"${_auth.currentUser!.uid}", "amazonuid":""}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 20.0, bottom: 5),
+        child: Text(
+            'Para agregar usa una peticion PUT siguiendo el siguiente esquema:\n',
+            style: TextStyle(
+              fontSize: 20 *
+                  MediaQuery.of(context).size.width /
+                  360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+            )),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Petition',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"URL":"http://3.210.108.248:3000/charts/${widget._projectName}/$iPos"}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Params',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"firebaseuid":"${_auth.currentUser!.uid}", "amazonuid":""}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Body',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"value":"true/false"}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      )
+    ]);
   }
 
   /// Muestra un mensaje de error usando dialog si se produce alguno

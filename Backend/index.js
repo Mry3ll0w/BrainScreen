@@ -29,6 +29,7 @@ const ButtonController = require('./Controllers/ButtonController');
 const ChartController = require('./Controllers/ChartController');
 // Express Server initialization
 const express = require('express');
+const SwitchController = require('./Controllers/SwitchController');
 
 const nodeServer = express();
 const port = 3000;
@@ -316,6 +317,38 @@ nodeServer.put('/charts/:lienzo/:index', async (req, res) => {
     console.log(e);
   }
 });
+
+
+//? SWithces
+nodeServer.get('/switches/:lienzo/:index', async (req, res) => {
+  
+  try {
+    const {lienzo, index} = req.params;
+    const {firebaseuid, amazonuid}= req.headers;
+    
+    if (firebaseuid === undefined || amazonuid === undefined) {
+      res.status(403).send({res: 'test is error due to unauthorized'});
+    } else {
+      
+      const projectController = new ProjectController(DB);
+      // Check if user has access
+      const bUserAllowed = await projectController.
+          userAllowedForServerRequests(amazonuid, firebaseuid);
+      
+      if (!bUserAllowed) {
+        res.status(403).send({res: 'test is error, user not allowed'});
+      }else{
+        const urlPath = '/lienzo/' + lienzo + '/buttons/' + index + '/value';
+        var swValue = await SwitchController.getSwitchValue(urlPath)
+        
+        res.status(200).send({switchState: swValue});
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 
 
 nodeServer.listen(port, () => {

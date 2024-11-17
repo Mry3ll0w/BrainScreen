@@ -5,8 +5,10 @@ import 'package:brainscreen/pages/controllers/widget_controller.dart';
 import 'package:brainscreen/pages/home/homeView.dart';
 import 'package:brainscreen/pages/models/field_widget_model.dart';
 import 'package:brainscreen/styles/brain_colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_json_view/flutter_json_view.dart';
 
 class FieldWidgetEditorView extends StatefulWidget {
   final String sProjectName;
@@ -22,7 +24,7 @@ class FieldWidgetEditorView extends StatefulWidget {
 
 class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
   String h1 = 'Vista previa del Widget';
-
+  static final _auth = FirebaseAuth.instance;
   //Variables de inicializacion del Widget a crear.
   String sTextDefaultValue = '',
       sErrorText = 'Soy un mensaje de error',
@@ -222,6 +224,17 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
               ),
             ),
           ),
+          ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            tileColor: BrainColors.backgroundColor,
+            title: const Text(
+              'Como consumimos los datos al fieldwidget',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            subtitle: indicacionesUso_(),
+          ),
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Center(
@@ -327,5 +340,112 @@ class _FieldWidgetEditorViewState extends State<FieldWidgetEditorView> {
     } catch (e) {
       debugPrint('Error con data \n $e');
     }
+  }
+
+  Widget indicacionesUso_() {
+    return Column(children: [
+      Text(
+          'Para leer datos debes realizar una peticion GET siguiendo el siguiente esquema:\n',
+          style: TextStyle(
+            fontSize: 15 *
+                MediaQuery.of(context).size.width /
+                360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+          )),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Petition',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"URL":"http://3.210.108.248:3000/fieldwidgets/${widget.sProjectName}/${widget.iIndex}"}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Params',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"firebaseuid":"${_auth.currentUser!.uid}", "amazonuid":""}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 20.0, bottom: 5),
+        child: Text(
+            'Para agregar usa una peticion PUT siguiendo el siguiente esquema:\n',
+            style: TextStyle(
+              fontSize: 20 *
+                  MediaQuery.of(context).size.width /
+                  360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+            )),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Petition',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"URL":"http://3.210.108.248:3000/charts/${widget.sProjectName}/${widget.iIndex}"}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Params',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"firebaseuid":"${_auth.currentUser!.uid}", "amazonuid":""}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Text('Body',
+                style: TextStyle(
+                  fontSize: 20 *
+                      MediaQuery.of(context).size.width /
+                      360, // Ajusta el tamaño de la fuente basado en el ancho de la pantalla
+                )),
+            JsonView.string(
+              '{"value":"10"}',
+              theme: const JsonViewTheme(viewType: JsonViewType.base),
+            ),
+          ],
+        ),
+      )
+    ]);
   }
 }
