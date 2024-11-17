@@ -30,6 +30,7 @@ const ChartController = require('./Controllers/ChartController');
 // Express Server initialization
 const express = require('express');
 const SwitchController = require('./Controllers/SwitchController');
+const SliderController = require('./Controllers/SliderController');
 
 const nodeServer = express();
 const port = 3000;
@@ -354,8 +355,11 @@ nodeServer.patch('/switches/:lienzo/:index', async (req, res) => {
     const {lienzo, index} = req.params;
     const {firebaseuid, amazonuid}= req.headers;
     const {newValue} = req.body;
-    
-    if (firebaseuid === undefined || amazonuid === undefined) {
+
+    if(newValue.toLowerCase() != "true" || newValue.toLowerCase() != "false" ){
+      res.status(400).send("El valor enviado no es un booleano, debe ser true o false")
+    }else{
+      if (firebaseuid === undefined || amazonuid === undefined) {
       res.status(403).send({res: 'test is error due to unauthorized'});
     } else {
       
@@ -375,13 +379,49 @@ nodeServer.patch('/switches/:lienzo/:index', async (req, res) => {
           res.status(500).send('Error en la actualizacion del switch')
       }
     }
+    }
+    
+    
   } catch (e) {
     console.log(e);
   }
 });
 
 //? Sliders
+nodeServer.get('/sliders/:lienzo/:index', async (req, res) => {
+  
+  try {
+    const {lienzo, index} = req.params;
+    const {firebaseuid, amazonuid}= req.headers;
+    
+    if (firebaseuid === undefined || amazonuid === undefined) {
+      res.status(403).send({res: 'test is error due to unauthorized'});
+    } else {
+      
+      const projectController = new ProjectController(DB);
+      // Check if user has access
+      const bUserAllowed = await projectController.
+          userAllowedForServerRequests(amazonuid, firebaseuid);
+      
+      if (!bUserAllowed) {
+        res.status(403).send({res: 'user not allowed'});
+      }else{
 
+        const urlPath = '/lienzo/' + lienzo + '/buttons/' + index + '/value';
+        var sliderValue = await SliderController.getValue(urlPath)
+        
+        if ((sliderValue != 'true' || sliderValue != 'false') && Number.isNaN(sliderValue)) {
+            res.status(400).send("El valor que esta intentando obtener no se corresponde a al de un slider")
+        } else {
+          res.status(200).send({sliderValue: sliderValue});
+        }
+        
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
 
 //? FieldWidgets & Numberfields
 
