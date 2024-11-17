@@ -493,6 +493,38 @@ nodeServer.get('/fieldWidgets/:lienzo/:index', async (req, res) => {
 });
 
 
+nodeServer.patch('/fieldWidgets/:lienzo/:index', async (req, res) => {
+  try {
+    const {lienzo, index} = req.params;
+    const {firebaseuid, amazonuid}= req.headers;
+    const {newValue} = req.body;
+      if (firebaseuid === undefined || amazonuid === undefined) {
+        res.status(403).send({res: 'test is error due to unauthorized'});
+      } else {
+      
+        const projectController = new ProjectController(DB);
+        // Check if user has access
+        const bUserAllowed = await projectController.
+          userAllowedForServerRequests(amazonuid, firebaseuid);
+      
+        if (!bUserAllowed) {
+          res.status(403).send({res: 'test is error, user not allowed'});
+        }
+        else{
+            const urlPath = '/lienzo/' + lienzo + '/fieldWidgets/' + index ;
+            var updateValue = await FieldWidgetController.updateValue(urlPath, newValue)
+            if(updateValue)
+              res.status(200).send('FieldWidget actualizado');
+            else
+              res.status(500).send('Error en la actualizacion del FieldWidget')
+      }
+      }
+  }catch (e) {
+    console.log(e);
+  }
+});
+
+
 
 nodeServer.listen(port, () => {
   console.log(`Servidor Backend en el puerto ${port}`);
